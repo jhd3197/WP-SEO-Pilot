@@ -7,6 +7,9 @@
 
 namespace WPSEOPilot\Service;
 
+use WP_Post;
+use function WPSEOPilot\Helpers\generate_title_from_template;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -50,7 +53,18 @@ class Audit {
 			return;
 		}
 
-		$issues = $this->collect_issues();
+		wp_enqueue_style(
+			'wpseopilot-admin',
+			WPSEOPILOT_URL . 'assets/css/admin.css',
+			[],
+			WPSEOPILOT_VERSION
+		);
+
+		$results = $this->collect_issues();
+		$issues  = $results['issues'];
+		$stats   = $results['stats'];
+		$scanned = $results['scanned'];
+		$recommendations = $results['recommendations'];
 
 		include WPSEOPILOT_PATH . 'templates/audit.php';
 	}
@@ -58,10 +72,29 @@ class Audit {
 	/**
 	 * Evaluate posts for SEO issues.
 	 *
-	 * @return array<int,array<string,mixed>>
+	 * @return array{
+	 *     issues:array<int,array<string,mixed>>,
+	 *     stats:array<string,mixed>,
+	 *     scanned:int,
+	 *     recommendations:array<int,array<string,mixed>>
+	 * }
 	 */
 	private function collect_issues() {
-		$issues = [];
+		$data = [
+			'issues'          => [],
+			'stats'           => [
+				'severity' => [
+					'high'   => 0,
+					'medium' => 0,
+					'low'    => 0,
+				],
+				'types'  => [],
+				'total'  => 0,
+				'posts'  => [],
+			],
+			'scanned'        => 0,
+			'recommendations' => [],
+		];
 
 		$query = new \WP_Query(
 			[
@@ -71,46 +104,149 @@ class Audit {
 			]
 		);
 
+		$post_type_descriptions = get_option( 'wpseopilot_post_type_meta_descriptions', [] );
+		if ( ! is_array( $post_type_descriptions ) ) {
+			$post_type_descriptions = [];
+		}
+
 		while ( $query->have_posts() ) {
 			$query->the_post();
 			$post_id = get_the_ID();
 			$title   = get_the_title();
+			$post    = get_post( $post_id );
+			$content = get_the_content( null, false, $post );
 			$meta    = (array) get_post_meta( $post_id, Post_Meta::META_KEY, true );
 
+			++$data['scanned'];
+
 			if ( empty( $meta['title'] ) || strlen( $meta['title'] ) > 65 ) {
-				$issues[] = [
-					'post_id'  => $post_id,
-					'title'    => $title,
-					'severity' => empty( $meta['title'] ) ? 'high' : 'medium',
-					'message'  => empty( $meta['title'] ) ? __( 'Missing meta title.', 'wp-seo-pilot' ) : __( 'Meta title longer than 65 characters.', 'wp-seo-pilot' ),
-					'action'   => __( 'Edit SEO fields.', 'wp-seo-pilot' ),
-				];
+				$data = $this->add_issue(
+					$data,
+					[
+						'post_id'  => $post_id,
+						'title'    => $title,
+						'severity' => empty( $meta['title'] ) ? 'high' : 'medium',
+						'message'  => empty( $meta['title'] ) ? __( 'Missing meta title.', 'wp-seo-pilot' ) : __( 'Meta title longer than 65 characters.', 'wp-seo-pilot' ),
+						'action'   => __( 'Edit SEO fields.', 'wp-seo-pilot' ),
+						'type'     => empty( $meta['title'] ) ? 'title_missing' : 'title_length',
+					]
+				);
+
+				if ( empty( $meta['title'] ) ) {
+					$this->ensure_recommendation( $data['recommendations'], $post, $post_type_descriptions );
+				}
 			}
 
 			if ( empty( $meta['description'] ) ) {
-				$issues[] = [
-					'post_id'  => $post_id,
-					'title'    => $title,
-					'severity' => 'high',
-					'message'  => __( 'Missing meta description.', 'wp-seo-pilot' ),
-					'action'   => __( 'Add keyword-rich summary.', 'wp-seo-pilot' ),
-				];
+				$data = $this->add_issue(
+					$data,
+					[
+						'post_id'  => $post_id,
+						'title'    => $title,
+						'severity' => 'high',
+						'message'  => __( 'Missing meta description.', 'wp-seo-pilot' ),
+						'action'   => __( 'Add keyword-rich summary.', 'wp-seo-pilot' ),
+						'type'     => 'description_missing',
+					]
+				);
+				$this->ensure_recommendation( $data['recommendations'], $post, $post_type_descriptions );
 			}
 
-			if ( substr_count( wp_strip_all_tags( get_the_content() ), ' alt="' ) < substr_count( get_the_content(), '<img' ) ) {
-				$issues[] = [
-					'post_id'  => $post_id,
-					'title'    => $title,
-					'severity' => 'medium',
-					'message'  => __( 'Images missing alt text.', 'wp-seo-pilot' ),
-					'action'   => __( 'Add descriptive alt attributes.', 'wp-seo-pilot' ),
-				];
+			if ( substr_count( $content, ' alt="' ) < substr_count( $content, '<img' ) ) {
+				$data = $this->add_issue(
+					$data,
+					[
+						'post_id'  => $post_id,
+						'title'    => $title,
+						'severity' => 'medium',
+						'message'  => __( 'Images missing alt text.', 'wp-seo-pilot' ),
+						'action'   => __( 'Add descriptive alt attributes.', 'wp-seo-pilot' ),
+						'type'     => 'missing_alt',
+					]
+				);
 			}
 		}
 
 		wp_reset_postdata();
 
-		return $issues;
+		$data['stats']['posts_with_issues'] = count( $data['stats']['posts'] );
+		unset( $data['stats']['posts'] );
+
+		arsort( $data['stats']['types'] );
+		$data['recommendations'] = array_values( $data['recommendations'] );
+
+		return $data;
+	}
+
+	/**
+	 * Track statistics for an issue.
+	 *
+	 * @param array $data  Data bucket.
+	 * @param array $issue Issue payload.
+	 *
+	 * @return array
+	 */
+	private function add_issue( $data, $issue ) {
+		$data['issues'][] = $issue;
+		++$data['stats']['total'];
+
+		$severity = $issue['severity'];
+		if ( isset( $data['stats']['severity'][ $severity ] ) ) {
+			++$data['stats']['severity'][ $severity ];
+		} else {
+			$data['stats']['severity'][ $severity ] = 1;
+		}
+
+		$type = $issue['type'] ?? 'general';
+		$data['stats']['types'][ $type ] = ( $data['stats']['types'][ $type ] ?? 0 ) + 1;
+		$data['stats']['posts'][ $issue['post_id'] ] = true;
+
+		return $data;
+	}
+
+	/**
+	 * Build a recommendation payload per post if missing metadata.
+	 *
+	 * @param array         $recommendations Current map.
+	 * @param WP_Post|false $post            Post object.
+	 * @param array         $type_descriptions Default descriptions.
+	 *
+	 * @return void
+	 */
+	private function ensure_recommendation( &$recommendations, $post, $type_descriptions ) {
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+
+		if ( isset( $recommendations[ $post->ID ] ) ) {
+			return;
+		}
+
+		$title_suggestion = generate_title_from_template( $post );
+		if ( empty( $title_suggestion ) ) {
+			$title_suggestion = get_the_title( $post );
+		}
+
+		$excerpt = $post->post_excerpt ?: wp_trim_words( wp_strip_all_tags( $post->post_content ), 30 );
+		if ( empty( $excerpt ) && ! empty( $type_descriptions[ $post->post_type ] ) ) {
+			$excerpt = $type_descriptions[ $post->post_type ];
+		}
+
+		$tags = get_the_tags( $post->ID );
+		if ( $tags ) {
+			$tag_names = wp_list_pluck( $tags, 'name' );
+		} else {
+			$tag_names = wp_list_pluck( get_the_category( $post->ID ), 'name' );
+		}
+
+		$recommendations[ $post->ID ] = [
+			'post_id'               => $post->ID,
+			'title'                 => get_the_title( $post ),
+			'edit_url'              => get_edit_post_link( $post->ID ),
+			'suggested_title'       => $title_suggestion,
+			'suggested_description' => $excerpt,
+			'suggested_tags'        => array_filter( (array) $tag_names ),
+		];
 	}
 
 	/**

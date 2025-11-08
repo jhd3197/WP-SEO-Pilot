@@ -111,6 +111,9 @@ class Importers {
 
 		$options = [
 			'wpseopilot_default_title_template',
+			'wpseopilot_post_type_title_templates',
+			'wpseopilot_post_type_meta_descriptions',
+			'wpseopilot_post_type_keywords',
 			'wpseopilot_default_meta_description',
 			'wpseopilot_default_og_image',
 			'wpseopilot_default_social_width',

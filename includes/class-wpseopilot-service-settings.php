@@ -21,6 +21,9 @@ class Settings {
 	 */
 	private $defaults = [
 		'wpseopilot_default_title_template' => '%post_title% | %site_title%',
+		'wpseopilot_post_type_title_templates' => [],
+		'wpseopilot_post_type_meta_descriptions' => [],
+		'wpseopilot_post_type_keywords' => [],
 		'wpseopilot_default_meta_description' => '',
 		'wpseopilot_default_og_image' => '',
 		'wpseopilot_default_social_width' => 1200,
@@ -69,6 +72,9 @@ class Settings {
 		}
 
 		register_setting( 'wpseopilot', 'wpseopilot_default_title_template', [ $this, 'sanitize_template' ] );
+		register_setting( 'wpseopilot', 'wpseopilot_post_type_title_templates', [ $this, 'sanitize_post_type_templates' ] );
+		register_setting( 'wpseopilot', 'wpseopilot_post_type_meta_descriptions', [ $this, 'sanitize_post_type_descriptions' ] );
+		register_setting( 'wpseopilot', 'wpseopilot_post_type_keywords', [ $this, 'sanitize_post_type_keywords' ] );
 		register_setting( 'wpseopilot', 'wpseopilot_default_meta_description', 'sanitize_textarea_field' );
 		register_setting( 'wpseopilot', 'wpseopilot_default_og_image', 'esc_url_raw' );
 		register_setting( 'wpseopilot', 'wpseopilot_default_social_width', 'absint' );
@@ -107,6 +113,15 @@ class Settings {
 			'wpseopilot',
 			[ $this, 'render_settings_page' ]
 		);
+
+		add_submenu_page(
+			'wpseopilot',
+			__( 'Post Type Defaults', 'wp-seo-pilot' ),
+			__( 'Post Type Defaults', 'wp-seo-pilot' ),
+			'manage_options',
+			'wpseopilot-types',
+			[ $this, 'render_post_type_defaults_page' ]
+		);
 	}
 
 	/**
@@ -138,6 +153,79 @@ class Settings {
 		];
 
 		return str_replace( $allowed, $allowed, $value );
+	}
+
+	/**
+	 * Sanitize per-post-type template map.
+	 *
+	 * @param array|string $value Templates.
+	 *
+	 * @return array
+	 */
+	public function sanitize_post_type_templates( $value ) {
+		return $this->sanitize_post_type_text_map( $value, [ $this, 'sanitize_template' ] );
+	}
+
+	/**
+	 * Sanitize per-post-type description map.
+	 *
+	 * @param array|string $value Descriptions.
+	 *
+	 * @return array
+	 */
+	public function sanitize_post_type_descriptions( $value ) {
+		return $this->sanitize_post_type_text_map( $value, 'sanitize_textarea_field' );
+	}
+
+	/**
+	 * Sanitize per-post-type keywords map.
+	 *
+	 * @param array|string $value Keywords.
+	 *
+	 * @return array
+	 */
+	public function sanitize_post_type_keywords( $value ) {
+		return $this->sanitize_post_type_text_map( $value, 'sanitize_text_field' );
+	}
+
+	/**
+	 * Shared sanitizer for associative post-type arrays.
+	 *
+	 * @param array|string $value Value.
+	 * @param callable     $callback Sanitizer callback.
+	 *
+	 * @return array
+	 */
+	private function sanitize_post_type_text_map( $value, $callback ) {
+		if ( ! is_array( $value ) ) {
+			return [];
+		}
+
+		$allowed = get_post_types(
+			[
+				'public'  => true,
+				'show_ui' => true,
+			]
+		);
+
+		unset( $allowed['attachment'] );
+
+		$sanitized = [];
+
+		foreach ( $value as $post_type => $text ) {
+			if ( ! isset( $allowed[ $post_type ] ) ) {
+				continue;
+			}
+
+			$text = call_user_func( $callback, $text );
+			if ( '' === $text ) {
+				continue;
+			}
+
+			$sanitized[ $post_type ] = $text;
+		}
+
+		return $sanitized;
 	}
 
 	/**
@@ -193,5 +281,53 @@ class Settings {
 		);
 
 		include WPSEOPILOT_PATH . 'templates/settings-page.php';
+	}
+
+	/**
+	 * Render post type defaults page.
+	 *
+	 * @return void
+	 */
+	public function render_post_type_defaults_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'wpseopilot-admin',
+			WPSEOPILOT_URL . 'assets/css/admin.css',
+			[],
+			WPSEOPILOT_VERSION
+		);
+
+		$post_types = get_post_types(
+			[
+				'public'  => true,
+				'show_ui' => true,
+			],
+			'objects'
+		);
+
+		if ( isset( $post_types['attachment'] ) ) {
+			unset( $post_types['attachment'] );
+		}
+
+		$post_type_templates    = get_option( 'wpseopilot_post_type_title_templates', [] );
+		$post_type_descriptions = get_option( 'wpseopilot_post_type_meta_descriptions', [] );
+		$post_type_keywords     = get_option( 'wpseopilot_post_type_keywords', [] );
+
+		if ( ! is_array( $post_type_templates ) ) {
+			$post_type_templates = [];
+		}
+
+		if ( ! is_array( $post_type_descriptions ) ) {
+			$post_type_descriptions = [];
+		}
+
+		if ( ! is_array( $post_type_keywords ) ) {
+			$post_type_keywords = [];
+		}
+
+		include WPSEOPILOT_PATH . 'templates/post-type-defaults.php';
 	}
 }

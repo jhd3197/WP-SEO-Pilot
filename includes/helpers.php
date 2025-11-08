@@ -70,12 +70,27 @@ namespace WPSEOPilot\Helpers {
 	/**
 	 * Determine default title using template tags.
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param WP_Post|int $post Post object or ID.
 	 *
 	 * @return string
 	 */
 	function generate_title_from_template( $post ) {
-		$template = get_option( 'wpseopilot_default_title_template', '%post_title% | %site_title%' );
+		$post = \get_post( $post );
+
+		if ( ! $post ) {
+			return '';
+		}
+
+		$post_type_templates = \get_option( 'wpseopilot_post_type_title_templates', [] );
+		if ( ! is_array( $post_type_templates ) ) {
+			$post_type_templates = [];
+		}
+
+		if ( ! empty( $post->post_type ) && ! empty( $post_type_templates[ $post->post_type ] ) ) {
+			$template = $post_type_templates[ $post->post_type ];
+		} else {
+			$template = get_option( 'wpseopilot_default_title_template', '%post_title% | %site_title%' );
+		}
 
 		$replacements = [
 			'%post_title%'  => \wp_strip_all_tags( $post->post_title ),

@@ -32,6 +32,11 @@
 			[]
 		);
 
+		const postType = useSelect(
+			(select) => select('core/editor').getCurrentPostType(),
+			[]
+		);
+
 		const permalink = useSelect(
 			(select) => select('core/editor').getPermalink(),
 			[]
@@ -44,8 +49,12 @@
 			editPost({ meta: { _wpseopilot_meta: next } });
 		};
 
+		const typeDescription =
+			(config.postTypeDescriptions && postType && config.postTypeDescriptions[postType]) || '';
+
 		const snippetTitle = meta.title || postTitle;
-		const snippetDesc = meta.description || excerpt || config.defaultDescription || '';
+		const snippetDesc =
+			meta.description || excerpt || typeDescription || config.defaultDescription || '';
 
 		return el(
 			Fragment,

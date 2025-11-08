@@ -47,6 +47,8 @@ class Frontend {
 
 		$post = get_post();
 		$meta = $this->get_meta( $post );
+		$post_type_descriptions = $this->get_post_type_option( 'wpseopilot_post_type_meta_descriptions' );
+		$post_type_keywords     = $this->get_post_type_option( 'wpseopilot_post_type_keywords' );
 
 		$title = $meta['title'];
 		if ( empty( $title ) && $post instanceof WP_Post ) {
@@ -58,13 +60,24 @@ class Frontend {
 
 		$title = apply_filters( 'wpseopilot_title', $title, $post );
 
-		$description = $meta['description'] ?? get_option( 'wpseopilot_default_meta_description', get_bloginfo( 'description' ) );
+		$description = $meta['description'] ?? '';
+		if ( empty( $description ) && $post instanceof WP_Post && ! empty( $post_type_descriptions[ $post->post_type ] ) ) {
+			$description = $post_type_descriptions[ $post->post_type ];
+		}
+		if ( empty( $description ) ) {
+			$description = get_option( 'wpseopilot_default_meta_description', get_bloginfo( 'description' ) );
+		}
 		$description = apply_filters( 'wpseopilot_description', $description, $post );
 
 		$canonical = $this->get_canonical( $post, $meta );
 		$canonical = apply_filters( 'wpseopilot_canonical', $canonical, $post );
 
 		$robots = $this->get_robots( $meta );
+		$keywords = '';
+		if ( $post instanceof WP_Post && ! empty( $post_type_keywords[ $post->post_type ] ) ) {
+			$keywords = $post_type_keywords[ $post->post_type ];
+		}
+		$keywords = apply_filters( 'wpseopilot_keywords', $keywords, $post );
 
 		echo '<title>' . esc_html( $title ) . "</title>\n";
 
@@ -80,6 +93,9 @@ class Frontend {
 			printf( "<meta name=\"robots\" content=\"%s\" />\n", esc_attr( $robots ) );
 		}
 
+		if ( ! empty( $keywords ) ) {
+			printf( "<meta name=\"keywords\" content=\"%s\" />\n", esc_attr( $keywords ) );
+		}
 	}
 
 	/**
@@ -95,9 +111,17 @@ class Frontend {
 		$post = get_post();
 		$meta = $this->get_meta( $post );
 		$url  = $this->get_canonical( $post, $meta );
+		$post_type_descriptions = $this->get_post_type_option( 'wpseopilot_post_type_meta_descriptions' );
 
 		$title = apply_filters( 'wpseopilot_og_title', $meta['title'] ?: get_the_title( $post ), $post );
-		$description = apply_filters( 'wpseopilot_og_description', $meta['description'] ?: get_option( 'wpseopilot_default_meta_description', '' ), $post );
+		$description = $meta['description'] ?: '';
+		if ( empty( $description ) && $post instanceof WP_Post && ! empty( $post_type_descriptions[ $post->post_type ] ) ) {
+			$description = $post_type_descriptions[ $post->post_type ];
+		}
+		if ( empty( $description ) ) {
+			$description = get_option( 'wpseopilot_default_meta_description', '' );
+		}
+		$description = apply_filters( 'wpseopilot_og_description', $description, $post );
 		$image = $this->get_social_image( $post, $meta );
 
 		$tags = [
@@ -312,5 +336,18 @@ class Frontend {
 		];
 
 		return wp_parse_args( $meta, $defaults );
+	}
+
+	/**
+	 * Retrieve a sanitized per-post-type option array.
+	 *
+	 * @param string $option Option name.
+	 *
+	 * @return array
+	 */
+	private function get_post_type_option( $option ) {
+		$value = get_option( $option, [] );
+
+		return is_array( $value ) ? $value : [];
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin UX: meta boxes, Gutenberg sidebar, bulk editor, quick actions.
+ * Admin UX: meta boxes, Gutenberg sidebar, quick actions.
  *
  * @package WPSEOPilot
  */
@@ -30,13 +30,11 @@ class Admin_UI {
 		}
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
-		add_action( 'admin_menu', [ $this, 'register_bulk_editor_page' ] );
 		add_filter( 'manage_post_posts_columns', [ $this, 'add_posts_column' ] );
 		add_action( 'manage_post_posts_custom_column', [ $this, 'render_posts_column' ], 10, 2 );
 		add_filter( 'post_row_actions', [ $this, 'post_row_actions' ], 10, 2 );
 		add_filter( 'bulk_actions-edit-post', [ $this, 'bulk_actions' ] );
 		add_filter( 'handle_bulk_actions-edit-post', [ $this, 'handle_bulk_actions' ], 10, 3 );
-		add_action( 'admin_post_wpseopilot_bulk_save', [ $this, 'handle_bulk_save' ] );
 		add_action( 'admin_post_wpseopilot_toggle_noindex', [ $this, 'handle_toggle_noindex' ] );
 	}
 
@@ -90,7 +88,7 @@ class Admin_UI {
 	 * @return void
 	 */
 	public function enqueue_admin_assets( $hook ) {
-		if ( false === strpos( $hook, 'post.php' ) && false === strpos( $hook, 'post-new.php' ) && 'toplevel_page_wpseopilot' !== $hook && 'wpseopilot_page_wpseopilot-bulk' !== $hook ) {
+		if ( false === strpos( $hook, 'post.php' ) && false === strpos( $hook, 'post-new.php' ) && 'toplevel_page_wpseopilot' !== $hook ) {
 			return;
 		}
 
@@ -138,6 +136,17 @@ class Admin_UI {
 			WPSEOPILOT_VERSION
 		);
 
+		$post_type_templates    = get_option( 'wpseopilot_post_type_title_templates', [] );
+		$post_type_descriptions = get_option( 'wpseopilot_post_type_meta_descriptions', [] );
+
+		if ( ! is_array( $post_type_templates ) ) {
+			$post_type_templates = [];
+		}
+
+		if ( ! is_array( $post_type_descriptions ) ) {
+			$post_type_descriptions = [];
+		}
+
 		wp_localize_script(
 			'wpseopilot-editor',
 			'WPSEOPilotEditor',
@@ -145,79 +154,10 @@ class Admin_UI {
 				'defaultTitle'       => get_option( 'wpseopilot_default_title_template', '%post_title% | %site_title%' ),
 				'defaultDescription' => get_option( 'wpseopilot_default_meta_description', '' ),
 				'defaultOg'          => get_option( 'wpseopilot_default_og_image', '' ),
+				'postTypeTemplates'  => $post_type_templates,
+				'postTypeDescriptions' => $post_type_descriptions,
 			]
 		);
-	}
-
-	/**
-	 * Register bulk editor menu.
-	 *
-	 * @return void
-	 */
-	public function register_bulk_editor_page() {
-		add_submenu_page(
-			'wpseopilot',
-			__( 'Bulk SEO Editor', 'wp-seo-pilot' ),
-			__( 'Bulk Editor', 'wp-seo-pilot' ),
-			'edit_posts',
-			'wpseopilot-bulk',
-			[ $this, 'render_bulk_editor_page' ]
-		);
-	}
-
-	/**
-	 * Render bulk editor table.
-	 *
-	 * @return void
-	 */
-	public function render_bulk_editor_page() {
-		if ( ! current_user_can( 'edit_posts' ) ) {
-			return;
-		}
-
-		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-
-		$query = new \WP_Query(
-			[
-				'post_type'      => 'post',
-				'posts_per_page' => 20,
-				'paged'          => max( 1, $paged ),
-				'post_status'    => 'any',
-			]
-		);
-
-		include WPSEOPILOT_PATH . 'templates/bulk-editor.php';
-	}
-
-	/**
-	 * Handle bulk save submissions.
-	 *
-	 * @return void
-	 */
-	public function handle_bulk_save() {
-		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_die( esc_html__( 'Permission denied.', 'wp-seo-pilot' ) );
-		}
-
-		check_admin_referer( 'wpseopilot_bulk_save' );
-
-		if ( empty( $_POST['wpseopilot_bulk'] ) || ! is_array( $_POST['wpseopilot_bulk'] ) ) {
-			wp_redirect( wp_get_referer() );
-			exit;
-		}
-
-		foreach ( wp_unslash( $_POST['wpseopilot_bulk'] ) as $post_id => $fields ) {
-			$data = [
-				'title'       => isset( $fields['title'] ) ? sanitize_text_field( $fields['title'] ) : '',
-				'description' => isset( $fields['description'] ) ? sanitize_textarea_field( $fields['description'] ) : '',
-			];
-
-			$existing = (array) get_post_meta( (int) $post_id, Post_Meta::META_KEY, true );
-			update_post_meta( (int) $post_id, Post_Meta::META_KEY, array_merge( $existing, $data ) );
-		}
-
-		wp_redirect( add_query_arg( 'updated', '1', wp_get_referer() ) );
-		exit;
 	}
 
 	/**

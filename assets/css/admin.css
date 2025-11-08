@@ -109,3 +109,135 @@
 	color: #b24141;
 	font-weight: 600;
 }
+
+.wpseopilot-type-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.wpseopilot-type-slug {
+	font-size: 12px;
+	font-weight: 400;
+	color: #6c7781;
+	text-transform: lowercase;
+	margin-left: 8px;
+}
+
+.wpseopilot-audit__summary {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.wpseopilot-audit__stats {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.wpseopilot-audit__stats li {
+	text-align: center;
+	flex: 1;
+}
+
+.wpseopilot-audit__stats strong {
+	display: block;
+	font-size: 20px;
+}
+
+.wpseopilot-audit__bar {
+	display: flex;
+	height: 16px;
+	border-radius: 999px;
+	overflow: hidden;
+	background: #eceef1;
+	margin-bottom: 12px;
+}
+
+.wpseopilot-audit__bar-segment {
+	display: block;
+	height: 100%;
+}
+
+.wpseopilot-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	display: inline-block;
+	margin-right: 6px;
+}
+
+.wpseopilot-audit__legend {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.wpseopilot-audit__types {
+	margin: 0;
+	padding-left: 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.wpseopilot-audit__types li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.wpseopilot-audit__types strong {
+	font-size: 14px;
+}
+
+.wpseopilot-mini-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.wpseopilot-mini-table th,
+.wpseopilot-mini-table td {
+	padding: 8px;
+	border-bottom: 1px solid #e2e4e7;
+	text-align: left;
+	vertical-align: top;
+}
+
+.wpseopilot-tag-chip {
+	display: inline-block;
+	background: #f0f6ff;
+	color: #1d4ed8;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	margin: 0 6px 4px 0;
+}
+
+.wpseopilot-muted {
+	color: #7a7f87;
+}
+
+.wpseopilot-audit__bar-segment.is-high,
+.wpseopilot-dot.is-high {
+	background: #d93025;
+}
+
+.wpseopilot-audit__bar-segment.is-medium,
+.wpseopilot-dot.is-medium {
+	background: #fbbc05;
+}
+
+.wpseopilot-audit__bar-segment.is-low,
+.wpseopilot-dot.is-low {
+	background: #34a853;
+}
