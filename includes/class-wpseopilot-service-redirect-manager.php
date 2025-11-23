@@ -112,7 +112,8 @@ class Redirect_Manager {
 			__( 'Redirects', 'wp-seo-pilot' ),
 			'manage_options',
 			'wpseopilot-redirects',
-			[ $this, 'render_page' ]
+			[ $this, 'render_page' ],
+			11
 		);
 	}
 

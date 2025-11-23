@@ -59,7 +59,7 @@ class Settings {
 		'wpseopilot_robots_txt' => '',
 		'wpseopilot_enable_sitemap_enhancer' => '1',
 		'wpseopilot_enable_redirect_manager' => '1',
-		'wpseopilot_enable_404_logging' => '0',
+		'wpseopilot_enable_404_logging' => '1',
 	];
 
 	/**

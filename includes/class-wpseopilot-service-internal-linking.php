@@ -124,7 +124,8 @@ class Internal_Linking {
 			__( 'Internal Linking', 'wp-seo-pilot' ),
 			self::CAPABILITY,
 			self::PAGE_SLUG,
-			[ $this, 'render_page' ]
+			[ $this, 'render_page' ],
+			10
 		);
 	}
 

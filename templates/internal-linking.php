@@ -40,7 +40,7 @@ $current_rule = $rule_to_edit ?: $rule_defaults;
 
 ?>
 <div class="wrap wpseopilot-links">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'WP SEO Pilot — Internal Linking', 'wp-seo-pilot' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Internal Linking', 'wp-seo-pilot' ); ?></h1>
 	<p class="description wpseopilot-links__lede">
 		<?php esc_html_e( 'Create rules that automatically convert chosen keywords into links.', 'wp-seo-pilot' ); ?>
 	</p>

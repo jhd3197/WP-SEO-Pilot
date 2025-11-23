@@ -39,7 +39,8 @@ class Audit {
 			__( 'SEO Audit', 'wp-seo-pilot' ),
 			'manage_options',
 			'wpseopilot-audit',
-			[ $this, 'render_page' ]
+			[ $this, 'render_page' ],
+			13
 		);
 	}
 

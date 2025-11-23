@@ -9,27 +9,64 @@
 
 ?>
 <div class="wrap">
-	<h1><?php esc_html_e( '404 Monitor', 'wp-seo-pilot' ); ?></h1>
-	<p><?php esc_html_e( 'Top missing URLs, sorted by hits.', 'wp-seo-pilot' ); ?></p>
+	<h1><?php esc_html_e( '404 Error Log', 'wp-seo-pilot' ); ?></h1>
+	<p><?php esc_html_e( 'Monitor missing URLs and create redirects before search engines or visitors hit them again.', 'wp-seo-pilot' ); ?></p>
+	<p class="description">
+		<?php esc_html_e( 'The 404 error log does not collect user IPs. It collects the timestamp of the event, the 404 URL that was opened, and the user-agent string.', 'wp-seo-pilot' ); ?>
+	</p>
 
-	<table class="wp-list-table widefat striped">
-		<thead>
-			<tr>
-				<th><?php esc_html_e( 'URL', 'wp-seo-pilot' ); ?></th>
-				<th><?php esc_html_e( 'Hits', 'wp-seo-pilot' ); ?></th>
-				<th><?php esc_html_e( 'Last seen', 'wp-seo-pilot' ); ?></th>
-				<th><?php esc_html_e( 'Referrer hash', 'wp-seo-pilot' ); ?></th>
-				<th><?php esc_html_e( 'Quick action', 'wp-seo-pilot' ); ?></th>
-			</tr>
-		</thead>
+	<form method="get" class="wpseopilot-404-controls">
+		<input type="hidden" name="page" value="wpseopilot-404" />
+		<label for="wpseopilot-404-sort">
+			<?php esc_html_e( 'Sort by', 'wp-seo-pilot' ); ?>
+			<select id="wpseopilot-404-sort" name="sort">
+				<option value="recent" <?php selected( $sort, 'recent' ); ?>><?php esc_html_e( 'Most recent (Date & Time)', 'wp-seo-pilot' ); ?></option>
+				<option value="top" <?php selected( $sort, 'top' ); ?>><?php esc_html_e( 'Top hits', 'wp-seo-pilot' ); ?></option>
+			</select>
+		</label>
+		<label for="wpseopilot-404-per-page" style="margin-left:1em;">
+			<?php esc_html_e( 'Rows per page', 'wp-seo-pilot' ); ?>
+			<select id="wpseopilot-404-per-page" name="per_page">
+				<?php foreach ( [ 25, 50, 100, 200 ] as $option ) : ?>
+					<option value="<?php echo esc_attr( $option ); ?>" <?php selected( $per_page, $option ); ?>><?php echo esc_html( $option ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+		<button type="submit" class="button button-secondary" style="margin-left:1em;">
+			<?php esc_html_e( 'Apply', 'wp-seo-pilot' ); ?>
+		</button>
+	</form>
+
+	<p>
+		<?php
+		printf(
+			/* translators: 1: total log entries, 2: current page, 3: total pages */
+			esc_html__( '%1$s entries logged. Page %2$s of %3$s.', 'wp-seo-pilot' ),
+			number_format_i18n( $total_count ),
+			number_format_i18n( $page ),
+			number_format_i18n( $total_pages )
+		);
+		?>
+	</p>
+
+		<table class="wp-list-table widefat striped">
+			<thead>
+				<tr>
+					<th><?php esc_html_e( 'Target URL', 'wp-seo-pilot' ); ?></th>
+					<th><?php esc_html_e( 'Hits', 'wp-seo-pilot' ); ?></th>
+					<th><?php esc_html_e( 'Date & Time', 'wp-seo-pilot' ); ?></th>
+					<th><?php esc_html_e( 'User Device', 'wp-seo-pilot' ); ?></th>
+					<th><?php esc_html_e( 'Quick action', 'wp-seo-pilot' ); ?></th>
+				</tr>
+			</thead>
 		<tbody>
 			<?php if ( $rows ) : ?>
 				<?php foreach ( $rows as $row ) : ?>
 					<tr>
 						<td><?php echo esc_html( $row->request_uri ); ?></td>
 						<td><?php echo esc_html( $row->hits ); ?></td>
-						<td><?php echo esc_html( $row->last_seen ); ?></td>
-						<td><code><?php echo esc_html( substr( $row->referrer_hash, 0, 12 ) ); ?></code></td>
+						<td><?php echo esc_html( mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $row->last_seen ) ); ?></td>
+						<td><?php echo esc_html( $row->device_label ?: __( 'Unknown device', 'wp-seo-pilot' ) ); ?></td>
 						<td>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpseopilot-redirects&prefill=' . rawurlencode( $row->request_uri ) ) ); ?>" class="button button-small"><?php esc_html_e( 'Create redirect', 'wp-seo-pilot' ); ?></a>
 						</td>
@@ -37,9 +74,52 @@
 				<?php endforeach; ?>
 			<?php else : ?>
 				<tr>
-					<td colspan="4"><?php esc_html_e( 'No 404s logged yet.', 'wp-seo-pilot' ); ?></td>
+					<td colspan="5"><?php esc_html_e( 'No 404s logged yet.', 'wp-seo-pilot' ); ?></td>
 				</tr>
 			<?php endif; ?>
 		</tbody>
 	</table>
+
+	<?php if ( $total_pages > 1 ) : ?>
+		<?php
+		$prev_link = ( $page > 1 ) ? add_query_arg(
+			[
+				'sort'     => $sort,
+				'per_page' => $per_page,
+				'paged'    => $page - 1,
+			],
+			$base_url
+		) : '';
+		$next_link = ( $page < $total_pages ) ? add_query_arg(
+			[
+				'sort'     => $sort,
+				'per_page' => $per_page,
+				'paged'    => $page + 1,
+			],
+			$base_url
+		) : '';
+		?>
+		<div class="tablenav-pages" style="margin-top:1em;">
+			<span class="displaying-num"><?php echo esc_html( sprintf( _n( '%s item', '%s items', $total_count, 'wp-seo-pilot' ), number_format_i18n( $total_count ) ) ); ?></span>
+			<span class="pagination-links">
+				<?php if ( $prev_link ) : ?>
+					<a class="prev-page" href="<?php echo esc_url( $prev_link ); ?>">&lsaquo; <?php esc_html_e( 'Previous', 'wp-seo-pilot' ); ?></a>
+				<?php else : ?>
+					<span class="tablenav-pages-navspan">&lsaquo; <?php esc_html_e( 'Previous', 'wp-seo-pilot' ); ?></span>
+				<?php endif; ?>
+
+				<span class="paging-input">
+					<?php echo esc_html( number_format_i18n( $page ) ); ?>
+					<?php esc_html_e( 'of', 'wp-seo-pilot' ); ?>
+					<span class="total-pages"><?php echo esc_html( number_format_i18n( $total_pages ) ); ?></span>
+				</span>
+
+				<?php if ( $next_link ) : ?>
+					<a class="next-page" href="<?php echo esc_url( $next_link ); ?>"><?php esc_html_e( 'Next', 'wp-seo-pilot' ); ?> &rsaquo;</a>
+				<?php else : ?>
+					<span class="tablenav-pages-navspan"><?php esc_html_e( 'Next', 'wp-seo-pilot' ); ?> &rsaquo;</span>
+				<?php endif; ?>
+			</span>
+		</div>
+	<?php endif; ?>
 </div>

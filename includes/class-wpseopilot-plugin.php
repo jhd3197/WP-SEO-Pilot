@@ -124,6 +124,8 @@ class Plugin {
 		add_option( 'wpseopilot_default_og_image', '' );
 		add_option( 'wpseopilot_show_tour', '1' );
 		add_option( 'wpseopilot_enable_sitemap_enhancer', '1' );
+		add_option( 'wpseopilot_enable_redirect_manager', '1' );
+		add_option( 'wpseopilot_enable_404_logging', '1' );
 
 		if ( '1' === get_option( 'wpseopilot_enable_sitemap_enhancer', '1' ) ) {
 			( new Service\Sitemap_Enhancer() )->register_custom_sitemap();
