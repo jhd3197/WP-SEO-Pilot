@@ -29,6 +29,7 @@ class Frontend {
 			return;
 		}
 
+		add_filter( 'pre_get_document_title', [ $this, 'filter_document_title' ], 10, 1 );
 		add_action( 'wp_head', [ $this, 'render_head_tags' ], 1 );
 		add_action( 'wp_head', [ $this, 'render_social_tags' ], 5 );
 		add_action( 'wp_head', [ $this, 'render_json_ld' ], 20 );
@@ -56,18 +57,7 @@ class Frontend {
 		$homepage_description   = $is_home_view ? get_option( 'wpseopilot_homepage_description', '' ) : '';
 		$homepage_keywords      = $is_home_view ? trim( (string) get_option( 'wpseopilot_homepage_keywords', '' ) ) : '';
 
-		$title = $meta['title'];
-		if ( empty( $title ) && $is_home_view && ! empty( $homepage_title ) ) {
-			$title = $homepage_title;
-		}
-		if ( empty( $title ) && $post instanceof WP_Post ) {
-			$title = generate_title_from_template( $post );
-		}
-		if ( empty( $title ) ) {
-			$title = get_bloginfo( 'name' );
-		}
-
-		$title = apply_filters( 'wpseopilot_title', $title, $post );
+		$title = $this->resolve_title( $post, $meta, $is_home_view, $homepage_title );
 
 		$description = $meta['description'] ?? '';
 		if ( empty( $description ) && $is_home_view && ! empty( $homepage_description ) ) {
@@ -116,7 +106,9 @@ class Frontend {
 		}
 		$keywords = apply_filters( 'wpseopilot_keywords', $keywords, $post );
 
-		echo '<title>' . esc_html( $title ) . "</title>\n";
+		if ( ! current_theme_supports( 'title-tag' ) ) {
+			echo '<title>' . esc_html( $title ) . "</title>\n";
+		}
 
 		if ( ! empty( $description ) ) {
 			printf( "<meta name=\"description\" content=\"%s\" />\n", esc_attr( $description ) );
@@ -229,17 +221,45 @@ class Frontend {
 			'twitter:image'  => $image,
 		];
 
-		foreach ( $tags as $property => $value ) {
+		$tags = apply_filters( 'wpseopilot_social_tags', $tags, $post, $meta, $social_defaults );
+		$tags = $this->normalize_social_tags( $tags );
+		$tags = $this->dedupe_social_tags( $tags );
+
+		foreach ( $tags as $tag ) {
+			$property = $tag['property'];
+			$value    = $tag['content'];
+
 			if ( empty( $value ) ) {
 				continue;
 			}
 
-			if ( 0 === strpos( $property, 'og:' ) ) {
-				printf( "<meta property=\"%s\" content=\"%s\" />\n", esc_attr( $property ), esc_attr( $value ) );
-			} else {
-				printf( "<meta name=\"%s\" content=\"%s\" />\n", esc_attr( $property ), esc_attr( $value ) );
-			}
+			printf(
+				"<meta %s=\"%s\" content=\"%s\" />\n",
+				esc_attr( $tag['attr'] ),
+				esc_attr( $property ),
+				esc_attr( $value )
+			);
 		}
+	}
+
+	/**
+	 * Filter the document title when WordPress renders <title>.
+	 *
+	 * @param string $title Current title.
+	 *
+	 * @return string
+	 */
+	public function filter_document_title( $title ) {
+		if ( ! is_singular() && ! is_home() && ! is_archive() ) {
+			return $title;
+		}
+
+		$post = $this->get_context_post();
+		$meta = $this->get_meta( $post );
+		$is_home_view   = is_front_page() || is_home();
+		$homepage_title = $is_home_view ? get_option( 'wpseopilot_homepage_title', '' ) : '';
+
+		return $this->resolve_title( $post, $meta, $is_home_view, $homepage_title );
 	}
 
 	/**
@@ -478,6 +498,153 @@ class Frontend {
 		}
 
 		return $global;
+	}
+
+	/**
+	 * Resolve a sanitized title string.
+	 *
+	 * @param WP_Post|null $post Post.
+	 * @param array        $meta Meta.
+	 * @param bool         $is_home_view Is home/front view.
+	 * @param string       $homepage_title Homepage title override.
+	 *
+	 * @return string
+	 */
+	private function resolve_title( $post, $meta, $is_home_view, $homepage_title ) {
+		$title = $meta['title'];
+		if ( empty( $title ) && $is_home_view && ! empty( $homepage_title ) ) {
+			$title = $homepage_title;
+		}
+		if ( empty( $title ) && $post instanceof WP_Post ) {
+			$title = generate_title_from_template( $post );
+		}
+		if ( empty( $title ) ) {
+			$title = get_bloginfo( 'name' );
+		}
+
+		return apply_filters( 'wpseopilot_title', $title, $post );
+	}
+
+	/**
+	 * Normalize social meta tags into a consistent list.
+	 *
+	 * @param mixed $tags Raw tags array.
+	 *
+	 * @return array<int,array{attr:string,property:string,content:string}>
+	 */
+	private function normalize_social_tags( $tags ) {
+		if ( ! is_array( $tags ) ) {
+			return [];
+		}
+
+		$normalized = [];
+
+		foreach ( $tags as $key => $value ) {
+			if ( is_int( $key ) && is_array( $value ) ) {
+				$property = isset( $value['property'] ) ? (string) $value['property'] : '';
+				$name     = isset( $value['name'] ) ? (string) $value['name'] : '';
+				$content  = isset( $value['content'] ) ? (string) $value['content'] : '';
+
+				if ( '' === $content ) {
+					continue;
+				}
+
+				if ( '' !== $property ) {
+					$normalized[] = [
+						'attr'     => 'property',
+						'property' => $property,
+						'content'  => $content,
+					];
+				} elseif ( '' !== $name ) {
+					$normalized[] = [
+						'attr'     => 'name',
+						'property' => $name,
+						'content'  => $content,
+					];
+				}
+
+				continue;
+			}
+
+			if ( is_array( $value ) ) {
+				foreach ( $value as $entry ) {
+					if ( '' === $entry || null === $entry ) {
+						continue;
+					}
+
+					$normalized[] = $this->format_social_tag( (string) $key, (string) $entry );
+				}
+				continue;
+			}
+
+			if ( '' === $value || null === $value ) {
+				continue;
+			}
+
+			$normalized[] = $this->format_social_tag( (string) $key, (string) $value );
+		}
+
+		return $normalized;
+	}
+
+	/**
+	 * Remove duplicates for single-value social tags.
+	 *
+	 * @param array<int,array{attr:string,property:string,content:string}> $tags Tags.
+	 *
+	 * @return array<int,array{attr:string,property:string,content:string}>
+	 */
+	private function dedupe_social_tags( $tags ) {
+		$multi = [
+			'og:image',
+			'og:image:alt',
+			'og:video',
+			'og:video:secure_url',
+			'og:audio',
+			'twitter:image',
+		];
+
+		$multi = apply_filters( 'wpseopilot_social_multi_tags', $multi );
+		$multi = array_map( 'strtolower', array_filter( array_map( 'strval', (array) $multi ) ) );
+
+		$deduped = [];
+		$index_by_key = [];
+
+		foreach ( $tags as $tag ) {
+			$key = strtolower( $tag['property'] );
+			if ( in_array( $key, $multi, true ) ) {
+				$deduped[] = $tag;
+				continue;
+			}
+
+			if ( isset( $index_by_key[ $key ] ) ) {
+				$deduped[ $index_by_key[ $key ] ] = $tag;
+				continue;
+			}
+
+			$index_by_key[ $key ] = count( $deduped );
+			$deduped[] = $tag;
+		}
+
+		return $deduped;
+	}
+
+	/**
+	 * Resolve the attribute + property for a social tag.
+	 *
+	 * @param string $property Tag key.
+	 * @param string $content Tag value.
+	 *
+	 * @return array{attr:string,property:string,content:string}
+	 */
+	private function format_social_tag( $property, $content ) {
+		$attr = 0 === strpos( $property, 'og:' ) ? 'property' : 'name';
+
+		return [
+			'attr'     => $attr,
+			'property' => $property,
+			'content'  => $content,
+		];
 	}
 
 	/**

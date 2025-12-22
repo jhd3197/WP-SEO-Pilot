@@ -24,6 +24,8 @@ WP SEO Pilot is an all-in-one SEO workflow plugin focused on fast editorial UX a
 
 - `wpseopilot_title`, `wpseopilot_description`, `wpseopilot_canonical` allow programmatic overrides.
 - `wpseopilot_og_title`, `wpseopilot_og_description`, `wpseopilot_og_image` let you override Open Graph output per post.
+- `wpseopilot_social_tags` filters the full Open Graph + Twitter tag map (supports duplicate tags).
+- `wpseopilot_social_multi_tags` controls which social tags may appear multiple times (defaults include `og:image`, `og:video`, `twitter:image`).
 - `wpseopilot_keywords` filters the meta keywords tag derived from post-type defaults.
 - `wpseopilot_jsonld` filters the Structured Data graph before output.
 - `wpseopilot_feature_toggle` receives feature keys (`frontend_head`, `metabox`, `redirects`, `sitemaps`) for compatibility fallbacks.
@@ -38,6 +40,26 @@ WP SEO Pilot is an all-in-one SEO workflow plugin focused on fast editorial UX a
 - `wpseopilot_sitemap_index_items` filters the compiled sitemap index entries before rendering.
 - `wpseopilot_sitemap_stylesheet` swaps the pretty XSL front-end for `/sitemap_index.xml` and individual sitemaps.
 - `wpseopilot_sitemap_redirect` overrides the destination when requests hit WordPress core's `/wp-sitemap*.xml`.
+
+Add or duplicate social meta tags with `wpseopilot_social_tags`:
+
+```php
+add_filter( 'wpseopilot_social_tags', function ( $tags ) {
+	$tags['og:image'] = array_filter(
+		[
+			$tags['og:image'] ?? '',
+			'https://cdn.example.com/secondary.jpg',
+		]
+	);
+
+	$tags[] = [
+		'property' => 'og:image:alt',
+		'content'  => 'Secondary image alt text',
+	];
+
+	return $tags;
+}, 10, 1 );
+```
 
 ### WP-CLI
 
