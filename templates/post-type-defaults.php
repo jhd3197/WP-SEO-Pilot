@@ -26,7 +26,7 @@ call_user_func(
 		];
 		?>
 <div class="wrap wpseopilot-settings">
-	<h1><?php esc_html_e( 'WP SEO Pilot — Search Appearance', 'wp-seo-pilot' ); ?></h1>
+	<h1><?php esc_html_e( 'Search Appearance', 'wp-seo-pilot' ); ?></h1>
 	<p class="description">
 		<?php esc_html_e( 'Control how your post types, taxonomies, and archives appear in search. These values act as defaults whenever editors leave fields blank.', 'wp-seo-pilot' ); ?>
 	</p>
@@ -51,6 +51,7 @@ call_user_func(
 								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
 							</button>
 						</div>
+						<div class="wpseopilot-preview"></div>
 					</td>
 				</tr>
 				<tr>
@@ -66,6 +67,7 @@ call_user_func(
 								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
 							</button>
 						</div>
+						<div class="wpseopilot-preview"></div>
 					</td>
 				</tr>
 				<tr>
@@ -143,6 +145,7 @@ call_user_func(
 							</button>
 						</div>
 						<input type="text" class="regular-text" id="wpseopilot_template_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_title_templates[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $template ); ?>" data-context="<?php echo esc_attr($context_key); ?>" />
+						<div class="wpseopilot-preview" style="margin-top: 5px; color: #646970; font-style: italic;"></div>
 						
 						<div class="wpseopilot-flex-label">
 							<label for="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>">
@@ -153,6 +156,7 @@ call_user_func(
 							</button>
 						</div>
 						<textarea class="large-text" rows="3" id="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_meta_descriptions[<?php echo esc_attr( $slug ); ?>]" data-context="<?php echo esc_attr($context_key); ?>"><?php echo esc_textarea( $description ); ?></textarea>
+						<div class="wpseopilot-preview" style="margin-top: 5px; color: #646970; font-style: italic;"></div>
 
 						<div class="wpseopilot-flex-label">
 							<label for="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>">
@@ -251,6 +255,7 @@ call_user_func(
 							</button>
 						</div>
 						<input type="text" class="regular-text" id="wpseopilot_tax_title_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_taxonomy_settings[<?php echo esc_attr( $slug ); ?>][title]" value="<?php echo esc_attr( $settings['title'] ); ?>" data-context="<?php echo esc_attr($context_key); ?>" />
+						<div class="wpseopilot-preview" style="margin-top: 5px; color: #646970; font-style: italic;"></div>
 
 						<div class="wpseopilot-flex-label">
 							<label for="wpseopilot_tax_desc_<?php echo esc_attr( $slug ); ?>">
@@ -261,6 +266,7 @@ call_user_func(
 							</button>
 						</div>
 						<textarea class="large-text" rows="3" id="wpseopilot_tax_desc_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_taxonomy_settings[<?php echo esc_attr( $slug ); ?>][description]" data-context="<?php echo esc_attr($context_key); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
+						<div class="wpseopilot-preview" style="margin-top: 5px; color: #646970; font-style: italic;"></div>
 					</div>
 				</details>
 			<?php endforeach; ?>
@@ -309,6 +315,7 @@ call_user_func(
 							</button>
 						</div>
 						<input type="text" class="regular-text" id="wpseopilot_archive_title_<?php echo esc_attr( $key ); ?>" name="wpseopilot_archive_settings[<?php echo esc_attr( $key ); ?>][title]" value="<?php echo esc_attr( $settings['title'] ); ?>" data-context="<?php echo esc_attr($context_key); ?>" />
+						<div class="wpseopilot-preview" style="margin-top: 5px; color: #646970; font-style: italic;"></div>
 
 						<div class="wpseopilot-flex-label">
 							<label for="wpseopilot_archive_desc_<?php echo esc_attr( $key ); ?>">
@@ -319,6 +326,7 @@ call_user_func(
 							</button>
 						</div>
 						<textarea class="large-text" rows="3" id="wpseopilot_archive_desc_<?php echo esc_attr( $key ); ?>" name="wpseopilot_archive_settings[<?php echo esc_attr( $key ); ?>][description]" data-context="<?php echo esc_attr($context_key); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
+						<div class="wpseopilot-preview" style="margin-top: 5px; color: #646970; font-style: italic;"></div>
 					</div>
 				</details>
 			<?php endforeach; ?>

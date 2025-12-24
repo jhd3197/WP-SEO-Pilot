@@ -89,7 +89,7 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 };
 ?>
 <div class="wrap wpseopilot-settings">
-	<h1><?php esc_html_e( 'WP SEO Pilot — SEO Defaults', 'wp-seo-pilot' ); ?></h1>
+	<h1><?php esc_html_e( 'SEO Defaults', 'wp-seo-pilot' ); ?></h1>
 
 	<div class="wpseopilot-tabs" data-component="wpseopilot-tabs">
 		<div class="nav-tab-wrapper wpseopilot-tabs__nav" role="tablist" aria-label="<?php esc_attr_e( 'Site default sections', 'wp-seo-pilot' ); ?>">

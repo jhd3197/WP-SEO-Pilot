@@ -15,7 +15,7 @@
 ?>
 <div class="wrap wpseopilot-settings wpseopilot-ai">
 	<div class="wpseopilot-ai__hero">
-		<h1><?php esc_html_e( 'WP SEO Pilot — AI Assistant', 'wp-seo-pilot' ); ?></h1>
+		<h1><?php esc_html_e( 'AI Assistant', 'wp-seo-pilot' ); ?></h1>
 		<p class="description"><?php esc_html_e( 'Speed up titles, descriptions, and on-page polish with customizable AI guidance.', 'wp-seo-pilot' ); ?></p>
 	</div>
 

@@ -102,6 +102,36 @@
         const variableSettings = settings.variables || {};
         const globalVars = variableSettings.global || [];
 
+        // Debounce utility
+        const debounce = (func, wait) => {
+            let timeout;
+            return function (...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        };
+
+        // Fetch Preview
+        const fetchPreview = (template, context, $previewContainer) => {
+            if (!$previewContainer.length) return;
+
+            // $previewContainer.text('Updating...'); // Optional: visual feedback immediately? Maybe too jittery.
+
+            $.post(settings.ai.ajax, {
+                action: 'wpseopilot_render_preview',
+                nonce: settings.ai.nonce,
+                template: template,
+                context: context
+            }).done(function (response) {
+                if (response.success) {
+                    $previewContainer.text(response.data.preview || '(Empty)');
+                } else {
+                    $previewContainer.text('Preview Error');
+                }
+            });
+        };
+
         const getVarsForInput = ($input) => {
             const context = $input.data('context');
             let vars = {};
@@ -307,6 +337,12 @@
 
             $editor.on('input', function () {
                 syncToInput();
+
+                // Trigger Preview
+                const $previewContainer = $input.nextAll('.wpseopilot-preview').add($input.parent().nextAll('.wpseopilot-preview')).first();
+                if ($previewContainer.length) {
+                    debouncedPreview($input.val(), $input.data('context'), $previewContainer);
+                }
 
                 const sel = window.getSelection();
                 if (!sel.rangeCount) return;
