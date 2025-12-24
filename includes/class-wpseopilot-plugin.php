@@ -111,7 +111,7 @@ class Plugin {
 		( new Service\Request_Monitor() )->create_tables();
 		Service\Internal_Linking::activate();
 
-		add_option( 'wpseopilot_default_title_template', '%post_title% | %site_title%' );
+		add_option( 'wpseopilot_default_title_template', '{{post_title}} | {{site_title}}' );
 		add_option( 'wpseopilot_post_type_title_templates', [] );
 		add_option( 'wpseopilot_post_type_meta_descriptions', [] );
 		add_option( 'wpseopilot_post_type_keywords', [] );

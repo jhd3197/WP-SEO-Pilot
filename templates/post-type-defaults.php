@@ -32,7 +32,7 @@ call_user_func(
 	</p>
 
 	<form action="options.php" method="post" class="wpseopilot-search-defaults">
-		<?php settings_fields( 'wpseopilot_homepage' ); ?>
+		<?php settings_fields( 'wpseopilot_search_appearance' ); ?>
 
 		<section class="wpseopilot-card">
 			<h2><?php esc_html_e( 'Homepage Defaults', 'wp-seo-pilot' ); ?></h2>
@@ -40,18 +40,32 @@ call_user_func(
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
-						<label for="wpseopilot_homepage_title"><?php esc_html_e( 'SEO title', 'wp-seo-pilot' ); ?></label>
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_homepage_title"><?php esc_html_e( 'SEO title', 'wp-seo-pilot' ); ?></label>
+						</div>
 					</th>
 					<td>
-						<input type="text" class="regular-text" id="wpseopilot_homepage_title" name="wpseopilot_homepage_title" value="<?php echo esc_attr( get_option( 'wpseopilot_homepage_title' ) ); ?>" />
+						<div class="wpseopilot-flex-input">
+							<input type="text" class="regular-text" id="wpseopilot_homepage_title" name="wpseopilot_homepage_title" value="<?php echo esc_attr( get_option( 'wpseopilot_homepage_title' ) ); ?>" data-context="global" />
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_homepage_title">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="wpseopilot_homepage_description"><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></label>
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_homepage_description"><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></label>
+						</div>
 					</th>
 					<td>
-						<textarea class="large-text" rows="3" id="wpseopilot_homepage_description" name="wpseopilot_homepage_description"><?php echo esc_textarea( get_option( 'wpseopilot_homepage_description' ) ); ?></textarea>
+						<div class="wpseopilot-flex-input">
+							<textarea class="large-text" rows="3" id="wpseopilot_homepage_description" name="wpseopilot_homepage_description" data-context="global"><?php echo esc_textarea( get_option( 'wpseopilot_homepage_description' ) ); ?></textarea>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_homepage_description">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -66,14 +80,10 @@ call_user_func(
 			</table>
 		</section>
 
-		<?php submit_button( __( 'Save SEO defaults', 'wp-seo-pilot' ) ); ?>
-	</form>
-
-	<section class="wpseopilot-card">
-		<h2><?php esc_html_e( 'Content Types', 'wp-seo-pilot' ); ?></h2>
-		<p><?php esc_html_e( 'Decide whether each post type should appear in search, expose SEO controls to editors, and define fallback metadata.', 'wp-seo-pilot' ); ?></p>
-		<form action="options.php" method="post">
-			<?php settings_fields( 'wpseopilot_post_types' ); ?>
+		<section class="wpseopilot-card">
+			<h2><?php esc_html_e( 'Content Types', 'wp-seo-pilot' ); ?></h2>
+			<p><?php esc_html_e( 'Decide whether each post type should appear in search, expose SEO controls to editors, and define fallback metadata.', 'wp-seo-pilot' ); ?></p>
+			
 			<?php foreach ( $post_types as $slug => $object ) : ?>
 				<?php
 				$label = $object->labels->name ?: $object->label ?: ucfirst( $slug );
@@ -90,6 +100,8 @@ call_user_func(
 						'analysis_fields' => '',
 					]
 				);
+				// Determine context
+				$context_key = 'post_type:' . $slug;
 				?>
 				<details class="wpseopilot-accordion">
 					<summary>
@@ -130,7 +142,7 @@ call_user_func(
 								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
 							</button>
 						</div>
-						<input type="text" class="regular-text" id="wpseopilot_template_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_title_templates[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $template ); ?>" />
+						<input type="text" class="regular-text" id="wpseopilot_template_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_title_templates[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $template ); ?>" data-context="<?php echo esc_attr($context_key); ?>" />
 						
 						<div class="wpseopilot-flex-label">
 							<label for="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>">
@@ -140,15 +152,12 @@ call_user_func(
 								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
 							</button>
 						</div>
-						<textarea class="large-text" rows="3" id="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_meta_descriptions[<?php echo esc_attr( $slug ); ?>]"><?php echo esc_textarea( $description ); ?></textarea>
+						<textarea class="large-text" rows="3" id="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_meta_descriptions[<?php echo esc_attr( $slug ); ?>]" data-context="<?php echo esc_attr($context_key); ?>"><?php echo esc_textarea( $description ); ?></textarea>
 
 						<div class="wpseopilot-flex-label">
 							<label for="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>">
 								<strong><?php esc_html_e( 'Default keywords (optional)', 'wp-seo-pilot' ); ?></strong>
 							</label>
-							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>">
-								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
-							</button>
 						</div>
 						<input type="text" class="regular-text" id="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_keywords[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $keywords ); ?>" />
 
@@ -182,16 +191,12 @@ call_user_func(
 					</div>
 				</details>
 			<?php endforeach; ?>
+		</section>
 
-			<?php submit_button( __( 'Save post type defaults', 'wp-seo-pilot' ) ); ?>
-		</form>
-	</section>
-
-	<section class="wpseopilot-card">
-		<h2><?php esc_html_e( 'Taxonomies', 'wp-seo-pilot' ); ?></h2>
-		<p><?php esc_html_e( 'Configure how category, tag, and custom taxonomy archives behave in search results.', 'wp-seo-pilot' ); ?></p>
-		<form action="options.php" method="post">
-			<?php settings_fields( 'wpseopilot_taxonomies' ); ?>
+		<section class="wpseopilot-card">
+			<h2><?php esc_html_e( 'Taxonomies', 'wp-seo-pilot' ); ?></h2>
+			<p><?php esc_html_e( 'Configure how category, tag, and custom taxonomy archives behave in search results.', 'wp-seo-pilot' ); ?></p>
+			
 			<?php foreach ( $taxonomies as $slug => $taxonomy ) : ?>
 				<?php
 				$label = $taxonomy->labels->name ?: $taxonomy->label ?: ucfirst( $slug );
@@ -204,6 +209,7 @@ call_user_func(
 						'description' => '',
 					]
 				);
+				$context_key = 'taxonomy';
 				?>
 				<details class="wpseopilot-accordion">
 					<summary>
@@ -235,28 +241,35 @@ call_user_func(
 								</label>
 							</label>
 						</div>
-						<label for="wpseopilot_tax_title_<?php echo esc_attr( $slug ); ?>">
-							<strong><?php esc_html_e( 'SEO title', 'wp-seo-pilot' ); ?></strong>
-						</label>
-						<input type="text" class="regular-text" id="wpseopilot_tax_title_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_taxonomy_settings[<?php echo esc_attr( $slug ); ?>][title]" value="<?php echo esc_attr( $settings['title'] ); ?>" />
 
-						<label for="wpseopilot_tax_desc_<?php echo esc_attr( $slug ); ?>">
-							<strong><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></strong>
-						</label>
-						<textarea class="large-text" rows="3" id="wpseopilot_tax_desc_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_taxonomy_settings[<?php echo esc_attr( $slug ); ?>][description]"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_tax_title_<?php echo esc_attr( $slug ); ?>">
+								<strong><?php esc_html_e( 'SEO title', 'wp-seo-pilot' ); ?></strong>
+							</label>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_tax_title_<?php echo esc_attr( $slug ); ?>">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
+						<input type="text" class="regular-text" id="wpseopilot_tax_title_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_taxonomy_settings[<?php echo esc_attr( $slug ); ?>][title]" value="<?php echo esc_attr( $settings['title'] ); ?>" data-context="<?php echo esc_attr($context_key); ?>" />
+
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_tax_desc_<?php echo esc_attr( $slug ); ?>">
+								<strong><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></strong>
+							</label>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_tax_desc_<?php echo esc_attr( $slug ); ?>">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
+						<textarea class="large-text" rows="3" id="wpseopilot_tax_desc_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_taxonomy_settings[<?php echo esc_attr( $slug ); ?>][description]" data-context="<?php echo esc_attr($context_key); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
 					</div>
 				</details>
 			<?php endforeach; ?>
+		</section>
 
-			<?php submit_button( __( 'Save taxonomy settings', 'wp-seo-pilot' ) ); ?>
-		</form>
-	</section>
-
-	<section class="wpseopilot-card">
-		<h2><?php esc_html_e( 'Archives & Special Templates', 'wp-seo-pilot' ); ?></h2>
-		<p><?php esc_html_e( 'Control author archives, date archives, and built-in search pages.', 'wp-seo-pilot' ); ?></p>
-		<form action="options.php" method="post">
-			<?php settings_fields( 'wpseopilot_archives' ); ?>
+		<section class="wpseopilot-card">
+			<h2><?php esc_html_e( 'Archives & Special Templates', 'wp-seo-pilot' ); ?></h2>
+			<p><?php esc_html_e( 'Control author archives, date archives, and built-in search pages.', 'wp-seo-pilot' ); ?></p>
+			
 			<?php foreach ( $archive_items as $key => $label ) : ?>
 				<?php
 				$settings = wp_parse_args(
@@ -267,6 +280,7 @@ call_user_func(
 						'description' => '',
 					]
 				);
+				$context_key = ($key === 'author') ? 'author' : 'archive'; 
 				?>
 				<details class="wpseopilot-accordion">
 					<summary>
@@ -285,22 +299,33 @@ call_user_func(
 								<span><?php esc_html_e( 'No', 'wp-seo-pilot' ); ?></span>
 							</label>
 						</label>
-						<label for="wpseopilot_archive_title_<?php echo esc_attr( $key ); ?>">
-							<strong><?php esc_html_e( 'SEO title', 'wp-seo-pilot' ); ?></strong>
-						</label>
-						<input type="text" class="regular-text" id="wpseopilot_archive_title_<?php echo esc_attr( $key ); ?>" name="wpseopilot_archive_settings[<?php echo esc_attr( $key ); ?>][title]" value="<?php echo esc_attr( $settings['title'] ); ?>" />
 
-						<label for="wpseopilot_archive_desc_<?php echo esc_attr( $key ); ?>">
-							<strong><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></strong>
-						</label>
-						<textarea class="large-text" rows="3" id="wpseopilot_archive_desc_<?php echo esc_attr( $key ); ?>" name="wpseopilot_archive_settings[<?php echo esc_attr( $key ); ?>][description]"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_archive_title_<?php echo esc_attr( $key ); ?>">
+								<strong><?php esc_html_e( 'SEO title', 'wp-seo-pilot' ); ?></strong>
+							</label>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_archive_title_<?php echo esc_attr( $key ); ?>">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
+						<input type="text" class="regular-text" id="wpseopilot_archive_title_<?php echo esc_attr( $key ); ?>" name="wpseopilot_archive_settings[<?php echo esc_attr( $key ); ?>][title]" value="<?php echo esc_attr( $settings['title'] ); ?>" data-context="<?php echo esc_attr($context_key); ?>" />
+
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_archive_desc_<?php echo esc_attr( $key ); ?>">
+								<strong><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></strong>
+							</label>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_archive_desc_<?php echo esc_attr( $key ); ?>">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
+						<textarea class="large-text" rows="3" id="wpseopilot_archive_desc_<?php echo esc_attr( $key ); ?>" name="wpseopilot_archive_settings[<?php echo esc_attr( $key ); ?>][description]" data-context="<?php echo esc_attr($context_key); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
 					</div>
 				</details>
 			<?php endforeach; ?>
+		</section>
 
-			<?php submit_button( __( 'Save archive settings', 'wp-seo-pilot' ) ); ?>
-		</form>
-	</section>
+		<?php submit_button( __( 'Save Changes', 'wp-seo-pilot' ) ); ?>
+	</form>
 </div>
 <?php
 	},

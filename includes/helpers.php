@@ -68,6 +68,80 @@ namespace WPSEOPilot\Helpers {
 	}
 
 	/**
+	 * Replace template variables with context data.
+	 *
+	 * @param string $template Template string.
+	 * @param mixed  $context  Context (Post, Term, or null).
+	 *
+	 * @return string
+	 */
+	function replace_template_variables( $template, $context = null ) {
+		if ( empty( $template ) ) {
+			return '';
+		}
+
+		// Generic Global Replacements
+		$replacements = [
+			'{{site_title}}'    => \get_bloginfo( 'name' ),
+			'{{tagline}}'       => \get_bloginfo( 'description' ),
+			'{{separator}}'     => '-',
+			'{{current_year}}'  => date_i18n( 'Y' ),
+			'{{current_month}}' => date_i18n( 'F' ),
+			'{{current_day}}'   => date_i18n( 'j' ),
+		];
+
+		// Context Specific
+		if ( $context instanceof WP_Post ) {
+			$replacements['{{post_title}}']   = \wp_strip_all_tags( $context->post_title );
+			$replacements['{{post_excerpt}}'] = \wp_strip_all_tags( \get_the_excerpt( $context ) );
+			$replacements['{{post_date}}']    = get_the_date( '', $context );
+			$replacements['{{post_author}}']  = get_the_author_meta( 'display_name', $context->post_author );
+			$replacements['{{modified}}']     = get_the_modified_date( '', $context );
+			$replacements['{{id}}']           = $context->ID;
+			
+			$cats = get_the_category( $context->ID );
+			$replacements['{{category}}'] = ( ! empty( $cats ) && ! is_wp_error( $cats ) ) ? $cats[0]->name : '';
+
+			// Custom Fields: {{cf_key_name}}
+			if ( preg_match_all( '/\{\{cf_([^\}]+)\}\}/', $template, $matches ) ) {
+				foreach ( $matches[1] as $meta_key ) {
+					$val = get_post_meta( $context->ID, $meta_key, true );
+					// If array (serialized), maybe implode or just take first? For now strict string.
+					if ( is_array( $val ) ) {
+						$val = implode( ', ', $val );
+					}
+					$replacements[ '{{cf_' . $meta_key . '}}' ] = $val;
+				}
+			}
+		} elseif ( is_category() || is_tag() || is_tax() ) {
+			// Tax context (can pass Term object or rely on global queried object if null)
+			$term = $context instanceof \WP_Term ? $context : get_queried_object();
+			if ( $term instanceof \WP_Term ) {
+				$replacements['{{term_title}}']       = $term->name;
+				$replacements['{{term_description}}'] = wp_strip_all_tags( term_description( $term->term_id ) );
+			}
+		} elseif ( is_post_type_archive() ) {
+			$replacements['{{archive_title}}'] = post_type_archive_title( '', false );
+		} elseif ( is_date() ) {
+			$replacements['{{archive_date}}']  = get_the_date();
+			$replacements['{{archive_title}}'] = get_the_archive_title();
+		} elseif ( is_author() ) {
+			$replacements['{{author_name}}'] = get_the_author();
+			$replacements['{{author_bio}}']  = get_the_author_meta( 'description' );
+		}
+
+		// Allow legacy %var% syntax just in case
+		foreach ( $replacements as $key => $value ) {
+			$legacy_key = str_replace( [ '{{', '}}' ], '%', $key );
+			if ( strpos( $template, $legacy_key ) !== false ) {
+				$replacements[ $legacy_key ] = $value;
+			}
+		}
+		
+		return strtr( $template, $replacements );
+	}
+
+	/**
 	 * Determine default title using template tags.
 	 *
 	 * @param WP_Post|int $post Post object or ID.
@@ -89,29 +163,10 @@ namespace WPSEOPilot\Helpers {
 		if ( ! empty( $post->post_type ) && ! empty( $post_type_templates[ $post->post_type ] ) ) {
 			$template = $post_type_templates[ $post->post_type ];
 		} else {
-			$template = get_option( 'wpseopilot_default_title_template', '%post_title% | %site_title%' );
+			$template = get_option( 'wpseopilot_default_title_template', '{{post_title}} | {{site_title}}' );
 		}
 
-		$replacements = [
-			'{{post_title}}'   => \wp_strip_all_tags( $post->post_title ),
-			'{{site_title}}'   => \get_bloginfo( 'name' ),
-			'{{tagline}}'      => \get_bloginfo( 'description' ),
-			'{{post_author}}'  => get_the_author_meta( 'display_name', $post->post_author ),
-			'{{separator}}'    => '-', // Could be made configurable later.
-			'{{date}}'         => get_the_date( '', $post ),
-			'{{current_year}}' => date_i18n( 'Y' ),
-			'{{current_month}}'=> date_i18n( 'F' ),
-			'{{current_day}}'  => date_i18n( 'j' ),
-			'{{modified}}'     => get_the_modified_date( '', $post ),
-			'{{category}}'     => '',
-		];
-
-		$cats = get_the_category( $post->ID );
-		if ( ! empty( $cats ) && ! is_wp_error( $cats ) ) {
-			$replacements['{{category}}'] = $cats[0]->name;
-		}
-
-		return strtr( $template, $replacements );
+		return replace_template_variables( $template, $post );
 	}
 
 	/**

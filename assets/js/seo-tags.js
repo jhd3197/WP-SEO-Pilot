@@ -3,24 +3,139 @@
  */
 (function ($, settings) {
     const initRichTags = () => {
+        // Inject styles for the menu
+        const injectStyles = () => {
+            if ($('#wpseopilot-menu-styles').length) return;
+            const style = `
+                .wpseopilot-autocomplete-menu {
+                    position: absolute;
+                    background: #fff;
+                    border: 1px solid #8c8f94;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+                    z-index: 100000;
+                    max-height: 300px;
+                    overflow-y: auto;
+                    border-radius: 4px;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+                }
+                .wpseopilot-autocomplete-header {
+                    padding: 8px 12px;
+                    background: #f0f0f1;
+                    font-weight: 700;
+                    color: #1d2327;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    border-bottom: 1px solid #c3c4c7;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                }
+                .wpseopilot-autocomplete-item {
+                    padding: 8px 12px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #f0f0f1;
+                    transition: none;
+                    color: #2c3338;
+                }
+                .wpseopilot-autocomplete-item:last-child {
+                    border-bottom: none;
+                }
+                /* Selected / Hover State - High Contrast Light Gray */
+                .wpseopilot-autocomplete-item:hover, .wpseopilot-autocomplete-item.is-selected {
+                    background: #f0f0f1;
+                    color: #1d2327;
+                    border-left: 4px solid #2271b1; /* Blue accent bar */
+                    padding-left: 8px; /* Offset for border */
+                }
+                .wpseopilot-autocomplete-item .item-content {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 4px;
+                }
+                .wpseopilot-autocomplete-item .item-tag {
+                    font-weight: 700;
+                    font-family: monospace;
+                    background: #dcdcde;
+                    padding: 2px 6px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                    color: #1d2327;
+                    border: 1px solid #c3c4c7;
+                }
+                /* Tag in selected state - distinct but readable */
+                .wpseopilot-autocomplete-item.is-selected .item-tag, .wpseopilot-autocomplete-item:hover .item-tag {
+                    background: #fff;
+                    border-color: #8c8f94;
+                    color: #1d2327;
+                }
+                .wpseopilot-autocomplete-item .item-preview {
+                    font-size: 11px;
+                    color: #50575e;
+                    max-width: 50%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    text-align: right;
+                }
+                .wpseopilot-autocomplete-item.is-selected .item-preview, .wpseopilot-autocomplete-item:hover .item-preview {
+                    color: #1d2327;
+                    font-weight: 500;
+                }
+                .wpseopilot-autocomplete-item .item-desc {
+                    font-size: 11px;
+                    color: #646970;
+                    margin-top: 2px;
+                }
+                .wpseopilot-autocomplete-item.is-selected .item-desc, .wpseopilot-autocomplete-item:hover .item-desc {
+                    color: #1d2327;
+                }
+            `;
+            $('<style id="wpseopilot-menu-styles">').text(style).appendTo('head');
+        };
+        injectStyles();
+
         console.log('WP SEO Pilot: Initializing Rich Tags...');
         const tagRegex = /\{\{\s*([^}]+)\s*\}\}/g; // Matches {{variable}} or {{ variable }}
 
-        const vars = [
-            'post_title',
-            'site_title',
-            'tagline',
-            'post_author',
-            'separator',
-            'date',
-            'current_year',
-            'current_month',
-            'current_day',
-            'modified',
-            'category',
-        ];
+        // Variables from server settings
+        const variableSettings = settings.variables || {};
+        const globalVars = variableSettings.global || [];
+
+        const getVarsForInput = ($input) => {
+            const context = $input.data('context');
+            let vars = {};
+
+            // Helper to add group if not strict
+            const addGroup = (key) => {
+                if (variableSettings[key] && !vars[key]) {
+                    vars[key] = variableSettings[key];
+                }
+            };
+
+            if (context) {
+                // 1. Try exact context match (e.g. "post_type:book")
+                addGroup(context);
+
+                // 2. Try generic fallback
+                let genericKey = 'global';
+                if (context.includes('post_type') || context === 'post') genericKey = 'post';
+                else if (context.includes('taxonomy')) genericKey = 'taxonomy';
+                else if (context.includes('archive')) genericKey = 'archive';
+
+                if (genericKey !== context) {
+                    addGroup(genericKey);
+                }
+            }
+
+            // 3. Always add global
+            addGroup('global');
+
+            return vars;
+        };
 
         let activeEditor = null;
+        let activeVars = []; // Current filtering list
         const $menu = $('<div class="wpseopilot-autocomplete-menu"></div>').appendTo('body');
         let selectedIndex = 0;
 
@@ -28,6 +143,7 @@
             $menu.removeClass('is-visible').empty();
             activeEditor = null;
             selectedIndex = 0;
+            activeVars = [];
         };
 
         const insertVar = (variable) => {
@@ -93,34 +209,56 @@
             $(editor).focus();
         };
 
-        const renderMenu = (matches) => {
+        const renderMenu = (groups) => {
             $menu.empty();
-            if (!matches.length) {
+            let hasItems = false;
+            let itemIndex = 0;
+
+            Object.keys(groups).forEach(groupKey => {
+                const group = groups[groupKey];
+                if (!group || !group.vars || !group.vars.length) return;
+
+                const $header = $('<div class="wpseopilot-autocomplete-header"></div>').text(group.label);
+                $menu.append($header);
+
+                group.vars.forEach(v => {
+                    hasItems = true;
+                    const $item = $('<div class="wpseopilot-autocomplete-item"></div>')
+                        .attr('data-value', v.tag)
+                        .attr('data-index', itemIndex);
+
+                    const $content = $('<div class="item-content"></div>');
+                    $content.append($('<span class="item-tag"></span>').text('{{' + v.tag + '}}'));
+                    if (v.preview) {
+                        $content.append($('<span class="item-preview"></span>').text(v.preview));
+                    }
+                    $item.append($content);
+
+                    if (v.desc) {
+                        $item.append($('<div class="item-desc"></div>').text(v.desc));
+                    }
+
+                    if (itemIndex === selectedIndex) {
+                        $item.addClass('is-selected');
+                    }
+
+                    $item.on('mousedown', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        insertVar(v.tag);
+                    });
+                    $menu.append($item);
+                    itemIndex++;
+                });
+            });
+
+            if (!hasItems) {
                 hideMenu();
                 return;
             }
 
-            matches.forEach((match, index) => {
-                const $item = $('<div class="wpseopilot-autocomplete-item"></div>')
-                    .text(match)
-                    .attr('data-value', match);
-
-                if (index === selectedIndex) {
-                    $item.addClass('is-selected');
-                }
-
-                $item.on('mousedown', (e) => {
-                    // Important: mousedown prevents the editor from losing focus before we can insert
-                    e.preventDefault();
-                    e.stopPropagation();
-                    insertVar(match);
-                });
-                $menu.append($item);
-            });
-
             if (activeEditor) {
                 const offset = $(activeEditor).offset();
-                console.log('WP SEO Pilot: Opening menu at', offset);
                 $menu.css({
                     top: offset.top + $(activeEditor).outerHeight(),
                     left: offset.left,
@@ -144,6 +282,10 @@
 
             $input.hide().after($container);
             $container.append($editor);
+
+            // Determine relevant variables
+            const allowedVars = getVarsForInput($input);
+            $editor.data('allowed-vars', allowedVars);
 
             // Expose editor for external triggers
             $input.data('editor', $editor);
@@ -171,6 +313,7 @@
                 const range = sel.getRangeAt(0);
                 const node = range.startContainer;
 
+                // Only trigger autocomplete if typing
                 if (node.nodeType === 3) {
                     const text = node.textContent;
                     const caret = range.startOffset;
@@ -181,7 +324,30 @@
                         const query = text.substring(lastOpen + 2, caret).trim();
                         if (!query.includes('}}')) {
                             activeEditor = $editor[0];
-                            const matches = vars.filter(v => v.startsWith(query));
+                            const currentAllowed = $editor.data('allowed-vars') || {};
+
+                            // Filter grouped results
+                            const matches = {};
+                            let hasMatch = false;
+
+                            Object.keys(currentAllowed).forEach(groupKey => {
+                                const group = currentAllowed[groupKey];
+                                const filteredVars = group.vars.filter(v => v.tag.includes(query) || v.label.toLowerCase().includes(query.toLowerCase()));
+
+                                if (filteredVars.length > 0) {
+                                    matches[groupKey] = {
+                                        label: group.label,
+                                        vars: filteredVars.sort((a, b) => {
+                                            // Prioritize exact match
+                                            if (a.tag === query) return -1;
+                                            if (b.tag === query) return 1;
+                                            return 0;
+                                        })
+                                    };
+                                    hasMatch = true;
+                                }
+                            });
+
                             selectedIndex = 0;
                             renderMenu(matches);
                             return;
@@ -193,7 +359,7 @@
 
             $editor.on('keydown', function (e) {
                 if ($menu.hasClass('is-visible')) {
-                    const items = $menu.children();
+                    const items = $menu.find('.wpseopilot-autocomplete-item');
                     if (e.key === 'ArrowDown') {
                         e.preventDefault();
                         selectedIndex = (selectedIndex + 1) % items.length;
@@ -243,6 +409,8 @@
                 $editor.focus();
                 activeEditor = $editor[0];
 
+                const allowedVars = $editor.data('allowed-vars') || {};
+
                 // Calculate position
                 const offset = $editor.offset();
                 $menu.css({
@@ -252,7 +420,7 @@
                 }).addClass('is-visible');
 
                 selectedIndex = 0;
-                renderMenu(vars);
+                renderMenu(allowedVars); // Show all allowed vars
             } else {
                 console.error('WP SEO Pilot: No editor found for input', targetId);
             }

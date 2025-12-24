@@ -167,12 +167,14 @@ class Admin_UI {
 		}
 
 		$ai_enabled = ! empty( get_option( 'wpseopilot_openai_api_key', '' ) );
+		$settings_svc = new Settings();
 		wp_localize_script(
 			'wpseopilot-admin',
 			'WPSEOPilotAdmin',
 			[
 				'mediaTitle'  => __( 'Select image', 'wp-seo-pilot' ),
 				'mediaButton' => __( 'Use image', 'wp-seo-pilot' ),
+				'variables'   => $settings_svc->get_context_variables(),
 				'ai'          => [
 					'enabled' => $ai_enabled,
 					'ajax'    => admin_url( 'admin-ajax.php' ),
@@ -226,7 +228,7 @@ class Admin_UI {
 			'wpseopilot-editor',
 			'WPSEOPilotEditor',
 			[
-				'defaultTitle'       => get_option( 'wpseopilot_default_title_template', '%post_title% | %site_title%' ),
+				'defaultTitle'       => get_option( 'wpseopilot_default_title_template', '{{post_title}} | {{site_title}}' ),
 				'defaultDescription' => get_option( 'wpseopilot_default_meta_description', '' ),
 				'defaultOg'          => get_option( 'wpseopilot_default_og_image', '' ),
 				'postTypeTemplates'  => $post_type_templates,

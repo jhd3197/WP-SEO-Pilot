@@ -11,6 +11,7 @@ use WP_Post;
 use function WPSEOPilot\Helpers\breadcrumbs;
 use function WPSEOPilot\Helpers\generate_content_snippet;
 use function WPSEOPilot\Helpers\generate_title_from_template;
+use function WPSEOPilot\Helpers\replace_template_variables;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -75,6 +76,9 @@ class Frontend {
 		if ( empty( $description ) ) {
 			$description = get_bloginfo( 'description' );
 		}
+		
+		// Run Variable Replacer
+		$description = replace_template_variables( $description, $post );
 		$description = apply_filters( 'wpseopilot_description', $description, $post );
 
 		$canonical = $this->get_canonical( $post, $meta );
@@ -104,6 +108,9 @@ class Frontend {
 				$keywords = implode( ', ', $term_names );
 			}
 		}
+
+		// Run Replacer on Keywords too
+		$keywords = replace_template_variables( $keywords, $post );
 		$keywords = apply_filters( 'wpseopilot_keywords', $keywords, $post );
 
 		if ( ! current_theme_supports( 'title-tag' ) ) {
@@ -159,6 +166,9 @@ class Frontend {
 		if ( empty( $raw_title ) ) {
 			$raw_title = get_bloginfo( 'name' );
 		}
+		
+		// Run Replacer
+		$raw_title = replace_template_variables( $raw_title, $post );
 		$title = apply_filters( 'wpseopilot_og_title', $raw_title, $post );
 
 		$description = $meta['description'] ?? '';
@@ -180,6 +190,9 @@ class Frontend {
 		if ( empty( $description ) ) {
 			$description = get_bloginfo( 'description' );
 		}
+		
+		// Run Replacer
+		$description = replace_template_variables( $description, $post );
 		$description = apply_filters( 'wpseopilot_og_description', $description, $post );
 		$image = $this->get_social_image( $post, $meta, $social_defaults );
 

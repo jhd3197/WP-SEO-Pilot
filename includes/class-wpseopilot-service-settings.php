@@ -20,7 +20,7 @@ class Settings {
 	 * @var array<string,mixed>
 	 */
 	private $defaults = [
-		'wpseopilot_default_title_template' => '%post_title% | %site_title%',
+		'wpseopilot_default_title_template' => '{{post_title}} | {{site_title}}',
 		'wpseopilot_post_type_title_templates' => [],
 		'wpseopilot_post_type_meta_descriptions' => [],
 		'wpseopilot_post_type_keywords' => [],
@@ -96,20 +96,26 @@ class Settings {
 		}
 
 		register_setting( 'wpseopilot', 'wpseopilot_default_title_template', [ $this, 'sanitize_template' ] );
-		register_setting( 'wpseopilot_post_types', 'wpseopilot_post_type_title_templates', [ $this, 'sanitize_post_type_templates' ] );
-		register_setting( 'wpseopilot_post_types', 'wpseopilot_post_type_meta_descriptions', [ $this, 'sanitize_post_type_descriptions' ] );
-		register_setting( 'wpseopilot_post_types', 'wpseopilot_post_type_keywords', [ $this, 'sanitize_post_type_keywords' ] );
-		register_setting( 'wpseopilot_post_types', 'wpseopilot_post_type_settings', [ $this, 'sanitize_post_type_settings' ] );
-		register_setting( 'wpseopilot_taxonomies', 'wpseopilot_taxonomy_settings', [ $this, 'sanitize_taxonomy_settings' ] );
-		register_setting( 'wpseopilot_archives', 'wpseopilot_archive_settings', [ $this, 'sanitize_archive_settings' ] );
+
+		// Consolidated Search Appearance Settings
+		$group = 'wpseopilot_search_appearance';
+		register_setting( $group, 'wpseopilot_post_type_title_templates', [ $this, 'sanitize_post_type_templates' ] );
+		register_setting( $group, 'wpseopilot_post_type_meta_descriptions', [ $this, 'sanitize_post_type_descriptions' ] );
+		register_setting( $group, 'wpseopilot_post_type_keywords', [ $this, 'sanitize_post_type_keywords' ] );
+		register_setting( $group, 'wpseopilot_post_type_settings', [ $this, 'sanitize_post_type_settings' ] );
+		register_setting( $group, 'wpseopilot_taxonomy_settings', [ $this, 'sanitize_taxonomy_settings' ] );
+		register_setting( $group, 'wpseopilot_archive_settings', [ $this, 'sanitize_archive_settings' ] );
+		register_setting( $group, 'wpseopilot_homepage_title', 'sanitize_text_field' );
+		register_setting( $group, 'wpseopilot_homepage_description', 'sanitize_textarea_field' );
+		register_setting( $group, 'wpseopilot_homepage_keywords', 'sanitize_text_field' );
+
+		// Other settings
 		register_setting( 'wpseopilot_ai_tuning', 'wpseopilot_ai_model', [ $this, 'sanitize_ai_model' ] );
 		register_setting( 'wpseopilot_ai_tuning', 'wpseopilot_ai_prompt_system', 'sanitize_textarea_field' );
-			register_setting( 'wpseopilot_ai_tuning', 'wpseopilot_ai_prompt_title', 'sanitize_textarea_field' );
-			register_setting( 'wpseopilot_ai_tuning', 'wpseopilot_ai_prompt_description', 'sanitize_textarea_field' );
-			register_setting( 'wpseopilot_ai_key', 'wpseopilot_openai_api_key', [ $this, 'sanitize_api_key' ] );
-		register_setting( 'wpseopilot_homepage', 'wpseopilot_homepage_title', 'sanitize_text_field' );
-		register_setting( 'wpseopilot_homepage', 'wpseopilot_homepage_description', 'sanitize_textarea_field' );
-		register_setting( 'wpseopilot_homepage', 'wpseopilot_homepage_keywords', 'sanitize_text_field' );
+		register_setting( 'wpseopilot_ai_tuning', 'wpseopilot_ai_prompt_title', 'sanitize_textarea_field' );
+		register_setting( 'wpseopilot_ai_tuning', 'wpseopilot_ai_prompt_description', 'sanitize_textarea_field' );
+		register_setting( 'wpseopilot_ai_key', 'wpseopilot_openai_api_key', [ $this, 'sanitize_api_key' ] );
+		
 		register_setting( 'wpseopilot', 'wpseopilot_homepage_description_prompt', 'sanitize_textarea_field' );
 		register_setting( 'wpseopilot_knowledge', 'wpseopilot_homepage_knowledge_type', [ $this, 'sanitize_knowledge_type' ] );
 		register_setting( 'wpseopilot_knowledge', 'wpseopilot_homepage_organization_name', 'sanitize_text_field' );
@@ -128,6 +134,104 @@ class Settings {
 		register_setting( 'wpseopilot', 'wpseopilot_enable_sitemap_enhancer', [ $this, 'sanitize_bool' ] );
 		register_setting( 'wpseopilot', 'wpseopilot_enable_redirect_manager', [ $this, 'sanitize_bool' ] );
 		register_setting( 'wpseopilot', 'wpseopilot_enable_404_logging', [ $this, 'sanitize_bool' ] );
+	}
+
+	/**
+	 * Get variables available for different contexts.
+	 *
+	 * @return array
+	 */
+	public function get_context_variables() {
+		$variables = [
+			'global' => [
+				'label' => __( 'General', 'wp-seo-pilot' ),
+				'vars'  => [
+					[ 'tag' => 'site_title', 'label' => __( 'Site Title', 'wp-seo-pilot' ), 'desc' => __( 'The main title of your site', 'wp-seo-pilot' ), 'preview' => get_bloginfo( 'name' ) ],
+					[ 'tag' => 'tagline', 'label' => __( 'Tagline', 'wp-seo-pilot' ), 'desc' => __( 'Site description / tagline', 'wp-seo-pilot' ), 'preview' => get_bloginfo( 'description' ) ],
+					[ 'tag' => 'separator', 'label' => __( 'Separator', 'wp-seo-pilot' ), 'desc' => __( 'Separator character (e.g. -)', 'wp-seo-pilot' ), 'preview' => '-' ],
+					[ 'tag' => 'current_year', 'label' => __( 'Current Year', 'wp-seo-pilot' ), 'desc' => __( 'The current year (4 digits)', 'wp-seo-pilot' ), 'preview' => date_i18n( 'Y' ) ],
+				],
+			],
+			'post' => [
+				'label' => __( 'Post Variables', 'wp-seo-pilot' ),
+				'vars'  => [
+					[ 'tag' => 'post_title', 'label' => __( 'Post Title', 'wp-seo-pilot' ), 'desc' => __( 'Title of the current post/page', 'wp-seo-pilot' ), 'preview' => 'Hello World' ],
+					[ 'tag' => 'post_excerpt', 'label' => __( 'Excerpt', 'wp-seo-pilot' ), 'desc' => __( 'Post excerpt or auto-generated snippet', 'wp-seo-pilot' ), 'preview' => 'This is an example excerpt...' ],
+					[ 'tag' => 'post_date', 'label' => __( 'Date', 'wp-seo-pilot' ), 'desc' => __( 'Publish date', 'wp-seo-pilot' ), 'preview' => date_i18n( get_option( 'date_format' ) ) ],
+					[ 'tag' => 'post_author', 'label' => __( 'Author', 'wp-seo-pilot' ), 'desc' => __( 'Display name of the author', 'wp-seo-pilot' ), 'preview' => 'John Doe' ],
+					[ 'tag' => 'category', 'label' => __( 'Primary Category', 'wp-seo-pilot' ), 'desc' => __( 'The main category for this post', 'wp-seo-pilot' ), 'preview' => 'Technology' ],
+					[ 'tag' => 'modified', 'label' => __( 'Modified Date', 'wp-seo-pilot' ), 'desc' => __( 'Last modified date', 'wp-seo-pilot' ), 'preview' => date_i18n( get_option( 'date_format' ) ) ],
+					[ 'tag' => 'id', 'label' => __( 'ID', 'wp-seo-pilot' ), 'desc' => __( 'The numeric post ID', 'wp-seo-pilot' ), 'preview' => '123' ],
+				],
+			],
+			'taxonomy' => [
+				'label' => __( 'Taxonomy Variables', 'wp-seo-pilot' ),
+				'vars'  => [
+					[ 'tag' => 'term_title', 'label' => __( 'Term Name', 'wp-seo-pilot' ), 'desc' => __( 'Name of the current category/tag', 'wp-seo-pilot' ), 'preview' => 'My Category' ],
+					[ 'tag' => 'term_description', 'label' => __( 'Term Description', 'wp-seo-pilot' ), 'desc' => __( 'Description of the term', 'wp-seo-pilot' ), 'preview' => 'A list of all posts about...' ],
+				],
+			],
+			'archive' => [
+				'label' => __( 'Archive Variables', 'wp-seo-pilot' ),
+				'vars'  => [
+					[ 'tag' => 'archive_title', 'label' => __( 'Archive Title', 'wp-seo-pilot' ), 'desc' => __( 'Title based on date or type', 'wp-seo-pilot' ), 'preview' => 'Archives for June 2025' ],
+					[ 'tag' => 'archive_date', 'label' => __( 'Archive Date', 'wp-seo-pilot' ), 'desc' => __( 'Date for daily/monthly archives', 'wp-seo-pilot' ), 'preview' => 'June 2025' ],
+				],
+			],
+			'author' => [
+				'label' => __( 'Author Variables', 'wp-seo-pilot' ),
+				'vars'  => [
+					[ 'tag' => 'author_name', 'label' => __( 'Author Name', 'wp-seo-pilot' ), 'desc' => __( 'Name of the author being viewed', 'wp-seo-pilot' ), 'preview' => 'Jane Smith' ],
+					[ 'tag' => 'author_bio', 'label' => __( 'Author Bio', 'wp-seo-pilot' ), 'desc' => __( 'Biographical info', 'wp-seo-pilot' ), 'preview' => 'Jane is a writer...' ],
+				],
+			],
+		];
+		
+		// Discover Custom Fields per Post Type
+		$post_types = get_post_types( [ 'public' => true ], 'objects' );
+		foreach ( $post_types as $pt ) {
+			$latest = get_posts( [
+				'post_type'      => $pt->name,
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'post_status'    => 'publish',
+			] );
+
+			if ( ! empty( $latest ) ) {
+				$post_id = $latest[0];
+				$keys    = get_post_custom_keys( $post_id );
+				$custom_vars = [];
+
+				if ( $keys ) {
+					foreach ( $keys as $key ) {
+						if ( is_protected_meta( $key, 'post' ) ) {
+							continue;
+						}
+						// Get sample value
+						$vals = get_post_meta( $post_id, $key, true );
+						$preview = is_string( $vals ) && strlen( $vals ) < 50 ? $vals : 'Sample Value';
+						
+						$custom_vars[] = [
+							'tag'     => 'cf_' . $key,
+							'label'   => $key,
+							'desc'    => sprintf( __( 'Custom Field: %s', 'wp-seo-pilot' ), $key ),
+							'preview' => $preview,
+						];
+					}
+				}
+
+				if ( ! empty( $custom_vars ) ) {
+					// Use a key like "post_type:book" so frontend can match it
+					$context_key = 'post_type:' . $pt->name;
+					$variables[ $context_key ] = [
+						'label' => sprintf( __( '%s Custom Fields', 'wp-seo-pilot' ), $pt->label ),
+						'vars'  => $custom_vars,
+					];
+				}
+			}
+		}
+
+		return $variables;
 	}
 
 	/**
@@ -183,19 +287,23 @@ class Settings {
 	public function sanitize_template( $value ) {
 		$value = sanitize_text_field( $value );
 
-		$allowed = [
-			'{{post_title}}',
-			'{{site_title}}',
-			'{{tagline}}',
-			'{{post_author}}',
-			'{{separator}}',
-			'{{date}}',
-			'{{current_year}}',
-			'{{current_month}}',
-			'{{current_day}}',
-			'{{modified}}',
-			'{{category}}',
-		];
+		$contexts = $this->get_context_variables();
+		$allowed = [];
+
+
+		foreach ( $contexts as $group ) {
+			if ( ! empty( $group['vars'] ) && is_array( $group['vars'] ) ) {
+				foreach ( $group['vars'] as $var_def ) {
+					$var = $var_def['tag'];
+					$allowed[] = '{{' . $var . '}}';
+					$allowed[] = '%' . $var . '%';
+				}
+			}
+		}
+
+		// Also allow custom fields patterns if desired, but for now stick to the list.
+		// The user mentioned "detect if the theme has custom type yes but how about variables".
+		// We'll trust the list for now.
 
 		return str_replace( $allowed, $allowed, $value );
 	}
