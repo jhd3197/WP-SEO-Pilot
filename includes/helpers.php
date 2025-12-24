@@ -573,7 +573,7 @@ namespace WPSEOPilot\Helpers {
 			];
 		}
 
-		$crumbs = apply_filters( 'wpseopilot_breadcrumb_links', $crumbs );
+		$crumbs = apply_filters( 'wpseopilot_breadcrumb_links', $crumbs, $post );
 
 		if ( empty( $crumbs ) || ! is_array( $crumbs ) ) {
 			return null;
