@@ -122,25 +122,34 @@ call_user_func(
 							</label>
 						</div>
 
-						<label for="wpseopilot_template_<?php echo esc_attr( $slug ); ?>">
-							<strong><?php esc_html_e( 'SEO title template', 'wp-seo-pilot' ); ?></strong>
-						</label>
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_template_<?php echo esc_attr( $slug ); ?>">
+								<strong><?php esc_html_e( 'SEO title template', 'wp-seo-pilot' ); ?></strong>
+							</label>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_template_<?php echo esc_attr( $slug ); ?>">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
 						<input type="text" class="regular-text" id="wpseopilot_template_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_title_templates[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $template ); ?>" />
-						<p class="description">
-							<?php
-							/* translators: %post_title%, %site_title%, %tagline%, %post_author% are template placeholders. */
-							esc_html_e( 'Available tags: %post_title%, %site_title%, %tagline%, %post_author%', 'wp-seo-pilot' );
-							?>
-						</p>
-
-						<label for="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>">
-							<strong><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></strong>
-						</label>
+						
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>">
+								<strong><?php esc_html_e( 'Meta description', 'wp-seo-pilot' ); ?></strong>
+							</label>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
 						<textarea class="large-text" rows="3" id="wpseopilot_desc_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_meta_descriptions[<?php echo esc_attr( $slug ); ?>]"><?php echo esc_textarea( $description ); ?></textarea>
 
-						<label for="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>">
-							<strong><?php esc_html_e( 'Default keywords (optional)', 'wp-seo-pilot' ); ?></strong>
-						</label>
+						<div class="wpseopilot-flex-label">
+							<label for="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>">
+								<strong><?php esc_html_e( 'Default keywords (optional)', 'wp-seo-pilot' ); ?></strong>
+							</label>
+							<button type="button" class="button button-small wpseopilot-trigger-vars" data-target="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>">
+								<?php esc_html_e( 'Variables', 'wp-seo-pilot' ); ?>
+							</button>
+						</div>
 						<input type="text" class="regular-text" id="wpseopilot_keywords_<?php echo esc_attr( $slug ); ?>" name="wpseopilot_post_type_keywords[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $keywords ); ?>" />
 
 						<div class="wpseopilot-flex">

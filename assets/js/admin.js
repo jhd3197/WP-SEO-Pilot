@@ -58,7 +58,7 @@
 		if (!aiConfig.enabled) {
 			setAiStatus(
 				button.closest('.wpseopilot-ai-inline').find('[data-ai-status]'),
-				aiConfig.strings?.disabled || ''
+				(aiConfig.strings && aiConfig.strings.disabled) || ''
 			);
 			return;
 		}
@@ -72,14 +72,14 @@
 			.find('[data-ai-status]');
 
 		if (!field || !postId || !target.length) {
-			setAiStatus(statusEl, aiConfig.strings?.error || '', 'error');
+			setAiStatus(statusEl, (aiConfig.strings && aiConfig.strings.error) || '', 'error');
 			return;
 		}
 
 		button.prop('disabled', true);
 		setAiStatus(
 			statusEl,
-			aiConfig.strings?.running || 'Generating…',
+			(aiConfig.strings && aiConfig.strings.running) || 'Generating…',
 			'loading'
 		);
 
@@ -95,7 +95,7 @@
 				if (!response || !response.success) {
 					const message =
 						(response && response.data) ||
-						aiConfig.strings?.error ||
+						(aiConfig.strings && aiConfig.strings.error) ||
 						'';
 					setAiStatus(statusEl, message, 'error');
 					return;
@@ -105,16 +105,16 @@
 				target.val(value).trigger('input');
 				setAiStatus(
 					statusEl,
-					aiConfig.strings?.success || '',
+					(aiConfig.strings && aiConfig.strings.success) || '',
 					'success'
 				);
 			}
 		)
 			.fail((xhr) => {
 				const message =
-					xhr?.responseJSON?.data ||
-					xhr?.statusText ||
-					aiConfig.strings?.error ||
+					(xhr && xhr.responseJSON && xhr.responseJSON.data) ||
+					(xhr && xhr.statusText) ||
+					(aiConfig.strings && aiConfig.strings.error) ||
 					'';
 				setAiStatus(statusEl, message, 'error');
 			})

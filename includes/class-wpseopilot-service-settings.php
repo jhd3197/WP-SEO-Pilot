@@ -178,24 +178,27 @@ class Settings {
 
 	/**
 	 * Ensure template placeholders stay safe.
-	 *
-	 * @param string $value Template.
-	 *
 	 * @return string
 	 */
 	public function sanitize_template( $value ) {
 		$value = sanitize_text_field( $value );
 
 		$allowed = [
-			'%post_title%',
-			'%site_title%',
-			'%tagline%',
-			'%post_author%',
+			'{{post_title}}',
+			'{{site_title}}',
+			'{{tagline}}',
+			'{{post_author}}',
+			'{{separator}}',
+			'{{date}}',
+			'{{current_year}}',
+			'{{current_month}}',
+			'{{current_day}}',
+			'{{modified}}',
+			'{{category}}',
 		];
 
 		return str_replace( $allowed, $allowed, $value );
 	}
-
 	/**
 	 * Sanitize per-post-type template map.
 	 *

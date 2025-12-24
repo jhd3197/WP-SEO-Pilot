@@ -93,11 +93,23 @@ namespace WPSEOPilot\Helpers {
 		}
 
 		$replacements = [
-			'%post_title%'  => \wp_strip_all_tags( $post->post_title ),
-			'%site_title%'  => \get_bloginfo( 'name' ),
-			'%tagline%'     => \get_bloginfo( 'description' ),
-			'%post_author%' => get_the_author_meta( 'display_name', $post->post_author ),
+			'{{post_title}}'   => \wp_strip_all_tags( $post->post_title ),
+			'{{site_title}}'   => \get_bloginfo( 'name' ),
+			'{{tagline}}'      => \get_bloginfo( 'description' ),
+			'{{post_author}}'  => get_the_author_meta( 'display_name', $post->post_author ),
+			'{{separator}}'    => '-', // Could be made configurable later.
+			'{{date}}'         => get_the_date( '', $post ),
+			'{{current_year}}' => date_i18n( 'Y' ),
+			'{{current_month}}'=> date_i18n( 'F' ),
+			'{{current_day}}'  => date_i18n( 'j' ),
+			'{{modified}}'     => get_the_modified_date( '', $post ),
+			'{{category}}'     => '',
 		];
+
+		$cats = get_the_category( $post->ID );
+		if ( ! empty( $cats ) && ! is_wp_error( $cats ) ) {
+			$replacements['{{category}}'] = $cats[0]->name;
+		}
 
 		return strtr( $template, $replacements );
 	}

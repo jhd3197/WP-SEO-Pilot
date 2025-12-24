@@ -121,7 +121,7 @@ class Admin_UI {
 	 * @return void
 	 */
 	public function enqueue_admin_assets( $hook ) {
-		$should_enqueue = ( 'toplevel_page_wpseopilot' === $hook );
+		$should_enqueue = ( false !== strpos( $hook, 'wpseopilot' ) );
 
 		if ( ! $should_enqueue ) {
 			foreach ( [ 'post.php', 'post-new.php', 'edit.php' ] as $needle ) {
@@ -147,6 +147,14 @@ class Admin_UI {
 			'wpseopilot-admin',
 			WPSEOPILOT_URL . 'assets/js/admin.js',
 			[ 'jquery' ],
+			WPSEOPILOT_VERSION,
+			true
+		);
+
+		wp_enqueue_script(
+			'wpseopilot-seo-tags',
+			WPSEOPILOT_URL . 'assets/js/seo-tags.js',
+			[ 'jquery', 'wpseopilot-admin' ],
 			WPSEOPILOT_VERSION,
 			true
 		);
