@@ -129,6 +129,8 @@ class Request_Monitor {
 		$sort     = isset( $_GET['sort'] ) ? sanitize_key( wp_unslash( $_GET['sort'] ) ) : 'recent';
 		$per_page = isset( $_GET['per_page'] ) ? max( 1, min( 200, absint( $_GET['per_page'] ) ) ) : 50;
 		$page     = isset( $_GET['paged'] ) ? max( 1, absint( $_GET['paged'] ) ) : 1;
+		$hide_spam   = isset( $_GET['hide_spam'] ) ? (bool) absint( $_GET['hide_spam'] ) : true;
+		$hide_images = isset( $_GET['hide_images'] ) ? (bool) absint( $_GET['hide_images'] ) : false;
 
 		if ( ! in_array( $sort, [ 'recent', 'top' ], true ) ) {
 			$sort = 'recent';
@@ -139,21 +141,43 @@ class Request_Monitor {
 		$offset = ( $page - 1 ) * $per_page;
 
 		global $wpdb;
+		$filters = [];
+		$params  = [];
+
+		if ( $hide_spam ) {
+			foreach ( $this->get_spam_url_patterns() as $pattern ) {
+				$filters[] = 'request_uri NOT LIKE %s';
+				$params[]  = $pattern;
+			}
+		}
+
+		if ( $hide_images ) {
+			foreach ( $this->get_image_url_patterns() as $pattern ) {
+				$filters[] = 'request_uri NOT LIKE %s';
+				$params[]  = $pattern;
+			}
+		}
+
+		$where_sql = $filters ? ' WHERE ' . implode( ' AND ', $filters ) : '';
+
+		$count_sql = "SELECT COUNT(*) FROM {$this->table}{$where_sql}";
+		if ( $params ) {
+			$count_sql = $wpdb->prepare( $count_sql, $params );
+		}
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom ordering/pagination requires direct queries.
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$this->table}" );
+		$total_count = (int) $wpdb->get_var( $count_sql );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom ordering/pagination requires direct queries.
 		$order_by_sql = ( 'hits' === $order_by ) ? 'hits' : 'last_seen';
-		$sql          = $wpdb->prepare(
-			"SELECT * FROM {$this->table} ORDER BY {$order_by_sql} DESC LIMIT %d OFFSET %d",
-			$per_page,
-			$offset
-		);
+		$sql = "SELECT * FROM {$this->table}{$where_sql} ORDER BY {$order_by_sql} DESC LIMIT %d OFFSET %d";
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom ordering/pagination requires direct queries.
+		$sql = $wpdb->prepare( $sql, array_merge( $params, [ $per_page, $offset ] ) );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom ordering/pagination requires direct queries.
 		$rows = $wpdb->get_results( $sql );
 
 		if ( $rows ) {
 			$rows = $this->hydrate_device_labels( $rows );
+			$rows = $this->annotate_redirect_status( $rows );
 		}
 
 		$total_pages = max( 1, (int) ceil( $total_count / $per_page ) );
@@ -283,6 +307,194 @@ class Request_Monitor {
 		}
 
 		return $rows;
+	}
+
+	/**
+	 * Mark rows that already have redirects configured.
+	 *
+	 * @param array<int,\stdClass> $rows Log rows.
+	 * @return array<int,\stdClass>
+	 */
+	private function annotate_redirect_status( $rows ) {
+		global $wpdb;
+
+		$redirect_table = $wpdb->prefix . 'wpseopilot_redirects';
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Table existence check avoids hard errors on older installs.
+		$has_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $redirect_table ) );
+		if ( $redirect_table !== $has_table ) {
+			foreach ( $rows as $row ) {
+				$row->redirect_exists = false;
+			}
+			return $rows;
+		}
+
+		$requests = [];
+		foreach ( $rows as $row ) {
+			if ( ! empty( $row->request_uri ) ) {
+				$requests[] = $row->request_uri;
+			}
+		}
+
+		if ( ! $requests ) {
+			foreach ( $rows as $row ) {
+				$row->redirect_exists = false;
+			}
+			return $rows;
+		}
+
+		$requests     = array_values( array_unique( $requests ) );
+		$placeholders = implode( ',', array_fill( 0, count( $requests ), '%s' ) );
+		$sql          = "SELECT source FROM {$redirect_table} WHERE source IN ({$placeholders})";
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Matching redirects against 404 log rows requires direct query.
+		$sources = $wpdb->get_col( $wpdb->prepare( $sql, $requests ) );
+
+		$lookup = $sources ? array_fill_keys( $sources, true ) : [];
+		foreach ( $rows as $row ) {
+			$row->redirect_exists = isset( $lookup[ $row->request_uri ] );
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * Spammy file and path patterns to suppress in the 404 log view.
+	 *
+	 * @return string[]
+	 */
+	private function get_spam_url_patterns() {
+		return [
+			// Executables and configs
+			'%.php',
+			'%.env',
+			'%.ini',
+			'%.log',
+			'%.bak',
+			'%.old',
+			'%.sql',
+			'%.zip',
+			'%.tar',
+			'%.gz',
+			'%.rar',
+			'%.exe',
+			'%.sh',
+			'%.bat',
+			'%.cmd',
+			'%.bin',
+			'%.dll',
+			'%.com',
+			'%.scr',
+			'%.sys',
+			'%.htaccess',
+			'%.htpasswd',
+
+			// Git and server internals
+			'%/.git/config',
+			'%/.git%',
+			'%/.svn%',
+			'%/.hg%',
+			'%/.DS_Store',
+
+			// WordPress core attack targets
+			'%/wp-admin%',
+			'%/wp-includes%',
+			'%/wp-login%',
+			'%/xmlrpc.php%',
+			'%/readme.html%',
+			'%/license.txt%',
+			'%/wp-config.php%',
+			'%/wp-content/plugins/%',
+			'%/wp-content/themes/%',
+			'%/wp-content/mu-plugins/%',
+			'%/wp-content/debug.log%',
+			'%/wp-json/%',
+			'%/wp-cron.php%',
+			'%/wp-trackback.php%',
+
+			// Fonts
+			'%.ttf',
+			'%.woff',
+			'%.woff2',
+			'%.eot',
+			'%.otf',
+			'%.sfnt',
+			'%.fnt',
+			'%.fon',
+
+			// Frontend assets
+			'%.css',
+			'%.js',
+			'%.map',
+			'%.less',
+			'%.scss',
+			'%.sass',
+			'%.styl',
+			'%.xml',
+			'%.json',
+			'%.rss',
+			'%.atom',
+			'%.yaml',
+			'%.yml',
+			'%.csv',
+			'%.txt',
+			'%.md',
+			'%.markdown',
+			'%.pdf',
+			'%.doc',
+			'%.docx',
+			'%.xls',
+			'%.xlsx',
+			'%.ppt',
+			'%.pptx',
+
+			// WordPress content noise
+			'%/wp-content/uploads%',
+			'%/wp-content/cache%',
+			'%/wp-content/plugins%',
+			'%/wp-content/themes%',
+			'%/wp-content/ai1wm-backups%',
+			'%/wp-content/backup%',
+			'%/wp-content/debug.log%',
+
+			// Common bot probes
+			'%/cgi-bin%',
+			'%/vendor%',
+			'%/node_modules%',
+			'%/composer.json%',
+			'%/package.json%',
+		];
+	}
+
+	/**
+	 * Image and static asset file patterns to optionally suppress in the 404 log view.
+	 *
+	 * @return string[]
+	 */
+	private function get_image_url_patterns() {
+		return [
+			// Images
+			'%.png',
+			'%.jpg',
+			'%.jpeg',
+			'%.gif',
+			'%.webp',
+			'%.svg',
+			'%.ico',
+			'%.bmp',
+			'%.tiff',
+			'%.heic',
+			'%.avif',
+			'%.psd',
+			'%.ai',
+			'%.eps',
+
+			// Media
+			'%.mp4',
+			'%.webm',
+			'%.mp3',
+			'%.wav',
+			'%.ogg',
+		];
 	}
 
 	/**

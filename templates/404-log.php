@@ -32,6 +32,14 @@
 				<?php endforeach; ?>
 			</select>
 		</label>
+		<label for="wpseopilot-404-hide-spam" style="margin-left:1em;">
+			<input id="wpseopilot-404-hide-spam" type="checkbox" name="hide_spam" value="1" <?php checked( $hide_spam ); ?> />
+			<?php esc_html_e( 'Hide spammy extensions', 'wp-seo-pilot' ); ?>
+		</label>
+		<label for="wpseopilot-404-hide-images" style="margin-left:1em;">
+			<input id="wpseopilot-404-hide-images" type="checkbox" name="hide_images" value="1" <?php checked( $hide_images ); ?> />
+			<?php esc_html_e( 'Hide image extensions', 'wp-seo-pilot' ); ?>
+		</label>
 		<button type="submit" class="button button-secondary" style="margin-left:1em;">
 			<?php esc_html_e( 'Apply', 'wp-seo-pilot' ); ?>
 		</button>
@@ -63,7 +71,14 @@
 			<?php if ( $rows ) : ?>
 				<?php foreach ( $rows as $row ) : ?>
 					<tr>
-						<td><?php echo esc_html( $row->request_uri ); ?></td>
+						<td>
+							<?php echo esc_html( $row->request_uri ); ?>
+							<?php if ( ! empty( $row->redirect_exists ) ) : ?>
+								<span class="wpseopilot-404-tag" style="margin-left:0.5em;display:inline-block;padding:0 6px;border-radius:10px;background:#e6f2ff;color:#0b57d0;font-size:11px;line-height:18px;">
+									<?php esc_html_e( 'Redirect exists', 'wp-seo-pilot' ); ?>
+								</span>
+							<?php endif; ?>
+						</td>
 						<td><?php echo esc_html( $row->hits ); ?></td>
 						<td><?php echo esc_html( mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $row->last_seen ) ); ?></td>
 						<td><?php echo esc_html( $row->device_label ?: __( 'Unknown device', 'wp-seo-pilot' ) ); ?></td>
@@ -82,20 +97,29 @@
 
 	<?php if ( $total_pages > 1 ) : ?>
 		<?php
+		$filter_args = [
+			'sort'     => $sort,
+			'per_page' => $per_page,
+		];
+		if ( $hide_spam ) {
+			$filter_args['hide_spam'] = 1;
+		}
+		if ( $hide_images ) {
+			$filter_args['hide_images'] = 1;
+		}
+
 		$prev_link = ( $page > 1 ) ? add_query_arg(
-			[
-				'sort'     => $sort,
-				'per_page' => $per_page,
-				'paged'    => $page - 1,
-			],
+			array_merge(
+				$filter_args,
+				[ 'paged' => $page - 1 ]
+			),
 			$base_url
 		) : '';
 		$next_link = ( $page < $total_pages ) ? add_query_arg(
-			[
-				'sort'     => $sort,
-				'per_page' => $per_page,
-				'paged'    => $page + 1,
-			],
+			array_merge(
+				$filter_args,
+				[ 'paged' => $page + 1 ]
+			),
 			$base_url
 		) : '';
 		?>
