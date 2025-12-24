@@ -432,37 +432,43 @@ class Frontend {
 	 * @return string
 	 */
 	private function get_social_image( $post, $meta, $social_defaults = [] ) {
-		$override = apply_filters( 'wpseopilot_og_image', '', $post, $meta, $social_defaults );
-		if ( ! empty( $override ) ) {
-			return esc_url_raw( $override );
-		}
+		$image = '';
 
+		// 1. Check direct post meta override
 		if ( ! empty( $meta['og_image'] ) ) {
-			return esc_url_raw( $meta['og_image'] );
+			$image = esc_url_raw( $meta['og_image'] );
 		}
 
-		if ( $post instanceof WP_Post ) {
+		// 2. Featured Image
+		if ( empty( $image ) && $post instanceof WP_Post ) {
 			$image_id = get_post_thumbnail_id( $post );
 			if ( $image_id ) {
 				$url = wp_get_attachment_image_url( $image_id, 'full' );
 				if ( $url ) {
-					return $url;
+					$image = $url;
 				}
 			}
 		}
 
-		$fallback = $social_defaults['image_source'] ?? '';
-		if ( ! empty( $fallback ) ) {
-			return esc_url_raw( $fallback );
+		// 3. Global Social Defaults / Fallback Source
+		if ( empty( $image ) ) {
+			$fallback = $social_defaults['image_source'] ?? '';
+			if ( ! empty( $fallback ) ) {
+				$image = esc_url_raw( $fallback );
+			}
 		}
 
-		$fallback = get_option( 'wpseopilot_default_og_image', '' );
-		if ( ! empty( $fallback ) ) {
-			return $fallback;
+		// 4. Site-wide Default
+		if ( empty( $image ) ) {
+			$fallback = get_option( 'wpseopilot_default_og_image', '' );
+			if ( ! empty( $fallback ) ) {
+				$image = $fallback;
+			}
 		}
 
-		if ( $post instanceof WP_Post ) {
-			return add_query_arg(
+		// 5. Dynamic Card Generation (last resort)
+		if ( empty( $image ) && $post instanceof WP_Post ) {
+			$image = add_query_arg(
 				[
 					'wpseopilot_social_card' => 1,
 					'title'                  => get_the_title( $post ),
@@ -471,7 +477,15 @@ class Frontend {
 			);
 		}
 
-		return '';
+		/**
+		 * Filter the final Open Graph image URL.
+		 *
+		 * @param string  $image           The calculated image URL.
+		 * @param WP_Post $post            The post object.
+		 * @param array   $meta            The custom SEO meta for this post.
+		 * @param array   $social_defaults Social default settings.
+		 */
+		return apply_filters( 'wpseopilot_og_image', $image, $post, $meta, $social_defaults );
 	}
 
 	/**

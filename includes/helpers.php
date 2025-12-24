@@ -116,7 +116,11 @@ namespace WPSEOPilot\Helpers {
 			$all_meta = get_post_meta( $context->ID );
 			foreach ( $all_meta as $k => $v ) {
 				if ( ! is_protected_meta( $k, 'post' ) ) {
-					$val = $v[0];
+					if ( is_array( $v ) ) {
+						$val = isset( $v[0] ) ? $v[0] : '';
+					} else {
+						$val = $v;
+					}
 					if ( is_serialized( $val ) ) {
 						$val = implode( ', ', maybe_unserialize( $val ) );
 					}
