@@ -12,6 +12,43 @@
 <div class="wrap">
 	<h1><?php esc_html_e( 'Redirect Manager', 'wp-seo-pilot' ); ?></h1>
 
+	<?php
+	$suggestions = get_option( 'wpseopilot_monitor_slugs', [] );
+	if ( ! empty( $suggestions ) ) :
+		?>
+		<div class="wpseopilot-card" style="margin-bottom: 20px; border-left: 4px solid #ffba00;">
+			<h2><?php esc_html_e( '⚠️ Detected Slug Changes', 'wp-seo-pilot' ); ?></h2>
+			<p><?php esc_html_e( 'The following posts have changed their URL structure. You should probably create redirects to prevent 404 errors.', 'wp-seo-pilot' ); ?></p>
+			<table class="wp-list-table widefat striped" style="margin-top: 10px;">
+				<thead>
+					<tr>
+						<th><?php esc_html_e( 'Old Path', 'wp-seo-pilot' ); ?></th>
+						<th><?php esc_html_e( 'New Target', 'wp-seo-pilot' ); ?></th>
+						<th><?php esc_html_e( 'Actions', 'wp-seo-pilot' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ( $suggestions as $key => $suggestion ) : ?>
+						<tr>
+							<td><code><?php echo esc_html( $suggestion['source'] ); ?></code></td>
+							<td><a href="<?php echo esc_url( $suggestion['target'] ); ?>" target="_blank"><?php echo esc_html( $suggestion['target'] ); ?></a></td>
+							<td>
+								<a href="<?php echo esc_url( add_query_arg( [ 'prefill' => $suggestion['source'], 'target_prefill' => $suggestion['target'] ], admin_url( 'admin.php?page=wpseopilot-redirects' ) ) ); ?>" class="button button-small button-primary" onclick="
+									event.preventDefault();
+									document.getElementById('source').value = '<?php echo esc_js( $suggestion['source'] ); ?>';
+									document.getElementById('target').value = '<?php echo esc_js( $suggestion['target'] ); ?>';
+									document.getElementById('source').focus();
+								"><?php esc_html_e( 'Use', 'wp-seo-pilot' ); ?></a>
+								
+								<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'wpseopilot_dismiss_slug', 'key' => $key ], admin_url( 'admin-post.php' ) ), 'wpseopilot_dismiss_slug' ) ); ?>" class="button button-small button-link-delete" style="color: #a00;"><?php esc_html_e( 'Dismiss', 'wp-seo-pilot' ); ?></a>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+	<?php endif; ?>
+
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="wpseopilot-card">
 		<?php wp_nonce_field( 'wpseopilot_redirect' ); ?>
 		<input type="hidden" name="action" value="wpseopilot_save_redirect" />

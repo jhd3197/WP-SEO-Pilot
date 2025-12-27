@@ -74,6 +74,7 @@ class Redirect_Manager {
 		add_action( 'admin_menu', [ $this, 'register_menu' ] );
 		add_action( 'admin_post_wpseopilot_save_redirect', [ $this, 'handle_save' ] );
 		add_action( 'admin_post_wpseopilot_delete_redirect', [ $this, 'handle_delete' ] );
+		add_action( 'admin_post_wpseopilot_dismiss_slug', [ $this, 'handle_dismiss_slug' ] );
 
 		// Slug change detection.
 		add_action( 'post_updated', [ $this, 'detect_slug_change' ], 10, 3 );
@@ -140,6 +141,19 @@ class Redirect_Manager {
 			],
 			60
 		);
+
+		// Also store in persistent option for the "Recommended Redirects" list.
+		$suggestions = get_option( 'wpseopilot_monitor_slugs', [] );
+		$key         = md5( $source ); // Use hash of source as key to avoid special char issues in keys.
+		
+		$suggestions[ $key ] = [
+			'source'  => $source,
+			'target'  => $new_url,
+			'post_id' => $post_id,
+			'date'    => current_time( 'mysql' ),
+		];
+
+		update_option( 'wpseopilot_monitor_slugs', $suggestions );
 	}
 
 	/**
@@ -235,6 +249,14 @@ class Redirect_Manager {
 		}
 
 		self::flush_cache();
+
+		// Cleanup from suggestions if exists.
+		$suggestions = get_option( 'wpseopilot_monitor_slugs', [] );
+		$key         = md5( $normalized );
+		if ( isset( $suggestions[ $key ] ) ) {
+			unset( $suggestions[ $key ] );
+			update_option( 'wpseopilot_monitor_slugs', $suggestions );
+		}
 
 		return $wpdb->insert_id;
 	}
@@ -384,9 +406,37 @@ class Redirect_Manager {
 			global $wpdb;
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Deleting rows from the custom redirects table requires a direct query.
 			$wpdb->delete( $this->table, [ 'id' => $id ], [ '%d' ] );
+
+			self::flush_cache();
 		}
 
-		self::flush_cache();
+		$redirect_url = wp_get_referer();
+		$redirect_url = $redirect_url ? $redirect_url : $this->get_admin_redirect_url();
+		wp_safe_redirect( $redirect_url );
+		exit;
+	}
+
+	/**
+	 * Handle slug suggestion dismissal.
+	 *
+	 * @return void
+	 */
+	public function handle_dismiss_slug() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Permission denied.', 'wp-seo-pilot' ) );
+		}
+
+		check_admin_referer( 'wpseopilot_dismiss_slug' );
+
+		$key = isset( $_GET['key'] ) ? sanitize_text_field( $_GET['key'] ) : '';
+
+		if ( $key ) {
+			$suggestions = get_option( 'wpseopilot_monitor_slugs', [] );
+			if ( isset( $suggestions[ $key ] ) ) {
+				unset( $suggestions[ $key ] );
+				update_option( 'wpseopilot_monitor_slugs', $suggestions );
+			}
+		}
 
 		$redirect_url = wp_get_referer();
 		$redirect_url = $redirect_url ? $redirect_url : $this->get_admin_redirect_url();

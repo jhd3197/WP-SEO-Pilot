@@ -229,7 +229,7 @@ class Admin_UI {
 		// Check for pending slug change redirect for this user.
 		$user_id     = get_current_user_id();
 		$slug_change = get_transient( 'wpseopilot_slug_changed_' . $user_id );
-		error_log( 'WPSEOPilot Admin_UI: slug_change transient (' . $user_id . '): ' . print_r( $slug_change, true ) );
+
 		if ( $slug_change ) {
 			// Clear it so it doesn't persist.
 			delete_transient( 'wpseopilot_slug_changed_' . $user_id );
