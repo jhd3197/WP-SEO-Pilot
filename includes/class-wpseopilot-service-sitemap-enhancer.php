@@ -132,11 +132,15 @@ class Sitemap_Enhancer {
 		$entry['priority']   = 0.7;
 		$entry['changefreq'] = 'weekly';
 
-		$content = get_post_field( 'post_content', $post_id );
-		$images  = $this->collect_post_images( $post_id, $content );
+		$exclude_images = get_option( 'wpseopilot_sitemap_exclude_images', '0' );
 
-		if ( ! empty( $images ) ) {
-			$entry['image:image'] = $images;
+		if ( '1' !== $exclude_images ) {
+			$content = get_post_field( 'post_content', $post_id );
+			$images  = $this->collect_post_images( $post_id, $content );
+
+			if ( ! empty( $images ) ) {
+				$entry['image:image'] = $images;
+			}
 		}
 
 		if ( 'post' === $post_type ) {
@@ -314,6 +318,18 @@ class Sitemap_Enhancer {
 
 		add_rewrite_rule( '^sitemap-style\.xsl$', 'index.php?wpseopilot_sitemap_stylesheet=1', 'top' );
 		add_rewrite_tag( '%wpseopilot_sitemap_stylesheet%', '1' );
+
+		// RSS Sitemap
+		add_rewrite_rule( '^sitemap-rss\.xml$', 'index.php?wpseopilot_sitemap_rss=1', 'top' );
+		add_rewrite_tag( '%wpseopilot_sitemap_rss%', '1' );
+
+		// Google News Sitemap
+		add_rewrite_rule( '^sitemap-news\.xml$', 'index.php?wpseopilot_sitemap_news=1', 'top' );
+		add_rewrite_tag( '%wpseopilot_sitemap_news%', '1' );
+
+		// Additional Pages Sitemap
+		add_rewrite_rule( '^additional-sitemap\.xml$', 'index.php?wpseopilot_sitemap_additional=1', 'top' );
+		add_rewrite_tag( '%wpseopilot_sitemap_additional%', '1' );
 	}
 
 	/**
@@ -339,6 +355,21 @@ class Sitemap_Enhancer {
 
 		if ( get_query_var( 'wpseopilot_sitemap_index' ) ) {
 			$this->render_sitemap_index();
+			return;
+		}
+
+		if ( get_query_var( 'wpseopilot_sitemap_rss' ) ) {
+			$this->render_rss_sitemap();
+			return;
+		}
+
+		if ( get_query_var( 'wpseopilot_sitemap_news' ) ) {
+			$this->render_google_news_sitemap();
+			return;
+		}
+
+		if ( get_query_var( 'wpseopilot_sitemap_additional' ) ) {
+			$this->render_additional_pages_sitemap();
 			return;
 		}
 
@@ -412,6 +443,15 @@ class Sitemap_Enhancer {
 
 				$items[] = $item;
 			}
+		}
+
+		// Add additional pages if configured
+		$additional_pages = get_option( 'wpseopilot_sitemap_additional_pages', [] );
+		if ( ! empty( $additional_pages ) && is_array( $additional_pages ) ) {
+			// Create a custom sitemap for additional pages
+			$items[] = [
+				'loc' => home_url( '/additional-sitemap.xml' ),
+			];
 		}
 
 		return apply_filters( 'wpseopilot_sitemap_index_items', $items );
@@ -499,11 +539,43 @@ class Sitemap_Enhancer {
 		$map       = [];
 		$providers = $server->registry->get_providers();
 
+		// Get enabled post types and taxonomies from settings
+		$enabled_post_types = get_option( 'wpseopilot_sitemap_post_types', null );
+		$enabled_taxonomies = get_option( 'wpseopilot_sitemap_taxonomies', null );
+		$include_author     = get_option( 'wpseopilot_sitemap_include_author_pages', '0' );
+
+		// If null, this is first time - get all available post types
+		if ( null === $enabled_post_types ) {
+			if ( isset( $providers['posts'] ) ) {
+				$post_provider = $providers['posts'];
+				$subtypes      = $post_provider->get_object_subtypes();
+				$enabled_post_types = array_keys( $subtypes );
+			} else {
+				$enabled_post_types = [];
+			}
+		}
+
+		// If null, this is first time - get all available taxonomies
+		if ( null === $enabled_taxonomies ) {
+			if ( isset( $providers['taxonomies'] ) ) {
+				$tax_provider = $providers['taxonomies'];
+				$taxonomies_list = $tax_provider->get_object_subtypes();
+				$enabled_taxonomies = array_keys( $taxonomies_list );
+			} else {
+				$enabled_taxonomies = [];
+			}
+		}
+
 		if ( isset( $providers['posts'] ) ) {
 			$post_provider = $providers['posts'];
 			$subtypes      = $post_provider->get_object_subtypes();
 
 			foreach ( $subtypes as $name => $object ) {
+				// Only include if in the enabled list
+				if ( ! in_array( $name, $enabled_post_types, true ) ) {
+					continue;
+				}
+
 				$map[] = [
 					'slug'     => $this->sanitize_slug( $name ),
 					'label'    => $object->label ?? $name,
@@ -518,6 +590,11 @@ class Sitemap_Enhancer {
 			$taxonomies   = $tax_provider->get_object_subtypes();
 
 			foreach ( $taxonomies as $name => $object ) {
+				// Only include if in the enabled list
+				if ( ! in_array( $name, $enabled_taxonomies, true ) ) {
+					continue;
+				}
+
 				$map[] = [
 					'slug'     => $this->sanitize_slug( $name ),
 					'label'    => $object->label ?? $name,
@@ -527,7 +604,7 @@ class Sitemap_Enhancer {
 			}
 		}
 
-		if ( isset( $providers['users'] ) ) {
+		if ( isset( $providers['users'] ) && '1' === $include_author ) {
 			$map[] = [
 				'slug'     => 'author',
 				'label'    => __( 'Authors', 'wp-seo-pilot' ),
@@ -811,7 +888,8 @@ class Sitemap_Enhancer {
 			return $this->max_urls_per_page;
 		}
 
-		$limit = $this->default_max_urls_per_page;
+		// Get from settings first
+		$limit = (int) get_option( 'wpseopilot_sitemap_max_urls', $this->default_max_urls_per_page );
 
 		if ( null !== $core_default ) {
 			$limit = min( (int) $core_default, $limit );
@@ -1282,5 +1360,164 @@ class Sitemap_Enhancer {
 	 */
 	private function get_stylesheet_url() {
 		return apply_filters( 'wpseopilot_sitemap_stylesheet', home_url( '/sitemap-style.xsl' ) );
+	}
+
+	/**
+	 * Render RSS sitemap.
+	 *
+	 * @return void
+	 */
+	private function render_rss_sitemap() {
+		if ( '1' !== get_option( 'wpseopilot_sitemap_enable_rss', '0' ) ) {
+			$this->bail_404();
+			return;
+		}
+
+		$posts = get_posts(
+			[
+				'posts_per_page' => 50,
+				'post_status'    => 'publish',
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			]
+		);
+
+		if ( empty( $posts ) ) {
+			$this->bail_404();
+			return;
+		}
+
+		nocache_headers();
+		header( 'Content-Type: application/rss+xml; charset=UTF-8' );
+
+		echo '<?xml version="1.0" encoding="UTF-8"?>';
+		?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+	<channel>
+		<title><?php echo esc_html( get_bloginfo( 'name' ) ); ?></title>
+		<link><?php echo esc_url( home_url( '/' ) ); ?></link>
+		<description><?php echo esc_html( get_bloginfo( 'description' ) ); ?></description>
+		<language><?php echo esc_attr( get_locale() ); ?></language>
+		<?php foreach ( $posts as $post ) : ?>
+		<item>
+			<title><?php echo esc_html( get_the_title( $post ) ); ?></title>
+			<link><?php echo esc_url( get_permalink( $post ) ); ?></link>
+			<guid><?php echo esc_url( get_permalink( $post ) ); ?></guid>
+			<pubDate><?php echo esc_html( get_post_time( 'r', true, $post ) ); ?></pubDate>
+			<description><![CDATA[<?php echo wp_kses_post( get_the_excerpt( $post ) ); ?>]]></description>
+			<content:encoded><![CDATA[<?php echo wp_kses_post( $post->post_content ); ?>]]></content:encoded>
+		</item>
+		<?php endforeach; ?>
+	</channel>
+</rss>
+		<?php
+		exit;
+	}
+
+	/**
+	 * Render Google News sitemap.
+	 *
+	 * @return void
+	 */
+	private function render_google_news_sitemap() {
+		if ( '1' !== get_option( 'wpseopilot_sitemap_enable_google_news', '0' ) ) {
+			$this->bail_404();
+			return;
+		}
+
+		$post_types    = get_option( 'wpseopilot_sitemap_google_news_post_types', [] );
+		$pub_name      = get_option( 'wpseopilot_sitemap_google_news_name', get_bloginfo( 'name' ) );
+
+		if ( empty( $post_types ) ) {
+			$post_types = [ 'post' ];
+		}
+
+		$posts = get_posts(
+			[
+				'post_type'      => $post_types,
+				'posts_per_page' => 1000,
+				'post_status'    => 'publish',
+				'date_query'     => [
+					[
+						'after' => '2 days ago',
+					],
+				],
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			]
+		);
+
+		if ( empty( $posts ) ) {
+			$this->bail_404();
+			return;
+		}
+
+		nocache_headers();
+		header( 'Content-Type: application/xml; charset=UTF-8' );
+
+		echo '<?xml version="1.0" encoding="UTF-8"?>';
+		?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+	<?php foreach ( $posts as $post ) : ?>
+	<url>
+		<loc><?php echo esc_url( get_permalink( $post ) ); ?></loc>
+		<news:news>
+			<news:publication>
+				<news:name><?php echo esc_html( $pub_name ); ?></news:name>
+				<news:language><?php echo esc_attr( get_locale() ); ?></news:language>
+			</news:publication>
+			<news:publication_date><?php echo esc_html( get_post_time( DATE_W3C, true, $post ) ); ?></news:publication_date>
+			<news:title><?php echo esc_html( get_the_title( $post ) ); ?></news:title>
+		</news:news>
+	</url>
+	<?php endforeach; ?>
+</urlset>
+		<?php
+		exit;
+	}
+
+	/**
+	 * Render additional pages sitemap.
+	 *
+	 * @return void
+	 */
+	private function render_additional_pages_sitemap() {
+		$additional_pages = get_option( 'wpseopilot_sitemap_additional_pages', [] );
+
+		if ( empty( $additional_pages ) || ! is_array( $additional_pages ) ) {
+			$this->bail_404();
+			return;
+		}
+
+		$url_list = [];
+
+		foreach ( $additional_pages as $page ) {
+			if ( empty( $page['url'] ) ) {
+				continue;
+			}
+
+			$url_list[] = [
+				'loc'      => esc_url_raw( $page['url'] ),
+				'priority' => floatval( $page['priority'] ?? 0.5 ),
+			];
+		}
+
+		if ( empty( $url_list ) ) {
+			$this->bail_404();
+			return;
+		}
+
+		$renderer = $this->get_renderer();
+
+		if ( ! $renderer ) {
+			$this->bail_404();
+			return;
+		}
+
+		nocache_headers();
+
+		$renderer->render_sitemap( $url_list );
+
+		exit;
 	}
 }

@@ -123,6 +123,11 @@ class Admin_UI {
 	 * @return void
 	 */
 	public function enqueue_admin_assets( $hook ) {
+		// Exclude sitemap settings page from rich input transformation
+		if ( 'wp-seo-pilot_page_wpseopilot-sitemap' === $hook ) {
+			return;
+		}
+
 		$should_enqueue = ( false !== strpos( $hook, 'wpseopilot' ) );
 
 		if ( ! $should_enqueue ) {

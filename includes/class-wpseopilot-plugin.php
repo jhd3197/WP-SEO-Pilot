@@ -63,6 +63,7 @@ class Plugin {
 		$this->register( 'redirects', new Service\Redirect_Manager() );
 		$this->register( 'audit', new Service\Audit() );
 		$this->register( 'sitemap', new Service\Sitemap_Enhancer() );
+		$this->register( 'sitemap_settings', new Service\Sitemap_Settings() );
 		$this->register( 'robots', new Service\Robots_Manager() );
 		$this->register( 'monitor', new Service\Request_Monitor() );
 		$this->register( 'social_card', new Service\Social_Card_Generator() );
@@ -126,6 +127,23 @@ class Plugin {
 		add_option( 'wpseopilot_enable_sitemap_enhancer', '1' );
 		add_option( 'wpseopilot_enable_redirect_manager', '1' );
 		add_option( 'wpseopilot_enable_404_logging', '1' );
+
+		// Sitemap settings defaults
+		add_option( 'wpseopilot_sitemap_enabled', '1' );
+		add_option( 'wpseopilot_sitemap_max_urls', 1000 );
+		add_option( 'wpseopilot_sitemap_enable_index', '1' );
+		add_option( 'wpseopilot_sitemap_dynamic_generation', '1' );
+		add_option( 'wpseopilot_sitemap_schedule_updates', '' );
+		add_option( 'wpseopilot_sitemap_post_types', [] );
+		add_option( 'wpseopilot_sitemap_taxonomies', [] );
+		add_option( 'wpseopilot_sitemap_include_author_pages', '0' );
+		add_option( 'wpseopilot_sitemap_include_date_archives', '0' );
+		add_option( 'wpseopilot_sitemap_exclude_images', '0' );
+		add_option( 'wpseopilot_sitemap_enable_rss', '0' );
+		add_option( 'wpseopilot_sitemap_enable_google_news', '0' );
+		add_option( 'wpseopilot_sitemap_google_news_name', get_bloginfo( 'name' ) );
+		add_option( 'wpseopilot_sitemap_google_news_post_types', [] );
+		add_option( 'wpseopilot_sitemap_additional_pages', [] );
 
 		if ( '1' === get_option( 'wpseopilot_enable_sitemap_enhancer', '1' ) ) {
 			( new Service\Sitemap_Enhancer() )->register_custom_sitemap();
