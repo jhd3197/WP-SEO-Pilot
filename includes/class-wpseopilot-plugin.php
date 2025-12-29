@@ -69,6 +69,7 @@ class Plugin {
 		$this->register( 'monitor', new Service\Request_Monitor() );
 		$this->register( 'social_card', new Service\Social_Card_Generator() );
 		$this->register( 'llm_txt', new Service\LLM_TXT_Generator() );
+		$this->register( 'local_seo', new Service\Local_SEO() );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$this->register( 'cli', new Service\CLI() );

@@ -1699,3 +1699,95 @@
     padding: 24px;
   }
 }
+
+/* Local SEO Opening Hours */
+.wpseopilot-opening-hours-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f1;
+}
+
+.wpseopilot-opening-hours-row:last-child {
+  border-bottom: none;
+}
+
+.wpseopilot-day-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.wpseopilot-day-toggle input[type="checkbox"] {
+  margin: 0;
+}
+
+.wpseopilot-day-toggle strong {
+  font-weight: 500;
+  color: #1d2327;
+}
+
+.wpseopilot-hours-inputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wpseopilot-time-input {
+  padding: 6px 10px;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.wpseopilot-time-input:focus {
+  border-color: #2271b1;
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 1px #2271b1;
+}
+
+.wpseopilot-hours-separator {
+  color: #646970;
+  font-weight: 500;
+}
+
+/* Schema Preview */
+.wpseopilot-schema-preview {
+  background: #f6f7f7;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  padding: 20px;
+  overflow-x: auto;
+  max-height: 600px;
+  margin: 0 0 16px 0;
+}
+
+.wpseopilot-schema-preview code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #1d2327;
+  white-space: pre;
+  display: block;
+}
+
+@media (max-width: 782px) {
+  .wpseopilot-opening-hours-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .wpseopilot-hours-inputs {
+    width: 100%;
+  }
+
+  .wpseopilot-time-input {
+    flex: 1;
+  }
+}

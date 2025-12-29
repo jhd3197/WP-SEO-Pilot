@@ -85,7 +85,7 @@ class Admin_Topbar {
 	 * @return array
 	 */
 	private static function get_nav_items() {
-		return [
+		$items = [
 			'defaults'   => [
 				'label' => __( 'Defaults', 'wp-seo-pilot' ),
 				'url'   => admin_url( 'admin.php?page=wpseopilot' ),
@@ -123,5 +123,15 @@ class Admin_Topbar {
 				'url'   => admin_url( 'admin.php?page=wpseopilot-social' ),
 			],
 		];
+
+		// Only show Local SEO if module is enabled.
+		if ( '1' === get_option( 'wpseopilot_enable_local_seo', '0' ) ) {
+			$items['local-seo'] = [
+				'label' => __( 'Local SEO', 'wp-seo-pilot' ),
+				'url'   => admin_url( 'admin.php?page=wpseopilot-local-seo' ),
+			];
+		}
+
+		return $items;
 	}
 }

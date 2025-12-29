@@ -309,6 +309,30 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 						</a>
 					</div>
 				</div>
+
+				<!-- Local SEO Module -->
+				<div class="wpseopilot-module-card">
+					<div class="wpseopilot-module-icon">
+						<span class="dashicons dashicons-location"></span>
+					</div>
+					<div class="wpseopilot-module-content">
+						<div class="wpseopilot-module-header">
+							<h3><?php esc_html_e( 'Local SEO', 'wp-seo-pilot' ); ?></h3>
+							<label class="wpseopilot-toggle-switch">
+								<input type="checkbox" name="wpseopilot_enable_local_seo" value="1" <?php checked( get_option( 'wpseopilot_enable_local_seo', '0' ), '1' ); ?> />
+								<span class="wpseopilot-toggle-slider"></span>
+							</label>
+						</div>
+						<p class="wpseopilot-module-description">
+							<?php esc_html_e( 'Add Local Business schema markup with business info, opening hours, and location data for better local search visibility.', 'wp-seo-pilot' ); ?>
+						</p>
+						<?php if ( '1' === get_option( 'wpseopilot_enable_local_seo', '0' ) ) : ?>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpseopilot-local-seo' ) ); ?>" class="wpseopilot-module-link">
+								<?php esc_html_e( 'Configure Local SEO →', 'wp-seo-pilot' ); ?>
+							</a>
+						<?php endif; ?>
+					</div>
+				</div>
 			</div>
 		</div>
 
