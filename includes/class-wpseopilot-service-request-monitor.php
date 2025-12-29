@@ -127,8 +127,8 @@ class Request_Monitor {
 	public function register_page() {
 		add_submenu_page(
 			'wpseopilot',
-			__( '404 Error Log', 'wp-seo-pilot' ),
-			__( '404 Error Log', 'wp-seo-pilot' ),
+			__( '404 Log', 'wp-seo-pilot' ),
+			__( '404 Log', 'wp-seo-pilot' ),
 			'manage_options',
 			'wpseopilot-404',
 			[ $this, 'render_page' ],

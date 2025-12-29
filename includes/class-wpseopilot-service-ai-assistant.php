@@ -1,6 +1,6 @@
 <?php
 /**
- * AI assistant admin experience.
+ * AI admin experience.
  *
  * @package WPSEOPilot
  */
@@ -14,7 +14,7 @@ use function WPSEOPilot\Helpers\generate_title_from_template;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * AI Assistant controller.
+ * AI controller.
  */
 class AI_Assistant {
 
@@ -38,8 +38,8 @@ class AI_Assistant {
 	public function register_page() {
 		add_submenu_page(
 			'wpseopilot',
-			__( 'AI Assistant', 'wp-seo-pilot' ),
-			__( 'AI Assistant', 'wp-seo-pilot' ),
+			__( 'AI', 'wp-seo-pilot' ),
+			__( 'AI', 'wp-seo-pilot' ),
 			'manage_options',
 			'wpseopilot-ai',
 			[ $this, 'render_page' ]
@@ -79,6 +79,13 @@ class AI_Assistant {
 		wp_enqueue_style(
 			'wpseopilot-admin',
 			WPSEOPILOT_URL . 'assets/css/admin.css',
+			[],
+			WPSEOPILOT_VERSION
+		);
+
+		wp_enqueue_style(
+			'wpseopilot-plugin',
+			WPSEOPILOT_URL . 'assets/css/plugin.css',
 			[],
 			WPSEOPILOT_VERSION
 		);

@@ -62,6 +62,7 @@ class Settings {
 		'wpseopilot_enable_redirect_manager' => '1',
 		'wpseopilot_enable_404_logging' => '1',
 		'wpseopilot_enable_og_preview' => '1',
+		'wpseopilot_enable_llm_txt' => '1',
 	];
 
 	/**
@@ -144,6 +145,7 @@ class Settings {
 		register_setting( 'wpseopilot', 'wpseopilot_enable_redirect_manager', [ $this, 'sanitize_bool' ] );
 		register_setting( 'wpseopilot', 'wpseopilot_enable_404_logging', [ $this, 'sanitize_bool' ] );
 		register_setting( 'wpseopilot', 'wpseopilot_enable_og_preview', [ $this, 'sanitize_bool' ] );
+		register_setting( 'wpseopilot', 'wpseopilot_enable_llm_txt', [ $this, 'sanitize_bool' ] );
 	}
 
 	/**

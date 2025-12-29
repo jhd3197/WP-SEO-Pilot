@@ -165,6 +165,12 @@
 
 				const noActions = standalonePanels.includes(targetId);
 				$container.toggleClass('wpseopilot-tabs--no-actions', noActions);
+
+				// Update URL hash
+				const shortName = targetId.replace('wpseopilot-tab-', '');
+				if (window.location.hash.substring(1) !== shortName) {
+					window.location.hash = shortName;
+				}
 			};
 
 			$tabs.on('click', function (event) {

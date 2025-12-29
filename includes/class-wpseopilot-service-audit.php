@@ -1,6 +1,6 @@
 <?php
 /**
- * Lightweight SEO audit and reporting.
+ * Lightweight Audit and reporting.
  *
  * @package WPSEOPilot
  */
@@ -35,8 +35,8 @@ class Audit {
 	public function register_page() {
 		add_submenu_page(
 			'wpseopilot',
-			__( 'SEO Audit', 'wp-seo-pilot' ),
-			__( 'SEO Audit', 'wp-seo-pilot' ),
+			__( 'Audit', 'wp-seo-pilot' ),
+			__( 'Audit', 'wp-seo-pilot' ),
 			'manage_options',
 			'wpseopilot-audit',
 			[ $this, 'render_page' ],

@@ -202,47 +202,114 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 			role="tabpanel"
 			aria-labelledby="wpseopilot-tab-link-modules"
 		>
-			<section class="wpseopilot-card">
-				<h2><?php esc_html_e( 'Modules', 'wp-seo-pilot' ); ?></h2>
-				<table class="form-table">
-						<tr>
-							<th scope="row"><?php esc_html_e( 'Sitemap enhancer', 'wp-seo-pilot' ); ?></th>
-							<td>
-								<label>
-									<input type="checkbox" name="wpseopilot_enable_sitemap_enhancer" value="1" <?php checked( get_option( 'wpseopilot_enable_sitemap_enhancer' ), '1' ); ?> />
-									<?php esc_html_e( 'Add image, video, and news data to WP core sitemaps.', 'wp-seo-pilot' ); ?>
-								</label>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'Redirect manager', 'wp-seo-pilot' ); ?></th>
-							<td>
-								<label>
-									<input type="checkbox" name="wpseopilot_enable_redirect_manager" value="1" <?php checked( get_option( 'wpseopilot_enable_redirect_manager' ), '1' ); ?> />
-									<?php esc_html_e( 'Enable UI + WP-CLI commands for redirects.', 'wp-seo-pilot' ); ?>
-								</label>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row"><?php esc_html_e( '404 logging', 'wp-seo-pilot' ); ?></th>
-							<td>
-								<label>
-									<input type="checkbox" name="wpseopilot_enable_404_logging" value="1" <?php checked( get_option( 'wpseopilot_enable_404_logging' ), '1' ); ?> />
-									<?php esc_html_e( 'Monitor and anonymize 404 referrers.', 'wp-seo-pilot' ); ?>
-								</label>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'OG Preview Link', 'wp-seo-pilot' ); ?></th>
-							<td>
-								<label>
-									<input type="checkbox" name="wpseopilot_enable_og_preview" value="1" <?php checked( get_option( 'wpseopilot_enable_og_preview', '1' ), '1' ); ?> />
-									<?php esc_html_e( 'Show "OG Preview" link in post list row actions.', 'wp-seo-pilot' ); ?>
-								</label>
-							</td>
-						</tr>
-					</table>
-			</section>
+			<div class="wpseopilot-modules-grid">
+				<!-- Sitemap Enhancer Module -->
+				<div class="wpseopilot-module-card">
+					<div class="wpseopilot-module-icon">
+						<span class="dashicons dashicons-media-code"></span>
+					</div>
+					<div class="wpseopilot-module-content">
+						<div class="wpseopilot-module-header">
+							<h3><?php esc_html_e( 'Sitemap Enhancer', 'wp-seo-pilot' ); ?></h3>
+							<label class="wpseopilot-toggle-switch">
+								<input type="checkbox" name="wpseopilot_enable_sitemap_enhancer" value="1" <?php checked( get_option( 'wpseopilot_enable_sitemap_enhancer' ), '1' ); ?> />
+								<span class="wpseopilot-toggle-slider"></span>
+							</label>
+						</div>
+						<p class="wpseopilot-module-description">
+							<?php esc_html_e( 'Add image, video, and news data to WordPress core sitemaps for better search engine indexing.', 'wp-seo-pilot' ); ?>
+						</p>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpseopilot-sitemap' ) ); ?>" class="wpseopilot-module-link">
+							<?php esc_html_e( 'Configure Sitemap →', 'wp-seo-pilot' ); ?>
+						</a>
+					</div>
+				</div>
+
+				<!-- Redirect Manager Module -->
+				<div class="wpseopilot-module-card">
+					<div class="wpseopilot-module-icon">
+						<span class="dashicons dashicons-controls-forward"></span>
+					</div>
+					<div class="wpseopilot-module-content">
+						<div class="wpseopilot-module-header">
+							<h3><?php esc_html_e( 'Redirect Manager', 'wp-seo-pilot' ); ?></h3>
+							<label class="wpseopilot-toggle-switch">
+								<input type="checkbox" name="wpseopilot_enable_redirect_manager" value="1" <?php checked( get_option( 'wpseopilot_enable_redirect_manager' ), '1' ); ?> />
+								<span class="wpseopilot-toggle-slider"></span>
+							</label>
+						</div>
+						<p class="wpseopilot-module-description">
+							<?php esc_html_e( 'Manage 301/302 redirects with an intuitive interface and WP-CLI commands.', 'wp-seo-pilot' ); ?>
+						</p>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpseopilot-redirects' ) ); ?>" class="wpseopilot-module-link">
+							<?php esc_html_e( 'Manage Redirects →', 'wp-seo-pilot' ); ?>
+						</a>
+					</div>
+				</div>
+
+				<!-- 404 Logging Module -->
+				<div class="wpseopilot-module-card">
+					<div class="wpseopilot-module-icon">
+						<span class="dashicons dashicons-warning"></span>
+					</div>
+					<div class="wpseopilot-module-content">
+						<div class="wpseopilot-module-header">
+							<h3><?php esc_html_e( '404 Error Logging', 'wp-seo-pilot' ); ?></h3>
+							<label class="wpseopilot-toggle-switch">
+								<input type="checkbox" name="wpseopilot_enable_404_logging" value="1" <?php checked( get_option( 'wpseopilot_enable_404_logging' ), '1' ); ?> />
+								<span class="wpseopilot-toggle-slider"></span>
+							</label>
+						</div>
+						<p class="wpseopilot-module-description">
+							<?php esc_html_e( 'Monitor and track 404 errors with anonymized referrer data to fix broken links.', 'wp-seo-pilot' ); ?>
+						</p>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpseopilot-404' ) ); ?>" class="wpseopilot-module-link">
+							<?php esc_html_e( 'View 404 Log →', 'wp-seo-pilot' ); ?>
+						</a>
+					</div>
+				</div>
+
+				<!-- OG Preview Module -->
+				<div class="wpseopilot-module-card">
+					<div class="wpseopilot-module-icon">
+						<span class="dashicons dashicons-share"></span>
+					</div>
+					<div class="wpseopilot-module-content">
+						<div class="wpseopilot-module-header">
+							<h3><?php esc_html_e( 'Social Preview', 'wp-seo-pilot' ); ?></h3>
+							<label class="wpseopilot-toggle-switch">
+								<input type="checkbox" name="wpseopilot_enable_og_preview" value="1" <?php checked( get_option( 'wpseopilot_enable_og_preview', '1' ), '1' ); ?> />
+								<span class="wpseopilot-toggle-slider"></span>
+							</label>
+						</div>
+						<p class="wpseopilot-module-description">
+							<?php esc_html_e( 'Add quick preview links to see how your posts will appear when shared on social media.', 'wp-seo-pilot' ); ?>
+						</p>
+					</div>
+				</div>
+
+				<!-- LLM.txt Generator Module -->
+				<div class="wpseopilot-module-card">
+					<div class="wpseopilot-module-icon">
+						<span class="dashicons dashicons-media-code"></span>
+					</div>
+					<div class="wpseopilot-module-content">
+						<div class="wpseopilot-module-header">
+							<h3><?php esc_html_e( 'LLM.txt Generator', 'wp-seo-pilot' ); ?></h3>
+							<label class="wpseopilot-toggle-switch">
+								<input type="checkbox" name="wpseopilot_enable_llm_txt" value="1" <?php checked( get_option( 'wpseopilot_enable_llm_txt', '1' ), '1' ); ?> />
+								<span class="wpseopilot-toggle-slider"></span>
+							</label>
+						</div>
+						<p class="wpseopilot-module-description">
+							<?php esc_html_e( 'Help AI engines discover your content with a standardized llm.txt file for better AI indexing.', 'wp-seo-pilot' ); ?>
+						</p>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpseopilot-sitemap#llm' ) ); ?>" class="wpseopilot-module-link">
+							<?php esc_html_e( 'Configure LLM.txt →', 'wp-seo-pilot' ); ?>
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div class="wpseopilot-tabs__actions">

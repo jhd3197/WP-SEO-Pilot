@@ -35,6 +35,11 @@ class Sitemap_Settings {
 		'wpseopilot_sitemap_google_news_name'      => '',
 		'wpseopilot_sitemap_google_news_post_types' => [],
 		'wpseopilot_sitemap_additional_pages'      => [],
+		'wpseopilot_enable_llm_txt'                => '1',
+		'wpseopilot_llm_txt_posts_per_type'        => 50,
+		'wpseopilot_llm_txt_title'                 => '',
+		'wpseopilot_llm_txt_description'           => '',
+		'wpseopilot_llm_txt_include_excerpt'       => '1',
 	];
 
 	/**
@@ -98,6 +103,13 @@ class Sitemap_Settings {
 		register_setting( $group, 'wpseopilot_sitemap_google_news_name', 'sanitize_text_field' );
 		register_setting( $group, 'wpseopilot_sitemap_google_news_post_types', [ $this, 'sanitize_array' ] );
 		register_setting( $group, 'wpseopilot_sitemap_additional_pages', [ $this, 'sanitize_additional_pages' ] );
+
+		// LLM.txt settings
+		register_setting( $group, 'wpseopilot_enable_llm_txt', [ $this, 'sanitize_bool' ] );
+		register_setting( $group, 'wpseopilot_llm_txt_posts_per_type', 'absint' );
+		register_setting( $group, 'wpseopilot_llm_txt_title', 'sanitize_text_field' );
+		register_setting( $group, 'wpseopilot_llm_txt_description', 'sanitize_textarea_field' );
+		register_setting( $group, 'wpseopilot_llm_txt_include_excerpt', [ $this, 'sanitize_bool' ] );
 	}
 
 	/**
@@ -110,7 +122,7 @@ class Sitemap_Settings {
 			return;
 		}
 
-		// Enqueue new modern plugin styles, NOT the admin.js that converts inputs
+		// Enqueue new modern plugin styles
 		wp_enqueue_style(
 			'wpseopilot-plugin',
 			WPSEOPILOT_URL . 'assets/css/plugin.css',
@@ -118,12 +130,18 @@ class Sitemap_Settings {
 			WPSEOPILOT_VERSION
 		);
 
-		// Enqueue jQuery separately for our inline scripts
-		wp_enqueue_script( 'jquery' );
+		// Enqueue admin.js for tab switching functionality
+		wp_enqueue_script(
+			'wpseopilot-admin',
+			WPSEOPILOT_URL . 'assets/js/admin.js',
+			[ 'jquery' ],
+			WPSEOPILOT_VERSION,
+			true
+		);
 
-		// Add inline script data without loading the full admin.js
+		// Add inline script data
 		wp_localize_script(
-			'jquery',
+			'wpseopilot-admin',
 			'WPSEOPilotSitemap',
 			[
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -147,10 +165,17 @@ class Sitemap_Settings {
 			return;
 		}
 
-		// Handle form submission
+		// Handle sitemap form submission
 		if ( isset( $_POST['wpseopilot_sitemap_submit'] ) && check_admin_referer( 'wpseopilot_sitemap_settings' ) ) {
 			$this->save_settings();
 			echo '<div class="notice notice-success"><p>' . esc_html__( 'Settings saved successfully!', 'wp-seo-pilot' ) . '</p></div>';
+		}
+
+		// Handle LLM.txt form submission
+		if ( isset( $_POST['wpseopilot_llm_txt_submit'] ) && check_admin_referer( 'wpseopilot_llm_txt_settings' ) ) {
+			$this->save_llm_txt_settings();
+			flush_rewrite_rules();
+			echo '<div class="notice notice-success"><p>' . esc_html__( 'LLM.txt settings saved successfully!', 'wp-seo-pilot' ) . '</p></div>';
 		}
 
 		// Prepare all variables for template
@@ -214,6 +239,13 @@ class Sitemap_Settings {
 			'daily'    => __( 'Daily', 'wp-seo-pilot' ),
 			'weekly'   => __( 'Weekly', 'wp-seo-pilot' ),
 		];
+
+		// LLM.txt variables
+		$llm_enabled         = get_option( 'wpseopilot_enable_llm_txt', '1' );
+		$llm_posts_per_type  = get_option( 'wpseopilot_llm_txt_posts_per_type', 50 );
+		$llm_title           = get_option( 'wpseopilot_llm_txt_title', '' );
+		$llm_description     = get_option( 'wpseopilot_llm_txt_description', '' );
+		$llm_include_excerpt = get_option( 'wpseopilot_llm_txt_include_excerpt', '1' );
 
 		// Load template
 		include WPSEOPILOT_PATH . 'templates/sitemap-settings.php';
@@ -287,6 +319,23 @@ class Sitemap_Settings {
 
 		// Flush rewrite rules to ensure new sitemap routes work
 		flush_rewrite_rules();
+	}
+
+	/**
+	 * Save LLM.txt settings.
+	 *
+	 * @return void
+	 */
+	private function save_llm_txt_settings() {
+		update_option( 'wpseopilot_enable_llm_txt', isset( $_POST['wpseopilot_enable_llm_txt'] ) ? '1' : '0' );
+
+		$posts_per_type = isset( $_POST['wpseopilot_llm_txt_posts_per_type'] ) ? absint( $_POST['wpseopilot_llm_txt_posts_per_type'] ) : 50;
+		$posts_per_type = max( 1, min( 500, $posts_per_type ) );
+		update_option( 'wpseopilot_llm_txt_posts_per_type', $posts_per_type );
+
+		update_option( 'wpseopilot_llm_txt_title', isset( $_POST['wpseopilot_llm_txt_title'] ) ? sanitize_text_field( $_POST['wpseopilot_llm_txt_title'] ) : '' );
+		update_option( 'wpseopilot_llm_txt_description', isset( $_POST['wpseopilot_llm_txt_description'] ) ? sanitize_textarea_field( $_POST['wpseopilot_llm_txt_description'] ) : '' );
+		update_option( 'wpseopilot_llm_txt_include_excerpt', isset( $_POST['wpseopilot_llm_txt_include_excerpt'] ) ? '1' : '0' );
 	}
 
 	/**

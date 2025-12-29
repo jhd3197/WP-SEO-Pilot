@@ -68,6 +68,7 @@ class Plugin {
 		$this->register( 'robots', new Service\Robots_Manager() );
 		$this->register( 'monitor', new Service\Request_Monitor() );
 		$this->register( 'social_card', new Service\Social_Card_Generator() );
+		$this->register( 'llm_txt', new Service\LLM_TXT_Generator() );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$this->register( 'cli', new Service\CLI() );
@@ -128,6 +129,11 @@ class Plugin {
 		add_option( 'wpseopilot_enable_sitemap_enhancer', '1' );
 		add_option( 'wpseopilot_enable_redirect_manager', '1' );
 		add_option( 'wpseopilot_enable_404_logging', '1' );
+		add_option( 'wpseopilot_enable_llm_txt', '1' );
+		add_option( 'wpseopilot_llm_txt_posts_per_type', 50 );
+		add_option( 'wpseopilot_llm_txt_title', '' );
+		add_option( 'wpseopilot_llm_txt_description', '' );
+		add_option( 'wpseopilot_llm_txt_include_excerpt', '1' );
 
 		// Sitemap settings defaults
 		add_option( 'wpseopilot_sitemap_enabled', '1' );
@@ -148,6 +154,10 @@ class Plugin {
 
 		if ( '1' === get_option( 'wpseopilot_enable_sitemap_enhancer', '1' ) ) {
 			( new Service\Sitemap_Enhancer() )->register_custom_sitemap();
+		}
+
+		if ( '1' === get_option( 'wpseopilot_enable_llm_txt', '1' ) ) {
+			( new Service\LLM_TXT_Generator() )->register_rewrite_rules();
 		}
 
 		flush_rewrite_rules();

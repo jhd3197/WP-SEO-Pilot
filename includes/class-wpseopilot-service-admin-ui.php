@@ -187,7 +187,7 @@ class Admin_UI {
 					'ajax'    => admin_url( 'admin-ajax.php' ),
 					'nonce'   => wp_create_nonce( 'wpseopilot_ai_generate' ),
 					'strings' => [
-						'disabled' => __( 'Add your OpenAI key under WP SEO Pilot → AI Assistant to enable suggestions.', 'wp-seo-pilot' ),
+						'disabled' => __( 'Add your OpenAI key under WP SEO Pilot → AI to enable suggestions.', 'wp-seo-pilot' ),
 						'running'  => __( 'Asking AI for ideas…', 'wp-seo-pilot' ),
 						'success'  => __( 'AI suggestion inserted.', 'wp-seo-pilot' ),
 						'error'    => __( 'Unable to fetch suggestion.', 'wp-seo-pilot' ),
@@ -258,7 +258,7 @@ class Admin_UI {
 					'ajax'    => admin_url( 'admin-ajax.php' ),
 					'nonce'   => wp_create_nonce( 'wpseopilot_ai_generate' ),
 					'strings' => [
-						'disabled' => __( 'Add your OpenAI key under WP SEO Pilot → AI Assistant to enable suggestions.', 'wp-seo-pilot' ),
+						'disabled' => __( 'Add your OpenAI key under WP SEO Pilot → AI to enable suggestions.', 'wp-seo-pilot' ),
 						'running'  => __( 'Asking AI for ideas…', 'wp-seo-pilot' ),
 						'success'  => __( 'AI suggestion inserted.', 'wp-seo-pilot' ),
 						'error'    => __( 'Unable to fetch suggestion.', 'wp-seo-pilot' ),
