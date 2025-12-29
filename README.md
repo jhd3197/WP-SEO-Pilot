@@ -1,6 +1,6 @@
 ## WP SEO Pilot
 
-<img width="1280" height="640" alt="WP-SEO-Pilot" src="https://github.com/user-attachments/assets/0eb73154-5c3a-4920-b25f-0d413e4c147b" />
+<img width="700" alt="WP-SEO-Pilot" src="https://github.com/user-attachments/assets/698871cd-fbbd-4833-8d52-9312cc78f592" />
 
 WP SEO Pilot is an all-in-one SEO workflow plugin focused on fast editorial UX and crawler-friendly output.
 
