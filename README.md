@@ -1,7 +1,7 @@
 # WP SEO Pilot
 
 <p align="center">
-  <img width="700" alt="WP SEO Pilot" src="https://github.com/user-attachments/assets/698871cd-fbbd-4833-8d52-9312cc78f592" />
+  <img width="641" alt="WP SEO Pilot" src="https://github.com/user-attachments/assets/e1219160-3178-4eaf-a193-565d113e03bf" />
 </p>
 
 <p align="center">
