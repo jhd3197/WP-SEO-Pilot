@@ -1,65 +1,139 @@
-## WP SEO Pilot
+# WP SEO Pilot
 
-<img width="700" alt="WP-SEO-Pilot" src="https://github.com/user-attachments/assets/698871cd-fbbd-4833-8d52-9312cc78f592" />
+<p align="center">
+  <img width="700" alt="WP SEO Pilot" src="https://github.com/user-attachments/assets/698871cd-fbbd-4833-8d52-9312cc78f592" />
+</p>
 
-WP SEO Pilot is an all-in-one SEO workflow plugin focused on fast editorial UX and crawler-friendly output.
+<p align="center">
+  <strong>The Open Standard for WordPress SEO</strong>
+</p>
 
-### Highlights
+<p align="center">
+  <a href="https://github.com/jhd3197/WP-SEO-Pilot/releases">
+    <img src="https://img.shields.io/github/v/release/jhd3197/WP-SEO-Pilot?style=flat-square&color=blue" alt="Latest Release">
+  </a>
+  <a href="https://github.com/jhd3197/WP-SEO-Pilot/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/jhd3197/WP-SEO-Pilot?style=flat-square&color=green" alt="License">
+  </a>
+  <a href="https://github.com/jhd3197/WP-SEO-Pilot/stargazers">
+    <img src="https://img.shields.io/github/stars/jhd3197/WP-SEO-Pilot?style=flat-square&color=yellow" alt="Stars">
+  </a>
+  <a href="https://github.com/jhd3197/WP-SEO-Pilot/network/members">
+    <img src="https://img.shields.io/github/forks/jhd3197/WP-SEO-Pilot?style=flat-square&color=orange" alt="Forks">
+  </a>
+  <a href="https://github.com/jhd3197/WP-SEO-Pilot/issues">
+    <img src="https://img.shields.io/github/issues/jhd3197/WP-SEO-Pilot?style=flat-square&color=red" alt="Issues">
+  </a>
+</p>
 
-- Per-post SEO fields stored in `_wpseopilot_meta` (title, description, canonical, robots, OG image) with Gutenberg sidebar + classic meta box.
-- Server-rendered `<title>`, meta description, canonical, robots, Open Graph, Twitter Card, and JSON-LD (WebSite, WebPage, Article, Breadcrumb).
-- Site-wide defaults for templates, descriptions, social images, robots, hreflang, and module toggles — plus dedicated per-post-type defaults for titles, descriptions, and keywords.
-- Snippet + social previews, internal link suggestions, quick actions, and compatibility detection for other SEO plugins.
-- Internal Linking: create rules that automatically convert chosen keywords into links across your content, complete with categories, limits, and preview tools.
-- AI connects to OpenAI for one-click title & meta description suggestions, with configurable prompts, model selection, and inline editor buttons.
-- Audit dashboard with severity graph, issue log, and auto-generated fallback titles/descriptions/tags for posts that are missing metadata.
-- **Advanced Sitemap Manager**: Full control over XML sitemaps with dedicated admin UI - select post types/taxonomies, enable author/date archives, configure RSS & Google News sitemaps, add custom pages, schedule automatic updates, and customize image inclusion.
-- Redirect manager (DB table `wpseopilot_redirects`), WP-CLI commands, 404 logging with hashed referrers, robots.txt editor, and JSON export for quick backups.
+<p align="center">
+  <a href="https://wordpress.org/">
+    <img src="https://img.shields.io/badge/WordPress-5.8%2B-21759B?style=flat-square&logo=wordpress" alt="WordPress Version">
+  </a>
+  <a href="https://php.net/">
+    <img src="https://img.shields.io/badge/PHP-7.4%2B-777BB4?style=flat-square&logo=php" alt="PHP Version">
+  </a>
+  <a href="https://github.com/jhd3197/WP-SEO-Pilot/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/jhd3197/WP-SEO-Pilot?style=flat-square&color=blueviolet" alt="Contributors">
+  </a>
+</p>
 
-### Template Tags & Shortcodes
+<p align="center">
+  <a href="https://github.com/jhd3197/WP-SEO-Pilot/discussions">
+    <img src="https://img.shields.io/badge/Discussions-Join%20Us-brightgreen?style=flat-square&logo=github" alt="Discussions">
+  </a>
+</p>
 
-- `wpseopilot_breadcrumbs( $post = null, $echo = true )` renders breadcrumb trail markup.
-- `[wpseopilot_breadcrumbs]` shortcode outputs the same breadcrumb list.
+<p align="center">
+  A comprehensive, transparent SEO solution built for developers who believe SEO tooling should be open source, not a black box.
+</p>
 
-### Filters
+---
 
-- `wpseopilot_title`, `wpseopilot_description`, `wpseopilot_canonical` allow programmatic overrides.
-- `wpseopilot_og_title`, `wpseopilot_og_description`, `wpseopilot_og_url`, `wpseopilot_og_type`, `wpseopilot_og_image` let you override Open Graph output per post.
-- `wpseopilot_social_tags` filters the full Open Graph + Twitter tag map (supports duplicate tags).
-- `wpseopilot_social_multi_tags` controls which social tags may appear multiple times (defaults include `og:image`, `og:video`, `twitter:image`).
-- `wpseopilot_keywords` filters the meta keywords tag derived from post-type defaults.
-- `wpseopilot_jsonld` filters the Structured Data graph before output.
-- `wpseopilot_feature_toggle` receives feature keys (`frontend_head`, `metabox`, `redirects`, `sitemaps`) for compatibility fallbacks.
-- `wpseopilot_link_suggestions` lets you augment/replace link suggestions in the meta box.
-- `wpseopilot_sitemap_map` adjusts which post types, taxonomies, or custom groups appear in the Yoast-style sitemap structure.
-- `wpseopilot_sitemap_max_urls` changes how many URLs are emitted per sitemap page (defaults to 1,000).
-- `wpseopilot_sitemap_images` customizes the `<image:image>` entries gathered from featured images, attached media, and inline content.
-- `wpseopilot_sitemap_group_count` overrides the calculated object totals per sitemap group.
-- `wpseopilot_sitemap_count_statuses` customizes which post statuses count toward post-type totals.
-- `wpseopilot_sitemap_lastmod` supplies last modified timestamps without forcing full URL hydration.
-- `wpseopilot_sitemap_excluded_terms` removes specific taxonomy slugs (e.g. `uncategorized`) from sitemap queries.
-- `wpseopilot_sitemap_index_items` filters the compiled sitemap index entries before rendering.
-- `wpseopilot_sitemap_stylesheet` swaps the pretty XSL front-end for `/sitemap_index.xml` and individual sitemaps.
-- `wpseopilot_sitemap_redirect` overrides the destination when requests hit WordPress core's `/wp-sitemap*.xml`.
+## Why Open Source SEO?
 
-### Developer Helper Functions
+For too long, WordPress SEO has been dominated by proprietary solutions that operate as black boxes. Each plugin guards its methods as trade secrets, fragmenting the ecosystem and forcing developers to work around opaque systems.
 
-You can use these global functions in your theme's `functions.php` or other plugins.
+**WP SEO Pilot takes a different approach**: We believe the SEO industry benefits from transparency, shared standards, and collaborative improvement. By open-sourcing our complete SEO workflow, we're establishing a foundation that the entire WordPress community can build upon, inspect, and enhance.
 
-**Create Redirects Programmatically**
+This is SEO without secrets—because better SEO comes from better collaboration, not better secrecy.
 
-Use `wpseopilot_create_redirect()` to register 301 redirects dynamically (e.g., during a migration script or custom event). It handles normalization and cache clearing automatically.
+---
+
+## Features
+
+### Core SEO Management
+- **Per-Post SEO Fields**: Complete meta control stored in `_wpseopilot_meta` with Gutenberg sidebar and classic editor support
+- **Server-Rendered Output**: `<title>`, meta descriptions, canonical URLs, robots directives, Open Graph, Twitter Cards, and JSON-LD structured data
+- **Site-Wide Templates**: Centralized defaults for titles, descriptions, social images, robots directives, and hreflang attributes
+- **Post-Type Granularity**: Dedicated defaults for each content type—no more one-size-fits-all configurations
+
+### Advanced Capabilities
+- **AI-Powered Suggestions**: OpenAI integration for intelligent title and meta description generation with customizable prompts and models
+- **Internal Linking Engine**: Automated keyword-to-link conversion with rule-based controls, category targeting, and comprehensive previews
+- **Advanced Sitemap Manager**: Full XML sitemap control with dedicated admin UI, post type/taxonomy selection, archive support, RSS & Google News sitemaps, custom pages, and scheduled regeneration
+- **Audit Dashboard**: Visual severity graphs, issue logging, and automatic fallback generation for missing metadata
+- **Redirect Manager**: Database-backed 301 redirects with WP-CLI support and 404 logging
+- **Developer Tools**: Snippet previews, social media card previews, internal link suggestions, and compatibility detection
+
+### Content Analysis
+- **Real-Time Previews**: SERP snippet and social media card simulations
+- **Link Opportunity Detection**: AI-powered internal linking suggestions
+- **Quick Actions**: Streamlined workflow for common SEO tasks
+- **Compatibility Checks**: Automatic detection and graceful coexistence with other SEO plugins
+
+---
+
+## Documentation
+
+- **[Getting Started](docs/GETTING_STARTED.md)** - Installation and basic configuration
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Filters, hooks, and programmatic control
+- **[Sitemap Configuration](docs/SITEMAPS.md)** - Advanced sitemap customization
+- **[Template Tags & Shortcodes](docs/TEMPLATE_TAGS.md)** - Theme integration reference
+- **[WP-CLI Commands](docs/WP_CLI.md)** - Command-line interface documentation
+- **[Filter Reference](docs/FILTERS.md)** - Complete filter documentation with examples
+
+---
+
+## Quick Start
+
+### Installation
+
+1. Download the latest release or clone this repository
+2. Upload to `/wp-content/plugins/wp-seo-pilot/`
+3. Activate through the WordPress admin interface
+4. Navigate to **WP SEO Pilot → Defaults** to configure site-wide settings
+
+### Basic Usage
+
+**Per-Post Configuration:**
+Edit any post or page and locate the "WP SEO Pilot" meta box or Gutenberg sidebar panel. Configure:
+- SEO Title
+- Meta Description  
+- Canonical URL
+- Robots Directives
+- Open Graph Image
+
+**Site-Wide Defaults:**
+Navigate to **WP SEO Pilot → Defaults** to set template-driven defaults that apply when per-post values aren't specified.
+
+---
+
+## Developer Integration
+
+### Template Tags
 
 ```php
-/**
- * Create a redirect.
- *
- * @param string $source      The path to redirect FROM (e.g. '/old-page').
- * @param string $target      The URL to redirect TO (e.g. 'https://example.com/new-page').
- * @param int    $status_code HTTP status code (default 301).
- *
- * @return int|\WP_Error      Returns the new Redirect ID or a WP_Error on failure.
- */
+// Render breadcrumbs in your theme
+if ( function_exists( 'wpseopilot_breadcrumbs' ) ) {
+    wpseopilot_breadcrumbs();
+}
+```
+
+### Programmatic Redirects
+
+```php
+// Create a 301 redirect programmatically
 $result = wpseopilot_create_redirect( '/old-url', '/new-url' );
 
 if ( is_wp_error( $result ) ) {
@@ -67,391 +141,92 @@ if ( is_wp_error( $result ) ) {
 }
 ```
 
-**Breadcrumbs**
-
-Render a breadcrumb trail anywhere in your theme.
+### Filter Hooks
 
 ```php
-if ( function_exists( 'wpseopilot_breadcrumbs' ) ) {
-    wpseopilot_breadcrumbs();
-}
-```
-
-**Get Template Title**
-
-Retrieve the auto-generated SEO title for a post (resolving all variables like `{{post_title}}`).
-
-### SEO Filters Cheatsheet
-
-Below is a complete reference of filters you can use to customize WP SEO Pilot output.
-
-#### 🔧 Global SEO Output
-```php
-// Change the entire SEO title
-add_filter( 'wpseopilot_title', function( $title ) {
-    return $title;
-});
-
-// Change the meta description
-add_filter( 'wpseopilot_description', function( $desc ) {
-    return $desc;
-});
-
-// Change the canonical URL
-add_filter( 'wpseopilot_canonical', function( $canonical ) {
-    return $canonical;
-});
-
-// Change robots meta string
-add_filter( 'wpseopilot_robots', function( $robots ) {
-    return 'noindex, nofollow';
-});
-```
-
-#### 🧠 Contextual SEO Filters
-```php
-// Modify title by post ID or post type
+// Modify SEO title dynamically
 add_filter( 'wpseopilot_title', function( $title, $post ) {
-    if ( is_singular( 'post' ) || ( $post && $post->ID === 123 ) ) {
-        return 'Custom Title';
+    if ( is_singular( 'product' ) ) {
+        return $title . ' | Buy Now';
     }
     return $title;
 }, 10, 2 );
 
-// Modify description by post
-add_filter( 'wpseopilot_description', function( $desc, $post ) {
+// Override Open Graph image
+add_filter( 'wpseopilot_og_image', function( $image, $post ) {
     if ( $post && $post->ID === 42 ) {
-        return 'Custom description';
+        return 'https://cdn.example.com/special-image.jpg';
     }
-    return $desc;
+    return $image;
 }, 10, 2 );
 ```
 
-#### 🧾 Robots and Indexing
-```php
-// Disable indexing for specific post types
-add_filter( 'wpseopilot_robots_array', function( $robots ) {
-    if ( is_post_type_archive( 'private' ) ) {
-        $robots[] = 'noindex';
-    }
-    return $robots;
-});
-```
+For comprehensive filter documentation, see **[docs/FILTERS.md](docs/FILTERS.md)**.
 
-#### 🔗 Canonical & URL Control
-```php
-// Remove canonical
-add_filter( 'wpseopilot_canonical', '__return_false' );
+---
 
-// Modify canonical dynamically
-add_filter( 'wpseopilot_canonical', function( $url ) {
-    return home_url( '/custom-url/' );
-});
-```
+## WP-CLI Support
 
-#### 🖼️ OpenGraph Filters
-```php
-add_filter( 'wpseopilot_og_title', function( $title ) { return $title; } );
-add_filter( 'wpseopilot_og_description', function( $desc ) { return $desc; } );
-add_filter( 'wpseopilot_og_url', function( $url, $post ) { return $url; }, 10, 2 );
-add_filter( 'wpseopilot_og_type', function( $type, $post ) { return $type; }, 10, 2 );
-add_filter( 'wpseopilot_og_image', function( $img ) { return $img; } );
-```
-
-#### 🐦 Twitter Card Filters
-```php
-add_filter( 'wpseopilot_twitter_title', function( $title ) { return $title; } );
-add_filter( 'wpseopilot_twitter_description', function( $desc ) { return $desc; } );
-add_filter( 'wpseopilot_twitter_image', function( $img ) { return $img; } );
-```
-
-#### 🧠 Schema / Structured Data
-```php
-// Filter entire schema graph
-add_filter( 'wpseopilot_jsonld', function( $graph ) {
-    return $graph;
-});
-
-// Filter specific schema pieces
-add_filter( 'wpseopilot_schema_webpage', function( $data ) {
-    return $data;
-});
-
-add_filter( 'wpseopilot_schema_article', function( $data ) {
-    return $data;
-});
-```
-
-#### 🧩 Breadcrumbs
-```php
-// Filter breadcrumbs output (array of links)
-add_filter( 'wpseopilot_breadcrumb_links', function( $links ) {
-    // $links[] = ['title' => 'Custom', 'url' => '/custom'];
-    return $links;
-});
-```
-
-#### 🗂️ XML SITEMAPS
-```php
-// Exclude a post type entirely from the sitemap index
-add_filter( 'wpseopilot_sitemap_map', function( $map ) {
-    foreach ( $map as $key => $group ) {
-        if ( 'private_type' === $group['subtype'] ) {
-            unset( $map[ $key ] );
-        }
-    }
-    return $map;
-});
-
-// Exclude specific posts from the sitemap query
-add_filter( 'wpseopilot_sitemap_post_query_args', function( $args, $post_type ) {
-    if ( 'post' === $post_type ) {
-        $args['post__not_in'] = [ 123, 456 ]; // Exclude IDs
-    }
-    return $args;
-}, 10, 2 );
-
-// Modify individual sitemap entries (add images, change priority)
-add_filter( 'wpseopilot_sitemap_entry', function( $entry, $post_id, $post_type ) {
-    return $entry;
-}, 10, 3 );
-```
-
-#### ⚙️ Features
-```php
-// Disable specific module features
-add_filter( 'wpseopilot_feature_toggle', function( $enabled, $feature ) {
-    if ( 'frontend_head' === $feature ) {
-        return false; // Disable head output
-    }
-    return $enabled;
-}, 10, 2 );
-```
-
-### Advanced Config
-
-Add or duplicate social meta tags with `wpseopilot_social_tags`:
-
-```php
-add_filter( 'wpseopilot_social_tags', function ( $tags ) {
-	$tags['og:image'] = array_filter(
-		[
-			$tags['og:image'] ?? '',
-			'https://cdn.example.com/secondary.jpg',
-		]
-	);
-
-	$tags[] = [
-		'property' => 'og:image:alt',
-		'content'  => 'Secondary image alt text',
-	];
-
-	return $tags;
-}, 10, 1 );
-```
-
-### WP-CLI
-
-```
+```bash
+# List all redirects
 wp wpseopilot redirects list --format=table
+
+# Export redirects to JSON
 wp wpseopilot redirects export redirects.json
+
+# Import redirects from JSON
 wp wpseopilot redirects import redirects.json
 ```
 
-### Export
+Full WP-CLI documentation: **[docs/WP_CLI.md](docs/WP_CLI.md)**
 
-Export site defaults + postmeta as JSON via **WP SEO Pilot → Defaults** for easy backups or migrations.
+---
 
-### Privacy
+## Contributing
 
-404 logging is opt-in and stores hashed referrers only. No telemetry or external requests are performed.
+We welcome contributions from the community. Whether you're fixing bugs, adding features, improving documentation, or suggesting enhancements, your input helps establish better standards for WordPress SEO.
 
-### Asset build
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for guidelines.
 
-The plugin styles now compile from Less sources located in `assets/less`.
+---
 
-1. Install dependencies once with `npm install`.
-2. Run `npm run build` to regenerate the CSS in `assets/css`.
-3. Use `npm run watch` during development to recompile files on change.
+## Privacy & Security
 
-### Sitemap Settings & Customization
+- **404 Logging**: Opt-in feature that stores only hashed referrers
+- **No Telemetry**: Zero external tracking or analytics
+- **No External Requests**: All processing happens on your server (except optional AI features when explicitly enabled)
 
-**Admin UI:** Configure all sitemap options via **WP SEO Pilot → Sitemap**
+---
 
-WP SEO Pilot replaces WordPress core sitemaps with `/sitemap_index.xml` plus Yoast-style `*-sitemap.xml` endpoints and enriches every entry with changefreq, priority, news/video data, and multiple images. The sitemap image list is built from the featured image, any images attached to the post, and `<img>` tags found in the post content.
+## Asset Development
 
-#### Sitemap Configuration Options
+The plugin uses Less for stylesheet compilation.
 
-Navigate to **WP SEO Pilot → Sitemap** to access these settings:
+```bash
+# Install dependencies
+npm install
 
-**XML Sitemap Settings:**
-- **Schedule Updates**: Automatically regenerate sitemaps on a schedule (Hourly, Twice Daily, Daily, Weekly, or No Schedule)
-- **Enable Sitemap Indexes**: Use sitemap index for better organization of large sites
-- **Maximum Posts Per Sitemap Page**: Configure how many URLs appear per sitemap page (default: 1000, max: 50000)
-- **Post Types**: Select which post types to include in the sitemap (Posts, Pages, Custom Post Types)
-- **Taxonomies**: Select which taxonomies to include (Categories, Tags, Custom Taxonomies)
-- **Include Date Archive Pages**: Add date-based archive pages to sitemap
-- **Include Author Pages**: Add author archive pages to sitemap
-- **Exclude Images**: Toggle whether images should be included in sitemap entries
-- **Dynamically Generate Sitemap**: Generate sitemap on-demand (recommended) or cache and regenerate on schedule
+# Build CSS from Less sources
+npm run build
 
-**Additional Sitemaps:**
-- **Create RSS Sitemap**: Enable RSS sitemap at `/sitemap-rss.xml` (latest 50 posts)
-- **Google News Sitemap**: Enable Google News sitemap at `/sitemap-news.xml`
-  - Configure publication name
-  - Select which post types to include
-  - Automatically filters posts from last 2 days (Google News requirement)
-
-**Additional Pages:**
-- Add custom URLs not managed by WordPress
-- Set priority (0.0 to 1.0) for each custom page
-- Perfect for external links or special landing pages
-
-#### Available Sitemap URLs
-
-Once configured, access your sitemaps at:
-- **Main Sitemap Index**: `yoursite.com/sitemap_index.xml`
-- **RSS Sitemap**: `yoursite.com/sitemap-rss.xml` (if enabled)
-- **Google News Sitemap**: `yoursite.com/sitemap-news.xml` (if enabled)
-- **Post Type Sitemaps**: `yoursite.com/post-sitemap.xml`, `yoursite.com/page-sitemap.xml`, etc.
-- **Taxonomy Sitemaps**: `yoursite.com/category-sitemap.xml`, `yoursite.com/post_tag-sitemap.xml`, etc.
-- **Author Sitemap**: `yoursite.com/author-sitemap.xml` (if enabled)
-- **Additional Pages**: `yoursite.com/additional-sitemap.xml` (if custom pages configured)
-
-#### Programmatic Customization
-
-You can tweak the sitemap output with `wpseopilot_sitemap_images`, for example to append a custom CDN URL:
-
-```php
-add_filter( 'wpseopilot_sitemap_images', function ( $images, $post_id ) {
-	$images[] = [
-		'image:loc'     => 'https://cdn.example.com/fallback.jpg',
-		'image:caption' => get_the_title( $post_id ),
-	];
-
-	return $images;
-}, 10, 2 );
+# Watch for changes during development
+npm run watch
 ```
 
-To fully customize a single page’s sitemap entry—including changefreq, priority, news/video data, and images—use `wpseopilot_sitemap_entry`:
+---
 
-```php
-add_filter( 'wpseopilot_sitemap_entry', function ( $entry, $post_id, $post_type ) {
-	if ( $post_id !== 42 ) { // target a specific page or post
-		return $entry;
-	}
+## License
 
-	$entry['priority']   = 1.0;
-	$entry['changefreq'] = 'daily';
-	$entry['news:news']  = [
-		'news:publication'      => [
-			'news:name'     => get_bloginfo( 'name' ),
-			'news:language' => get_locale(),
-		],
-		'news:publication_date' => get_post_time( DATE_W3C, true, $post_id ),
-		'news:title'            => get_the_title( $post_id ),
-	];
+[Your License Here]
 
-	$entry['video:video'] = [
-		'video:content_loc' => 'https://cdn.example.com/video.mp4',
-		'video:title'       => get_the_title( $post_id ),
-	];
+---
 
-	$entry['image:image'] = [
-		[
-			'image:loc'     => 'https://cdn.example.com/custom-hero.jpg',
-			'image:caption' => 'Custom hero image for this page',
-		],
-		[
-			'image:loc'     => 'https://cdn.example.com/custom-gallery.jpg',
-			'image:caption' => 'Gallery highlight',
-		],
-	];
+## Support
 
-return $entry;
-}, 10, 3 );
-```
+- **Issues**: [GitHub Issues](https://github.com/jhd3197/WP-SEO-Pilot/issues)
+- **Documentation**: [Full Documentation](docs/)
+- **Community**: [Discussions](https://github.com/jhd3197/WP-SEO-Pilot/discussions)
 
-Example: pull a quote + image from a custom table and use it for both the sitemap image and OG headers on a single page.
+---
 
-```php
-function wpseopilot_get_quote_row( $post_id ) {
-	static $cache = [];
-
-	if ( array_key_exists( $post_id, $cache ) ) {
-		return $cache[ $post_id ];
-	}
-
-	global $wpdb;
-	$table = $wpdb->prefix . 'custom_quotes';
-
-	$cache[ $post_id ] = $wpdb->get_row(
-		$wpdb->prepare(
-			"SELECT quote_text, author, image_url FROM {$table} WHERE post_id = %d",
-			$post_id
-		),
-		ARRAY_A
-	);
-
-	return $cache[ $post_id ];
-}
-
-add_filter( 'wpseopilot_sitemap_entry', function ( $entry, $post_id, $post_type ) {
-	if ( 'page' !== $post_type ) {
-		return $entry;
-	}
-
-	$quote = wpseopilot_get_quote_row( $post_id );
-	if ( empty( $quote ) || empty( $quote['image_url'] ) ) {
-		return $entry;
-	}
-
-	$entry['image:image'] = [
-		[
-			'image:loc'     => esc_url_raw( $quote['image_url'] ),
-			'image:caption' => wp_strip_all_tags( $quote['quote_text'] . ' - ' . $quote['author'] ),
-		],
-	];
-
-	return $entry;
-}, 10, 3 );
-
-add_filter( 'wpseopilot_og_title', function ( $title, $post ) {
-	if ( ! $post instanceof WP_Post ) {
-		return $title;
-	}
-
-	$quote = wpseopilot_get_quote_row( $post->ID );
-	if ( empty( $quote ) ) {
-		return $title;
-	}
-
-	return wp_strip_all_tags( $quote['author'] . ' Quote' );
-}, 10, 2 );
-
-add_filter( 'wpseopilot_og_description', function ( $description, $post ) {
-	if ( ! $post instanceof WP_Post ) {
-		return $description;
-	}
-
-	$quote = wpseopilot_get_quote_row( $post->ID );
-	if ( empty( $quote ) ) {
-		return $description;
-	}
-
-	return wp_strip_all_tags( $quote['quote_text'] );
-}, 10, 2 );
-
-add_filter( 'wpseopilot_og_image', function ( $image, $post ) {
-	if ( ! $post instanceof WP_Post ) {
-		return $image;
-	}
-
-	$quote = wpseopilot_get_quote_row( $post->ID );
-	if ( empty( $quote['image_url'] ) ) {
-		return $image;
-	}
-
-	return esc_url_raw( $quote['image_url'] );
-}, 10, 2 );
-```
+**Built with transparency. Built for the community. Built to be better.**
