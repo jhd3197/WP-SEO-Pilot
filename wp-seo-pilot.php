@@ -57,6 +57,10 @@ spl_autoload_register(
 
 require_once WPSEOPILOT_PATH . 'includes/helpers.php';
 
+if ( file_exists( WPSEOPILOT_PATH . 'test-analytics.php' ) ) {
+	require_once WPSEOPILOT_PATH . 'test-analytics.php';
+}
+
 /**
  * Bootstrap the plugin.
  */
