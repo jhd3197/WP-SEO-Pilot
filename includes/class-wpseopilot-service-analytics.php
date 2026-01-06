@@ -6,24 +6,34 @@ defined( 'ABSPATH' ) || exit;
 
 class Analytics {
 
-	private $matomo_url = 'https://matomo.builditdesign.com/matomo.php';
+	private $matomo_url = 'https://matomo.builditdesign.com';
 	private $site_id = 1;
-	private $enabled = true;
 
 	public function boot() {
-		add_action( 'admin_init', [ $this, 'track_admin_page_view' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_matomo_tracking' ] );
+		add_filter( 'script_loader_tag', [ $this, 'add_async_defer_attribute' ], 10, 2 );
+		add_filter( 'wp_resource_hints', [ $this, 'add_resource_hints' ], 10, 2 );
 	}
 
 	public function is_enabled() {
-		return apply_filters( 'wpseopilot_analytics_enabled', $this->enabled );
+		$setting_enabled = '1' === get_option( 'wpseopilot_enable_analytics', '1' );
+		return apply_filters( 'wpseopilot_analytics_enabled', $setting_enabled );
 	}
 
 	public static function track_activation() {
 		$analytics = new self();
-		$analytics->send_event( 'plugin_activate' );
+		if ( ! $analytics->is_enabled() ) {
+			return;
+		}
+
+		update_option( 'wpseopilot_track_activation', time() );
 	}
 
-	public function track_admin_page_view() {
+	public function enqueue_matomo_tracking( $hook ) {
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -38,102 +48,63 @@ class Analytics {
 			return;
 		}
 
-		$transient_key = 'wpseopilot_analytics_page_' . md5( $page . get_current_user_id() );
-
-		if ( get_transient( $transient_key ) ) {
-			return;
-		}
-
-		set_transient( $transient_key, 1, HOUR_IN_SECONDS );
-
-		$this->send_event( 'admin_page_view', admin_url( 'admin.php?page=' . $page ) );
-	}
-
-	public function track_feature( $feature_name ) {
-		$this->send_event( $feature_name );
-	}
-
-	public function test_tracking() {
-		$params = [
-			'idsite'      => $this->site_id,
-			'rec'         => 1,
-			'apiv'        => 1,
-			'action_name' => 'test_event',
-			'url'         => home_url(),
-			'rand'        => wp_rand( 100000, 999999 ),
-			'_id'         => substr( md5( home_url() ), 0, 16 ),
-			'bots'        => 1,
-		];
-
-		$tracking_url = add_query_arg( $params, $this->matomo_url );
-
-		$response = wp_remote_get(
-			$tracking_url,
-			[
-				'timeout'     => 10,
-				'blocking'    => true,
-				'httpversion' => '1.1',
-				'sslverify'   => false,
-			]
+		wp_enqueue_script(
+			'wpseopilot-matomo',
+			$this->matomo_url . '/matomo.js',
+			[],
+			WPSEOPILOT_VERSION,
+			true
 		);
 
-		if ( is_wp_error( $response ) ) {
-			return [
-				'success' => false,
-				'error'   => $response->get_error_message(),
-				'url'     => $tracking_url,
-			];
+		$activation_time = get_option( 'wpseopilot_track_activation', 0 );
+		$page_name = str_replace( 'wpseopilot-', '', $page );
+		$page_name = str_replace( 'wpseopilot', 'dashboard', $page_name );
+		$page_title = ucwords( str_replace( '-', ' ', $page_name ) );
+
+		$visitor_id = substr( md5( home_url() . get_current_user_id() ), 0, 16 );
+
+		$matomo_config = "
+			var _paq = window._paq = window._paq || [];
+			_paq.push(['setTrackerUrl', '{$this->matomo_url}/matomo.php']);
+			_paq.push(['setSiteId', '{$this->site_id}']);
+			_paq.push(['setVisitorId', '{$visitor_id}']);
+			_paq.push(['setCustomUrl', '" . admin_url( 'admin.php?page=' . esc_js( $page ) ) . "']);
+			_paq.push(['setDocumentTitle', 'WP SEO Pilot - {$page_title}']);
+			_paq.push(['setDoNotTrack', false]);
+			_paq.push(['disableCookies']);
+			_paq.push(['trackPageView']);
+			_paq.push(['enableLinkTracking']);
+			_paq.push(['enableHeartBeatTimer']);
+			console.log('WP SEO Pilot Analytics: Initialized', {
+				siteId: '{$this->site_id}',
+				visitorId: '{$visitor_id}',
+				trackerUrl: '{$this->matomo_url}/matomo.php'
+			});
+		";
+
+		if ( $activation_time && ( time() - $activation_time ) < 300 ) {
+			$matomo_config .= "
+				_paq.push(['trackEvent', 'Plugin', 'Activate', '" . WPSEOPILOT_VERSION . "']);
+			";
+			delete_option( 'wpseopilot_track_activation' );
 		}
 
-		$body = wp_remote_retrieve_body( $response );
-
-		return [
-			'success'  => true,
-			'code'     => wp_remote_retrieve_response_code( $response ),
-			'url'      => $tracking_url,
-			'body'     => $body,
-			'headers'  => wp_remote_retrieve_headers( $response ),
-		];
+		wp_add_inline_script( 'wpseopilot-matomo', $matomo_config, 'before' );
 	}
 
-	private function send_event( $action_name, $url = null ) {
-		if ( ! $this->is_enabled() ) {
-			return;
+	public function add_async_defer_attribute( $tag, $handle ) {
+		if ( 'wpseopilot-matomo' !== $handle ) {
+			return $tag;
 		}
-
-		if ( $url === null ) {
-			$url = home_url();
-		}
-
-		$params = [
-			'idsite'      => $this->site_id,
-			'rec'         => 1,
-			'apiv'        => 1,
-			'action_name' => $action_name,
-			'url'         => $url,
-			'rand'        => wp_rand( 100000, 999999 ),
-			'_id'         => substr( md5( home_url() ), 0, 16 ),
-			'bots'        => 1,
-		];
-
-		$tracking_url = add_query_arg( $params, $this->matomo_url );
-
-		$response = wp_remote_get(
-			$tracking_url,
-			[
-				'timeout'     => 5,
-				'blocking'    => false,
-				'httpversion' => '1.1',
-				'sslverify'   => false,
-			]
-		);
-
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			if ( is_wp_error( $response ) ) {
-				error_log( 'WP SEO Pilot Analytics Error: ' . $response->get_error_message() );
-			} else {
-				error_log( 'WP SEO Pilot Analytics Sent: ' . $tracking_url );
-			}
-		}
+		return str_replace( ' src', ' defer async src', $tag );
 	}
+
+	public function add_resource_hints( $urls, $relation_type ) {
+		if ( 'preconnect' === $relation_type ) {
+			$urls[] = $this->matomo_url;
+		}
+		return $urls;
+	}
+
+
 }

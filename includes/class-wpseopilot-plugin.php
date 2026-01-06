@@ -138,6 +138,7 @@ class Plugin {
 		add_option( 'wpseopilot_llm_txt_title', '' );
 		add_option( 'wpseopilot_llm_txt_description', '' );
 		add_option( 'wpseopilot_llm_txt_include_excerpt', '1' );
+		add_option( 'wpseopilot_enable_analytics', '1' );
 
 		// Sitemap settings defaults
 		add_option( 'wpseopilot_sitemap_enabled', '1' );

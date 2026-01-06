@@ -200,11 +200,6 @@ class AI_Assistant {
 
 		$suggestion = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $body['choices'][0]['message']['content'] ) ) );
 
-		$analytics = \WPSEOPilot\Plugin::instance()->get( 'analytics' );
-		if ( $analytics ) {
-			$analytics->track_feature( 'ai_generation_' . $field );
-		}
-
 		wp_send_json_success(
 			[
 				'value' => $suggestion,

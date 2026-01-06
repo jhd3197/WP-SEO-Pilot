@@ -74,11 +74,6 @@ class Audit {
 		$scanned = $results['scanned'];
 		$recommendations = $results['recommendations'];
 
-		$analytics = \WPSEOPilot\Plugin::instance()->get( 'analytics' );
-		if ( $analytics ) {
-			$analytics->track_feature( 'audit_scan' );
-		}
-
 		include WPSEOPILOT_PATH . 'templates/audit.php';
 	}
 

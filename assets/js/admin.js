@@ -108,6 +108,12 @@
 					(aiConfig.strings && aiConfig.strings.success) || '',
 					'success'
 				);
+
+				// Track AI generation success
+				if (typeof _paq !== 'undefined') {
+					const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+					_paq.push(['trackEvent', 'AI Assistant', 'Generate', fieldName]);
+				}
 			}
 		)
 			.fail((xhr) => {
@@ -176,7 +182,14 @@
 
 			$tabs.on('click', function (event) {
 				event.preventDefault();
-				activate($(this).data('wpseopilot-tab'));
+				const tabId = $(this).data('wpseopilot-tab');
+				activate(tabId);
+
+				// Track tab switch with Matomo
+				if (typeof _paq !== 'undefined') {
+					const tabName = tabId.replace('wpseopilot-tab-', '').replace(/-/g, ' ');
+					_paq.push(['trackEvent', 'Tabs', 'Switch', tabName]);
+				}
 			});
 
 			$container.addClass('wpseopilot-tabs--ready');

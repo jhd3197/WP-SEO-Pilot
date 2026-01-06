@@ -282,11 +282,6 @@ class Redirect_Manager {
 			wp_send_json_error( $result->get_error_message() );
 		}
 
-		$analytics = \WPSEOPilot\Plugin::instance()->get( 'analytics' );
-		if ( $analytics ) {
-			$analytics->track_feature( 'redirect_created' );
-		}
-
 		// Cleanup transient just in case it wasn't cleared by the render method (e.g. if we moved to dismissing manually).
 		delete_transient( 'wpseopilot_slug_changed_' . get_current_user_id() );
 

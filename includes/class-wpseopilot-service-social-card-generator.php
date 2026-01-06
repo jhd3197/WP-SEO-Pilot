@@ -90,11 +90,6 @@ class Social_Card_Generator {
 			$this->add_logo( $img, $design['logo_url'], $design['logo_position'], $width, $height );
 		}
 
-		$analytics = \WPSEOPilot\Plugin::instance()->get( 'analytics' );
-		if ( $analytics ) {
-			$analytics->track_feature( 'social_card_generated' );
-		}
-
 		nocache_headers();
 		header( 'Content-Type: image/png' );
 		imagepng( $img );

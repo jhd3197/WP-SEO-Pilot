@@ -338,6 +338,25 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 						<?php endif; ?>
 					</div>
 				</div>
+
+				<!-- Analytics Module -->
+				<div class="wpseopilot-module-card">
+					<div class="wpseopilot-module-icon">
+						<span class="dashicons dashicons-chart-bar"></span>
+					</div>
+					<div class="wpseopilot-module-content">
+						<div class="wpseopilot-module-header">
+							<h3><?php esc_html_e( 'Usage Analytics', 'wp-seo-pilot' ); ?></h3>
+							<label class="wpseopilot-toggle-switch">
+								<input type="checkbox" name="wpseopilot_enable_analytics" value="1" <?php checked( get_option( 'wpseopilot_enable_analytics', '1' ), '1' ); ?> />
+								<span class="wpseopilot-toggle-slider"></span>
+							</label>
+						</div>
+						<p class="wpseopilot-module-description">
+							<?php esc_html_e( 'Help improve WP SEO Pilot by sending anonymous usage data. No personal information or user data is collected - only plugin activation and feature usage.', 'wp-seo-pilot' ); ?>
+						</p>
+					</div>
+				</div>
 			</div>
 		</div>
 

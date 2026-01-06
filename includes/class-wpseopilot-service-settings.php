@@ -64,6 +64,7 @@ class Settings {
 		'wpseopilot_enable_og_preview' => '1',
 		'wpseopilot_enable_llm_txt' => '1',
 		'wpseopilot_enable_local_seo' => '0',
+		'wpseopilot_enable_analytics' => '1',
 		'wpseopilot_social_card_design' => [
 			'background_color' => '#1a1a36',
 			'accent_color'     => '#5a84ff',
@@ -163,6 +164,7 @@ class Settings {
 		register_setting( 'wpseopilot', 'wpseopilot_enable_og_preview', [ $this, 'sanitize_bool' ] );
 		register_setting( 'wpseopilot', 'wpseopilot_enable_llm_txt', [ $this, 'sanitize_bool' ] );
 		register_setting( 'wpseopilot', 'wpseopilot_enable_local_seo', [ $this, 'sanitize_bool' ] );
+		register_setting( 'wpseopilot', 'wpseopilot_enable_analytics', [ $this, 'sanitize_bool' ] );
 	}
 
 	/**
