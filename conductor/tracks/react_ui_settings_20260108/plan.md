@@ -11,7 +11,7 @@ This phase focuses on preparing the development environment for React developmen
     - [ ] Sub-task: Configure the build tool (e.g., esbuild, webpack, or a pre-configured solution like `@wordpress/scripts`) to output a single bundled JS file.
 - [x] Task: Create a placeholder React component (2d58d00)
     - [ ] Sub-task: Write a simple "Hello World" React component to serve as a placeholder.
-- [ ] Task: Enqueue the React script in WordPress
+- [x] Task: Enqueue the React script in WordPress (864a0d8)
     - [ ] Sub-task: Write the necessary PHP code to register and enqueue the compiled React JavaScript bundle on the "Defaults" admin page.
     - [ ] Sub-task: Verify that the "Hello World" component renders correctly on the "Defaults" admin page.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Environment Setup and Initial Scaffolding' (Protocol in workflow.md)

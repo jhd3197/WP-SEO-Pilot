@@ -144,8 +144,8 @@ class Admin_UI {
 		}
 
 		// If on a React-powered page, enqueue the React app.
-		// For now, we'll target the main 'wpseopilot' settings page (Defaults).
-		if ( 'toplevel_page_wpseopilot' === $hook ) {
+		// We enqueue on any 'wpseopilot' page and let the React app's root element determine if it should render.
+		if ( false !== strpos( $hook, 'wpseopilot' ) ) {
 			$react_app_asset_path = WPSEOPILOT_PATH . 'assets/js/build/index.asset.php';
 			if ( file_exists( $react_app_asset_path ) ) {
 				$react_app_assets = require $react_app_asset_path;
