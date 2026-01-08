@@ -143,6 +143,22 @@ class Admin_UI {
 			return;
 		}
 
+		// If on a React-powered page, enqueue the React app.
+		// For now, we'll target the main 'wpseopilot' settings page (Defaults).
+		if ( 'toplevel_page_wpseopilot' === $hook ) {
+			$react_app_asset_path = WPSEOPILOT_PATH . 'assets/js/build/index.asset.php';
+			if ( file_exists( $react_app_asset_path ) ) {
+				$react_app_assets = require $react_app_asset_path;
+				wp_enqueue_script(
+					'wpseopilot-react-app',
+					WPSEOPILOT_URL . 'assets/js/build/index.js',
+					$react_app_assets['dependencies'],
+					$react_app_assets['version'],
+					true
+				);
+			}
+		}
+
 		wp_enqueue_style(
 			'wpseopilot-admin',
 			WPSEOPILOT_URL . 'assets/css/admin.css',

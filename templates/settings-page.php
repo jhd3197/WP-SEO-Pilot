@@ -92,6 +92,7 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 \WPSEOPilot\Admin_Topbar::render( 'defaults' );
 ?>
 <div class="wrap wpseopilot-page wpseopilot-settings">
+	<div id="wp-seo-pilot-react-app"></div>
 	<div class="wpseopilot-tabs" data-component="wpseopilot-tabs">
 		<div class="nav-tab-wrapper wpseopilot-tabs__nav" role="tablist" aria-label="<?php esc_attr_e( 'Site default sections', 'wp-seo-pilot' ); ?>">
 			<button
