@@ -2,7 +2,7 @@
 
 This plan outlines the steps to migrate the "Defaults" and "Search Appearance" settings pages to a new React-based UI, as detailed in `spec.md`.
 
-## Phase 1: Environment Setup and Initial Scaffolding
+## Phase 1: Environment Setup and Initial Scaffolding [checkpoint: 3c64c05]
 
 This phase focuses on preparing the development environment for React development within the existing WordPress plugin structure.
 
