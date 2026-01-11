@@ -593,6 +593,9 @@ code {
 .pilot-card-mark.seo {
   background: #2271b1;
 }
+.pilot-card-mark.ai {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
 .pilot-card-mark svg {
   width: 22px;
   height: 22px;
@@ -620,6 +623,23 @@ code {
   gap: 8px;
   flex-wrap: wrap;
   margin-top: auto;
+}
+.pilot-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+  margin-left: auto;
+}
+.pilot-card-link:hover {
+  color: #1e1e1e;
+}
+.pilot-card-link svg {
+  flex-shrink: 0;
 }
 .panel {
   background: #ffffff;

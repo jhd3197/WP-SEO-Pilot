@@ -95,6 +95,10 @@
         background: @color-primary;
     }
 
+    &.ai {
+        background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    }
+
     svg {
         width: 22px;
         height: 22px;
@@ -127,6 +131,26 @@
     gap: @spacing-sm;
     flex-wrap: wrap;
     margin-top: auto;
+}
+
+.pilot-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: @color-muted;
+    text-decoration: none;
+    font-size: @font-size-sm;
+    font-weight: @font-weight-medium;
+    transition: color @transition-fast;
+    margin-left: auto;
+
+    &:hover {
+        color: @color-text;
+    }
+
+    svg {
+        flex-shrink: 0;
+    }
 }
 
 // Panel
