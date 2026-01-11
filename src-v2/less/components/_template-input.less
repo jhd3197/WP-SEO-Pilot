@@ -202,8 +202,8 @@
     z-index: 10;
 
     // When dropdown is open, boost z-index even higher
-    &:has(.variable-picker__dropdown--compact) {
-        z-index: @z-modal + 10;
+    &:has(.variable-picker__dropdown) {
+        z-index: 10000;
     }
 }
 
@@ -271,15 +271,11 @@
     }
 }
 
-// Compact variable picker - positioned relative to actions container
-.variable-picker--compact {
-    position: relative;
-}
 
 // Override WordPress/settings-control input styles
+// Only target the main field, NOT the variable picker search input
 .settings-control .template-input-v2 {
-    input,
-    textarea {
+    > .template-input-v2__container > .template-input-v2__field {
         position: absolute !important;
         border: none !important;
         background: transparent !important;

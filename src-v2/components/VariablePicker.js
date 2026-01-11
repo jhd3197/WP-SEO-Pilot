@@ -127,7 +127,7 @@ const VariablePicker = ({
                 </button>
 
                 {isOpen && (
-                    <div className="variable-picker__dropdown variable-picker__dropdown--compact">
+                    <div className="variable-picker__dropdown">
                         <div className="variable-picker__search">
                             <input
                                 type="text"

@@ -2,16 +2,19 @@
 // Variable Picker - Template Variable Selection Component
 // ==========================================================================
 
+// Tag colors
+@tag-global: #2271b1;
+@tag-post: #7c3aed;
+@tag-taxonomy: #059669;
+@tag-author: #ea580c;
+@tag-archive: #0891b2;
+
+// Base container
 .variable-picker {
     position: relative;
-    z-index: @z-dropdown;
 }
 
-// Compact mode (inside template inputs)
-.variable-picker--compact {
-    position: static; // Let dropdown position relative to container
-}
-
+// Full trigger button (non-compact mode)
 .variable-picker__trigger {
     display: flex;
     align-items: center;
@@ -42,88 +45,139 @@
     }
 }
 
+// ==========================================================================
+// Dropdown Styles (shared between full and compact mode)
+// ==========================================================================
+
 .variable-picker__dropdown {
-    .dropdown-base();
+    position: absolute;
     top: calc(100% + 6px);
     right: 0;
     width: 320px;
-    max-height: 400px;
-    .flex-column();
+    max-height: 420px;
+    background: @color-surface;
+    border: 1px solid @color-border;
+    border-radius: @radius-lg;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    z-index: 9999; // Very high to be above everything
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
+// Search section
 .variable-picker__search {
-    padding: @spacing-md;
+    flex-shrink: 0;
+    padding: 12px;
+    background: @color-surface;
     border-bottom: 1px solid @color-border;
 
-    input {
-        .input-base();
-        background: @color-surface-muted;
+    input,
+    input[type="text"] {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        height: 36px !important;
+        padding: 0 12px !important;
+        background: @color-surface-muted !important;
+        border: 1px solid @color-border !important;
+        border-radius: @radius-md !important;
+        font-family: inherit !important;
+        font-size: @font-size-sm !important;
+        color: @color-text !important;
+        outline: none !important;
+        box-sizing: border-box !important;
+        caret-color: @color-text !important;
+
+        &::placeholder {
+            color: @color-muted !important;
+        }
+
+        &:focus {
+            border-color: @color-primary !important;
+            background: @color-surface !important;
+            box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.1) !important;
+        }
     }
 }
 
+// Groups container (scrollable)
 .variable-picker__groups {
+    flex: 1;
     overflow-y: auto;
-    max-height: 340px;
+    padding: 8px 0;
 }
 
+// Individual group
 .variable-picker__group {
-    padding: @spacing-sm 0;
-
     &:not(:last-child) {
-        border-bottom: 1px solid @color-border;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid @color-border-light;
     }
 }
 
+// Group label
 .variable-picker__group-label {
-    padding: 6px @spacing-md;
-    font-size: @font-size-xs;
+    display: block;
+    padding: 6px 12px;
+    font-size: 10px;
     font-weight: @font-weight-bold;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     color: @color-muted;
+
+    // Color variants
+    &--global { color: @tag-global; }
+    &--post { color: @tag-post; }
+    &--taxonomy { color: @tag-taxonomy; }
+    &--author { color: @tag-author; }
+    &--archive { color: @tag-archive; }
 }
 
+// Items container
 .variable-picker__items {
-    .flex-column();
+    display: flex;
+    flex-direction: column;
 }
 
+// Individual item button
 .variable-picker__item {
-    .flex-column();
+    display: flex;
+    flex-direction: column;
     gap: 2px;
-    padding: @spacing-sm @spacing-md;
-    text-align: left;
+    width: 100%;
+    padding: 8px 12px;
     background: none;
     border: none;
+    text-align: left;
     cursor: pointer;
-    .transition-fast(background);
+    font-family: inherit;
+    transition: background 0.1s ease;
 
     &:hover {
         background: @color-surface-muted;
     }
 }
 
+// Item header (tag + label)
 .variable-picker__item-header {
     display: flex;
     align-items: center;
-    gap: @spacing-sm;
+    gap: 8px;
 }
 
-// Tag colors matching template-input pills
-@tag-global: #2271b1;
-@tag-post: #7c3aed;
-@tag-taxonomy: #059669;
-@tag-author: #ea580c;
-@tag-archive: #0891b2;
-
+// Variable tag code
 .variable-picker__tag {
+    display: inline-block;
+    padding: 2px 6px;
     font-family: @font-family-mono;
     font-size: 11px;
-    padding: 2px 6px;
+    font-weight: @font-weight-medium;
     background: fade(@tag-global, 12%);
     color: @tag-global;
     border-radius: 4px;
 
-    // Color variants by group
     &--global {
         background: fade(@tag-global, 12%);
         color: @tag-global;
@@ -150,96 +204,52 @@
     }
 }
 
-// Group label colors
-.variable-picker__group-label {
-    &--global { color: @tag-global; }
-    &--post { color: @tag-post; }
-    &--taxonomy { color: @tag-taxonomy; }
-    &--author { color: @tag-author; }
-    &--archive { color: @tag-archive; }
-}
-
+// Variable label
 .variable-picker__label {
     font-size: @font-size-sm;
     font-weight: @font-weight-medium;
     color: @color-text;
 }
 
+// Preview text
 .variable-picker__preview {
-    font-size: @font-size-sm;
+    font-size: 12px;
     color: @color-muted;
-    padding-left: 0;
-    .text-truncate();
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
 }
 
+// Empty state
 .variable-picker__empty {
-    padding: @spacing-xl;
+    padding: 24px 12px;
     text-align: center;
     color: @color-muted;
     font-size: @font-size-sm;
 }
 
-// Compact dropdown (used inside template inputs)
-.variable-picker__dropdown--compact {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    z-index: @z-modal; // Higher than other fields
-    width: 320px;
-    max-height: 400px;
-    background: @color-surface;
-    border: 1px solid @color-border;
-    border-radius: @radius-lg;
-    box-shadow: @shadow-xl;
-    overflow: hidden;
-    .flex-column();
+// ==========================================================================
+// Compact Mode (inside template inputs)
+// ==========================================================================
 
-    // Search input inside compact dropdown
-    .variable-picker__search {
-        padding: @spacing-md;
-        border-bottom: 1px solid @color-border;
-        background: @color-surface;
+.variable-picker--compact {
+    position: relative;
 
-        input {
-            width: 100%;
-            padding: @spacing-sm @spacing-md;
-            border: 1px solid @color-border;
-            border-radius: @radius-md;
-            background: @color-surface-muted;
-            font-family: inherit;
-            font-size: @font-size-sm;
-            color: @color-text;
-
-            &::placeholder {
-                color: @color-muted;
-            }
-
-            &:focus {
-                outline: none;
-                border-color: @color-primary;
-                background: @color-surface;
-            }
-        }
-    }
-
-    .variable-picker__groups {
-        overflow-y: auto;
-        max-height: 320px;
-        background: @color-surface;
-    }
-
-    .variable-picker__item {
-        width: 100%;
-        font-family: inherit;
+    // Compact dropdown positions from the button
+    .variable-picker__dropdown {
+        top: calc(100% + 8px);
+        right: 0;
     }
 }
 
 // Responsive
 @media (max-width: @breakpoint-sm) {
-    .variable-picker__dropdown,
-    .variable-picker__dropdown--compact {
+    .variable-picker__dropdown {
         width: 280px;
-        right: 0;
-        left: auto;
+    }
+
+    .variable-picker__preview {
+        max-width: 240px;
     }
 }
