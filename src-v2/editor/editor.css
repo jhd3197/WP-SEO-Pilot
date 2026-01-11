@@ -1,0 +1,465 @@
+/**
+ * WP SEO Pilot V2 - Editor Sidebar Styles
+ */
+
+/* Panel Container */
+.wpseopilot-editor-panel {
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Score Header */
+.wpseopilot-score-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.wpseopilot-score-info {
+    flex: 1;
+}
+
+.wpseopilot-score-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.wpseopilot-score-status {
+    font-size: 12px;
+    color: #757575;
+    margin-top: 2px;
+}
+
+/* Score Gauge */
+.wpseopilot-gauge {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+.wpseopilot-gauge__svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.wpseopilot-gauge__bg {
+    stroke: #e0e0e0;
+}
+
+.wpseopilot-gauge__progress {
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.wpseopilot-gauge__value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Tabs */
+.wpseopilot-tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fff;
+}
+
+.wpseopilot-tab {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #757575;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.wpseopilot-tab:hover {
+    color: #1e1e1e;
+    background: #f6f7f7;
+}
+
+.wpseopilot-tab.active {
+    color: #2271b1;
+    border-bottom-color: #2271b1;
+}
+
+/* Tab Content */
+.wpseopilot-tab-content {
+    padding: 16px;
+}
+
+/* Section Label */
+.wpseopilot-section-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #757575;
+    margin-bottom: 8px;
+}
+
+/* Search Preview */
+.wpseopilot-preview-section {
+    margin-bottom: 20px;
+}
+
+.wpseopilot-search-preview {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    font-family: Arial, sans-serif;
+}
+
+.wpseopilot-search-preview__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.wpseopilot-search-preview__favicon {
+    width: 26px;
+    height: 26px;
+    background: #f1f3f4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #70757a;
+}
+
+.wpseopilot-search-preview__favicon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.wpseopilot-search-preview__url-container {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.wpseopilot-search-preview__site-name {
+    font-size: 12px;
+    color: #202124;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.wpseopilot-search-preview__url {
+    font-size: 11px;
+    color: #70757a;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wpseopilot-search-preview__menu {
+    padding: 4px;
+    background: none;
+    border: none;
+    color: #70757a;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.wpseopilot-search-preview__menu:hover {
+    background: #f1f3f4;
+}
+
+.wpseopilot-search-preview__title {
+    font-size: 18px;
+    font-weight: 400;
+    color: #1a0dab;
+    line-height: 1.3;
+    margin: 0 0 4px;
+    cursor: pointer;
+}
+
+.wpseopilot-search-preview__title:hover {
+    text-decoration: underline;
+}
+
+.wpseopilot-search-preview__description {
+    font-size: 13px;
+    color: #4d5156;
+    line-height: 1.58;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+/* Fields */
+.wpseopilot-field {
+    margin-bottom: 16px;
+}
+
+.wpseopilot-field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.wpseopilot-field-header label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1e1e1e;
+}
+
+.wpseopilot-char-count {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.wpseopilot-char-count.good {
+    background: #edfaef;
+    color: #00a32a;
+}
+
+.wpseopilot-char-count.short,
+.wpseopilot-char-count.empty {
+    background: #fcf9e8;
+    color: #996800;
+}
+
+.wpseopilot-char-count.long {
+    background: #fcf0f1;
+    color: #d63638;
+}
+
+/* Progress Bar */
+.wpseopilot-progress-bar {
+    height: 3px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.wpseopilot-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.2s ease, background 0.2s ease;
+}
+
+.wpseopilot-progress-fill.good {
+    background: #00a32a;
+}
+
+.wpseopilot-progress-fill.short,
+.wpseopilot-progress-fill.empty {
+    background: #dba617;
+}
+
+.wpseopilot-progress-fill.long {
+    background: #d63638;
+}
+
+/* Issues List */
+.wpseopilot-issues {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.wpseopilot-issues-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.wpseopilot-issue {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    background: #f6f7f7;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.wpseopilot-issue--error {
+    background: #fcf0f1;
+}
+
+.wpseopilot-issue--warning {
+    background: #fcf9e8;
+}
+
+.wpseopilot-issue-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.wpseopilot-issue--error .wpseopilot-issue-icon {
+    background: #d63638;
+    color: #fff;
+}
+
+.wpseopilot-issue--warning .wpseopilot-issue-icon {
+    background: #dba617;
+    color: #fff;
+}
+
+.wpseopilot-issue-text {
+    color: #1e1e1e;
+}
+
+/* Robots Section */
+.wpseopilot-robots-section {
+    margin-bottom: 20px;
+}
+
+.wpseopilot-robots-section .components-toggle-control {
+    margin-bottom: 12px;
+}
+
+.wpseopilot-robots-preview {
+    padding: 12px;
+    background: #f6f7f7;
+    border-radius: 6px;
+}
+
+.wpseopilot-robots-code {
+    display: block;
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12px;
+    color: #1e1e1e;
+}
+
+/* Social Preview */
+.wpseopilot-social-preview {
+    margin-bottom: 20px;
+}
+
+.wpseopilot-social-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.wpseopilot-social-image {
+    width: 100%;
+    aspect-ratio: 1.91 / 1;
+    background: #f6f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wpseopilot-social-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wpseopilot-social-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #757575;
+}
+
+.wpseopilot-social-placeholder svg {
+    opacity: 0.5;
+}
+
+.wpseopilot-social-placeholder span {
+    font-size: 12px;
+}
+
+.wpseopilot-social-content {
+    padding: 12px;
+}
+
+.wpseopilot-social-url {
+    font-size: 11px;
+    color: #65676b;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.wpseopilot-social-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1e21;
+    line-height: 1.3;
+    margin-bottom: 4px;
+}
+
+.wpseopilot-social-desc {
+    font-size: 13px;
+    color: #65676b;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Media Button */
+.wpseopilot-media-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Field Note */
+.wpseopilot-field-note {
+    font-size: 11px;
+    color: #757575;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* WordPress Component Overrides */
+.wpseopilot-editor-panel .components-text-control__input,
+.wpseopilot-editor-panel .components-textarea-control__input {
+    font-size: 13px;
+    border-radius: 4px;
+}
+
+.wpseopilot-editor-panel .components-base-control__help {
+    font-size: 11px;
+    color: #757575;
+    margin-top: 4px;
+}
+
+.wpseopilot-editor-panel .components-toggle-control__label {
+    font-size: 13px;
+}

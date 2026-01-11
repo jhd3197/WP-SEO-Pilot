@@ -203,6 +203,7 @@ class Admin_V2 {
             'Audit'            => 'class-audit-controller.php',
             'Ai'               => 'class-ai-controller.php',
             'SearchAppearance' => 'class-searchappearance-controller.php',
+            'Dashboard'        => 'class-dashboard-controller.php',
         ];
 
         foreach ( $controllers as $controller => $file ) {

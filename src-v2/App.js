@@ -158,7 +158,7 @@ const App = ({ initialView = 'dashboard' }) => {
             case 'more':
                 return <More />;
             default:
-                return <Dashboard />;
+                return <Dashboard onNavigate={handleNavigate} />;
         }
     };
 

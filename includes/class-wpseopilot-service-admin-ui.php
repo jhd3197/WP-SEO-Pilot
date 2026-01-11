@@ -71,11 +71,20 @@ class Admin_UI {
 	}
 
 	/**
-	 * Register classic meta box.
+	 * Register classic meta box (only for classic editor).
+	 *
+	 * In the block editor, we use the React sidebar instead.
 	 *
 	 * @return void
 	 */
 	public function register_meta_box() {
+		$screen = get_current_screen();
+
+		// Skip registration if we're in the block editor
+		if ( $screen && method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor() ) {
+			return;
+		}
+
 		add_meta_box(
 			'wpseopilot-meta',
 			__( 'WP SEO Pilot', 'wp-seo-pilot' ),
@@ -198,24 +207,36 @@ class Admin_UI {
 	}
 
 	/**
-	 * Gutenberg sidebar assets.
+	 * Gutenberg sidebar assets (V2 React).
 	 *
 	 * @return void
 	 */
 	public function enqueue_editor_assets() {
+		// Load V2 React editor sidebar
+		$build_dir = WPSEOPILOT_PATH . 'build-editor/';
+		$build_url = WPSEOPILOT_URL . 'build-editor/';
+
+		$asset_file = $build_dir . 'index.asset.php';
+		$asset      = file_exists( $asset_file )
+			? require $asset_file
+			: [
+				'dependencies' => [ 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-api-fetch' ],
+				'version'      => WPSEOPILOT_VERSION,
+			];
+
 		wp_enqueue_script(
-			'wpseopilot-editor',
-			WPSEOPILOT_URL . 'assets/js/editor-sidebar.js',
-			[ 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-compose' ],
-			WPSEOPILOT_VERSION,
+			'wpseopilot-editor-v2',
+			$build_url . 'index.js',
+			$asset['dependencies'],
+			$asset['version'],
 			true
 		);
 
 		wp_enqueue_style(
-			'wpseopilot-editor',
-			WPSEOPILOT_URL . 'assets/css/editor.css',
+			'wpseopilot-editor-v2',
+			$build_url . 'index.css',
 			[],
-			WPSEOPILOT_VERSION
+			$asset['version']
 		);
 
 		$post_type_templates    = get_option( 'wpseopilot_post_type_title_templates', [] );

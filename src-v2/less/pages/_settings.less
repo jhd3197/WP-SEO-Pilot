@@ -1,0 +1,420 @@
+// ==========================================================================
+// Settings Page Styles
+// ==========================================================================
+
+// Settings layout with main + sidebar
+.settings-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: @spacing-2xl;
+    align-items: start;
+
+    @media (max-width: @breakpoint-lg) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.settings-main {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-2xl;
+    min-width: 0;
+}
+
+.settings-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-lg;
+    position: sticky;
+    top: @spacing-2xl;
+}
+
+// Page header actions
+.page-header__actions {
+    display: flex;
+    align-items: center;
+    gap: @spacing-md;
+}
+
+.save-indicator {
+    color: @color-success;
+    font-weight: @font-weight-medium;
+    font-size: @font-size-sm;
+    display: flex;
+    align-items: center;
+    gap: @spacing-xs;
+
+    &::before {
+        content: '✓';
+    }
+}
+
+// Panel description
+.panel-desc {
+    color: @color-muted;
+    font-size: @font-size-sm;
+    margin: -@spacing-sm 0 @spacing-xl 0;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: @spacing-xl;
+
+    h3 {
+        margin-bottom: @spacing-xs;
+    }
+}
+
+// Module count badge
+.module-count {
+    background: @color-primary-light;
+    color: @color-primary;
+    padding: @spacing-xs @spacing-md;
+    border-radius: @radius-full;
+    font-size: @font-size-sm;
+    font-weight: @font-weight-medium;
+    white-space: nowrap;
+}
+
+// Modules grid
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: @spacing-lg;
+}
+
+.module-card {
+    display: flex;
+    align-items: flex-start;
+    gap: @spacing-md;
+    padding: @spacing-lg;
+    background: @color-surface-muted;
+    border-radius: @radius-md;
+    border: 1px solid transparent;
+    transition: all @transition-fast;
+
+    &.active {
+        background: @color-surface;
+        border-color: @color-primary;
+        box-shadow: @shadow-sm;
+    }
+
+    &__icon {
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    &__content {
+        flex: 1;
+        min-width: 0;
+
+        h4 {
+            font-size: @font-size-base;
+            font-weight: @font-weight-semibold;
+            margin: 0 0 @spacing-xs 0;
+        }
+
+        p {
+            font-size: @font-size-sm;
+            color: @color-muted;
+            margin: 0;
+            line-height: @line-height-normal;
+        }
+    }
+
+    .toggle {
+        flex-shrink: 0;
+    }
+}
+
+// Separator picker
+.separator-picker {
+    display: flex;
+    gap: @spacing-xs;
+}
+
+.separator-option {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: @font-size-lg;
+    font-weight: @font-weight-bold;
+    background: @color-surface-muted;
+    border: 2px solid transparent;
+    border-radius: @radius-sm;
+    cursor: pointer;
+    transition: all @transition-fast;
+
+    &:hover {
+        background: @color-surface-hover;
+    }
+
+    &.active {
+        background: @color-surface;
+        border-color: @color-primary;
+        color: @color-primary;
+    }
+}
+
+// Title preview
+.title-preview {
+    background: @color-surface-muted;
+    padding: @spacing-md;
+    border-radius: @radius-sm;
+    margin-top: @spacing-sm;
+
+    &__text {
+        font-size: @font-size-base;
+        color: @color-text;
+        word-break: break-word;
+    }
+}
+
+// Input with prefix (like @username)
+.input-with-prefix {
+    display: flex;
+    align-items: center;
+    border: 1px solid @color-border;
+    border-radius: @radius-sm;
+    overflow: hidden;
+
+    &:focus-within {
+        border-color: @color-primary;
+        box-shadow: 0 0 0 1px @color-primary;
+    }
+
+    .input-prefix {
+        padding: 0 @spacing-md;
+        background: @color-surface-muted;
+        color: @color-muted;
+        font-size: @font-size-base;
+        height: @input-height;
+        display: flex;
+        align-items: center;
+        border-right: 1px solid @color-border;
+    }
+
+    input {
+        border: none;
+        flex: 1;
+        padding-left: @spacing-md;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+}
+
+// Social Preview
+.social-preview {
+    background: @color-surface;
+    border: 1px solid @color-border;
+    border-radius: @radius-lg;
+    overflow: hidden;
+
+    h4 {
+        padding: @spacing-md @spacing-lg;
+        margin: 0;
+        font-size: @font-size-sm;
+        font-weight: @font-weight-semibold;
+        border-bottom: 1px solid @color-border;
+        background: @color-surface-muted;
+    }
+
+    &__card {
+        border-bottom: 1px solid @color-border;
+    }
+
+    &__image {
+        aspect-ratio: 1200/630;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__placeholder {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+
+        span {
+            display: block;
+            font-size: @font-size-sm;
+            margin-bottom: @spacing-xs;
+        }
+
+        small {
+            font-size: @font-size-xs;
+            opacity: 0.7;
+        }
+    }
+
+    &__content {
+        padding: @spacing-md;
+        display: flex;
+        flex-direction: column;
+        gap: @spacing-xs;
+        background: @color-surface;
+    }
+
+    &__site {
+        font-size: @font-size-xs;
+        color: @color-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    &__title {
+        font-size: @font-size-sm;
+        font-weight: @font-weight-semibold;
+        color: @color-text;
+        line-height: @line-height-tight;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    &__meta {
+        padding: @spacing-md;
+        display: flex;
+        flex-direction: column;
+        gap: @spacing-sm;
+    }
+
+    &__meta-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: @font-size-xs;
+    }
+
+    &__meta-label {
+        color: @color-muted;
+    }
+
+    &__meta-value {
+        font-weight: @font-weight-medium;
+        color: @color-text;
+    }
+}
+
+// Settings grid (for compact toggles)
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: @spacing-md;
+
+    @media (max-width: @breakpoint-md) {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-row {
+        padding: @spacing-md;
+        background: @color-surface-muted;
+        border-radius: @radius-sm;
+        margin: 0;
+    }
+}
+
+// Tools actions
+.tools-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: @spacing-lg;
+
+    @media (max-width: @breakpoint-md) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tool-action {
+    padding: @spacing-lg;
+    background: @color-surface-muted;
+    border-radius: @radius-md;
+
+    h4 {
+        font-size: @font-size-base;
+        font-weight: @font-weight-semibold;
+        margin: 0 0 @spacing-xs 0;
+    }
+
+    p {
+        margin: 0 0 @spacing-md 0;
+    }
+}
+
+// Import controls
+.import-controls {
+    display: flex;
+    gap: @spacing-sm;
+    align-items: center;
+
+    input[type="file"] {
+        display: none;
+    }
+}
+
+// Danger zone panel
+.danger-zone {
+    border: 1px solid @color-danger;
+
+    h3 {
+        color: @color-danger;
+    }
+
+    .tool-action {
+        background: @color-danger-bg;
+    }
+}
+
+// Info rows
+.info-rows {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-sm;
+    margin-top: @spacing-md;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: @font-size-sm;
+
+    span {
+        color: @color-muted;
+    }
+
+    code {
+        background: @color-surface-muted;
+        padding: 2px @spacing-xs;
+        border-radius: 3px;
+        font-size: @font-size-xs;
+    }
+}
+
+// Side card variants
+.side-card {
+    &.warning {
+        border-left: 3px solid @color-warning;
+    }
+}
+
+// Danger button
+.button.danger {
+    background: @color-danger;
+    color: white;
+    border-color: @color-danger;
+
+    &:hover {
+        background: darken(@color-danger, 10%);
+        border-color: darken(@color-danger, 10%);
+    }
+}
