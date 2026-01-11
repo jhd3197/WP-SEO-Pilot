@@ -2,6 +2,7 @@ import { useState } from '@wordpress/element';
 
 // Tools data sorted by popularity
 const tools = [
+    // Popular Tools (working)
     {
         id: 'redirects',
         name: 'Redirects',
@@ -41,7 +42,6 @@ const tools = [
         ),
         color: '#00a32a',
         popular: true,
-        comingSoon: true,
     },
     {
         id: 'ai-assistant',
@@ -57,8 +57,8 @@ const tools = [
         ),
         color: '#8b5cf6',
         popular: true,
-        comingSoon: true,
     },
+    // More Tools (working)
     {
         id: 'internal-linking',
         name: 'Internal Linking',
@@ -73,16 +73,158 @@ const tools = [
         popular: false,
     },
     {
+        id: 'robots-txt',
+        name: 'Robots.txt Editor',
+        description: 'View and edit your robots.txt file. Control how search engines crawl your site.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M9 9h6M9 13h6M9 17h4"/>
+            </svg>
+        ),
+        color: '#64748b',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'htaccess-editor',
+        name: '.htaccess Editor',
+        description: 'Safely edit your .htaccess file. Manage redirects, security rules, and server configuration.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+            </svg>
+        ),
+        color: '#be185d',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'sitemap-validator',
+        name: 'Sitemap Validator',
+        description: 'Test and validate your XML sitemap. Ensure all URLs are accessible and properly formatted.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+        ),
+        color: '#0d9488',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'meta-validator',
+        name: 'Meta Tag Tester',
+        description: 'Test any URL for SEO meta tags. Validate titles, descriptions, OG tags, and Twitter cards.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1"/>
+                <path d="M9 12h6M9 16h6"/>
+            </svg>
+        ),
+        color: '#7c3aed',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'schema-validator',
+        name: 'Schema Validator',
+        description: 'Test structured data on any page. Validate JSON-LD, Microdata, and RDFa markup.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 6h16M4 12h16M4 18h10"/>
+                <circle cx="19" cy="18" r="3"/>
+                <path d="M19 16v2h2"/>
+            </svg>
+        ),
+        color: '#ea580c',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'heading-analyzer',
+        name: 'Heading Analyzer',
+        description: 'Analyze heading structure of any page. Check H1-H6 hierarchy and find issues.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 12h8M4 18V6M12 18V6M20 7v10M16 7h8M16 12h6"/>
+            </svg>
+        ),
+        color: '#0284c7',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'link-checker',
+        name: 'Broken Link Checker',
+        description: 'Scan pages for broken links. Find and fix dead links before they hurt your SEO.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 7h3a5 5 0 010 10h-3m-6 0H6a5 5 0 010-10h3"/>
+                <line x1="8" y1="12" x2="16" y2="12"/>
+                <path d="M2 2l20 20" strokeLinecap="round"/>
+            </svg>
+        ),
+        color: '#dc2626',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'page-speed',
+        name: 'Page Speed Test',
+        description: 'Test page load performance. Get Core Web Vitals scores and optimization tips.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+        ),
+        color: '#16a34a',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'mobile-test',
+        name: 'Mobile Friendly Test',
+        description: 'Check if pages are mobile-friendly. Identify viewport and touch issues.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="5" y="2" width="14" height="20" rx="2"/>
+                <path d="M12 18h.01"/>
+            </svg>
+        ),
+        color: '#2563eb',
+        popular: false,
+        comingSoon: true,
+    },
+    {
+        id: 'image-optimizer',
+        name: 'Image SEO Checker',
+        description: 'Analyze images for SEO. Check alt texts, file sizes, and compression opportunities.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+            </svg>
+        ),
+        color: '#f59e0b',
+        popular: false,
+        comingSoon: true,
+    },
+    // Coming Soon
+    {
         id: 'schema-generator',
         name: 'Schema Generator',
         description: 'Generate structured data markup for rich snippets. Support for articles, products, FAQs, and more.',
         icon: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 6h16M4 12h16M4 18h10"/>
-                <path d="M18 18l2-2-2-2"/>
+                <path d="M16 18l2-2-2-2M8 18l-2-2 2-2M14 4l-4 16"/>
             </svg>
         ),
-        color: '#ea580c',
+        color: '#8b5cf6',
         popular: false,
         comingSoon: true,
     },
@@ -122,13 +264,23 @@ const Tools = ({ onNavigate }) => {
     const handleToolClick = (tool) => {
         if (tool.comingSoon) return;
 
-        // Map tool IDs to view IDs
+        // Map tool IDs to view IDs (most map directly)
         const viewMap = {
             'redirects': 'redirects',
             '404-log': '404-log',
             'audit': 'audit',
             'ai-assistant': 'ai-assistant',
             'internal-linking': 'internal-linking',
+            'robots-txt': 'robots-txt',
+            'htaccess-editor': 'htaccess-editor',
+            'sitemap-validator': 'sitemap-validator',
+            'meta-validator': 'meta-validator',
+            'schema-validator': 'schema-validator',
+            'heading-analyzer': 'heading-analyzer',
+            'link-checker': 'link-checker',
+            'page-speed': 'page-speed',
+            'mobile-test': 'mobile-test',
+            'image-optimizer': 'image-optimizer',
         };
 
         const viewId = viewMap[tool.id];
