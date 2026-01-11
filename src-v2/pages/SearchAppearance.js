@@ -3,6 +3,7 @@ import apiFetch from '@wordpress/api-fetch';
 import SubTabs from '../components/SubTabs';
 import SearchPreview from '../components/SearchPreview';
 import TemplateInput from '../components/TemplateInput';
+import AiGenerateModal from '../components/AiGenerateModal';
 import useUrlTab from '../hooks/useUrlTab';
 
 const searchAppearanceTabs = [
@@ -109,6 +110,41 @@ const SearchAppearance = () => {
     });
     const [cardPreviewTitle, setCardPreviewTitle] = useState('Sample Post Title - Understanding Core Web Vitals');
     const [cardModuleEnabled, setCardModuleEnabled] = useState(true);
+
+    // AI Generation modal state
+    const [aiModal, setAiModal] = useState({
+        isOpen: false,
+        fieldType: 'title',
+        onApply: null,
+        context: {},
+    });
+
+    // Open AI modal for a specific field
+    const openAiModal = useCallback((fieldType, onApply, context = {}) => {
+        setAiModal({
+            isOpen: true,
+            fieldType,
+            onApply,
+            context,
+        });
+    }, []);
+
+    // Close AI modal
+    const closeAiModal = useCallback(() => {
+        setAiModal({
+            isOpen: false,
+            fieldType: 'title',
+            onApply: null,
+            context: {},
+        });
+    }, []);
+
+    // Handle AI generated content
+    const handleAiGenerate = useCallback((result) => {
+        if (aiModal.onApply && result) {
+            aiModal.onApply(result);
+        }
+    }, [aiModal]);
 
     // Fetch all data on mount
     const fetchData = useCallback(async () => {
@@ -447,6 +483,7 @@ const SearchAppearance = () => {
                                     variableValues={variableValues}
                                     context="global"
                                     maxLength={60}
+                                    onAiClick={() => openAiModal('title', (val) => setHomepage({ ...homepage, meta_title: val }), { type: 'Homepage' })}
                                 />
                             </div>
                         </div>
@@ -467,6 +504,7 @@ const SearchAppearance = () => {
                                     context="global"
                                     multiline
                                     maxLength={160}
+                                    onAiClick={() => openAiModal('description', (val) => setHomepage({ ...homepage, meta_description: val }), { type: 'Homepage' })}
                                 />
                             </div>
                         </div>
@@ -556,6 +594,7 @@ const SearchAppearance = () => {
                             onCancel={() => setEditingPostType(null)}
                             saving={saving}
                             renderTemplatePreview={renderTemplatePreview}
+                            openAiModal={openAiModal}
                         />
                     ) : (
                         <table className="data-table">
@@ -632,6 +671,7 @@ const SearchAppearance = () => {
                             onCancel={() => setEditingTaxonomy(null)}
                             saving={saving}
                             renderTemplatePreview={renderTemplatePreview}
+                            openAiModal={openAiModal}
                         />
                     ) : (
                         <table className="data-table">
@@ -712,6 +752,7 @@ const SearchAppearance = () => {
                             }}
                             onCancel={() => setEditingArchive(null)}
                             renderTemplatePreview={renderTemplatePreview}
+                            openAiModal={openAiModal}
                         />
                     ) : (
                         <table className="data-table">
@@ -802,6 +843,7 @@ const SearchAppearance = () => {
                                         variableValues={variableValues}
                                         context="post"
                                         maxLength={60}
+                                        onAiClick={() => openAiModal('title', (val) => setEditingPostTypeSocial({ ...editingPostTypeSocial, og_title: val }), { type: editingPostTypeSocial.name, name: 'OG Title' })}
                                     />
                                 </div>
                             </div>
@@ -821,6 +863,7 @@ const SearchAppearance = () => {
                                         context="post"
                                         multiline
                                         maxLength={160}
+                                        onAiClick={() => openAiModal('description', (val) => setEditingPostTypeSocial({ ...editingPostTypeSocial, og_description: val }), { type: editingPostTypeSocial.name, name: 'OG Description' })}
                                     />
                                 </div>
                             </div>
@@ -839,6 +882,7 @@ const SearchAppearance = () => {
                                         variableValues={variableValues}
                                         context="post"
                                         maxLength={60}
+                                        onAiClick={() => openAiModal('title', (val) => setEditingPostTypeSocial({ ...editingPostTypeSocial, twitter_title: val }), { type: editingPostTypeSocial.name, name: 'Twitter Title' })}
                                     />
                                 </div>
                             </div>
@@ -858,6 +902,7 @@ const SearchAppearance = () => {
                                         context="post"
                                         multiline
                                         maxLength={160}
+                                        onAiClick={() => openAiModal('description', (val) => setEditingPostTypeSocial({ ...editingPostTypeSocial, twitter_description: val }), { type: editingPostTypeSocial.name, name: 'Twitter Description' })}
                                     />
                                 </div>
                             </div>
@@ -937,6 +982,7 @@ const SearchAppearance = () => {
                                             variableValues={variableValues}
                                             context="global"
                                             maxLength={60}
+                                            onAiClick={() => openAiModal('title', (val) => setSocialDefaults({ ...socialDefaults, og_title: val }), { type: 'Social', name: 'Open Graph Title' })}
                                         />
                                     </div>
                                 </div>
@@ -956,6 +1002,7 @@ const SearchAppearance = () => {
                                             context="global"
                                             multiline
                                             maxLength={160}
+                                            onAiClick={() => openAiModal('description', (val) => setSocialDefaults({ ...socialDefaults, og_description: val }), { type: 'Social', name: 'Open Graph Description' })}
                                         />
                                     </div>
                                 </div>
@@ -974,6 +1021,7 @@ const SearchAppearance = () => {
                                             variableValues={variableValues}
                                             context="global"
                                             maxLength={60}
+                                            onAiClick={() => openAiModal('title', (val) => setSocialDefaults({ ...socialDefaults, twitter_title: val }), { type: 'Social', name: 'Twitter Card Title' })}
                                         />
                                     </div>
                                 </div>
@@ -993,6 +1041,7 @@ const SearchAppearance = () => {
                                             context="global"
                                             multiline
                                             maxLength={160}
+                                            onAiClick={() => openAiModal('description', (val) => setSocialDefaults({ ...socialDefaults, twitter_description: val }), { type: 'Social', name: 'Twitter Card Description' })}
                                         />
                                     </div>
                                 </div>
@@ -1101,6 +1150,16 @@ const SearchAppearance = () => {
                     )}
                 </section>
             )}
+
+            {/* AI Generate Modal */}
+            <AiGenerateModal
+                isOpen={aiModal.isOpen}
+                onClose={closeAiModal}
+                onGenerate={handleAiGenerate}
+                fieldType={aiModal.fieldType}
+                variableValues={variableValues}
+                context={aiModal.context}
+            />
 
             {/* Social Cards Tab */}
             {activeTab === 'social-cards' && (
@@ -1414,6 +1473,7 @@ const PostTypeEditor = ({
     onCancel,
     saving,
     renderTemplatePreview,
+    openAiModal,
 }) => {
     const [data, setData] = useState(postType);
 
@@ -1467,6 +1527,7 @@ const PostTypeEditor = ({
                             variableValues={variableValues}
                             context="post"
                             maxLength={60}
+                            onAiClick={() => openAiModal('title', (val) => setData({ ...data, title_template: val }), { type: 'Post Type', name: postType.name })}
                         />
                     </div>
                 </div>
@@ -1486,6 +1547,7 @@ const PostTypeEditor = ({
                             context="post"
                             multiline
                             maxLength={160}
+                            onAiClick={() => openAiModal('description', (val) => setData({ ...data, description_template: val }), { type: 'Post Type', name: postType.name })}
                         />
                     </div>
                 </div>
@@ -1573,6 +1635,7 @@ const TaxonomyEditor = ({
     onCancel,
     saving,
     renderTemplatePreview,
+    openAiModal,
 }) => {
     const [data, setData] = useState(taxonomy);
 
@@ -1626,6 +1689,7 @@ const TaxonomyEditor = ({
                             variableValues={variableValues}
                             context="taxonomy"
                             maxLength={60}
+                            onAiClick={() => openAiModal('title', (val) => setData({ ...data, title_template: val }), { type: 'Taxonomy', name: taxonomy.name })}
                         />
                     </div>
                 </div>
@@ -1645,6 +1709,7 @@ const TaxonomyEditor = ({
                             context="taxonomy"
                             multiline
                             maxLength={160}
+                            onAiClick={() => openAiModal('description', (val) => setData({ ...data, description_template: val }), { type: 'Taxonomy', name: taxonomy.name })}
                         />
                     </div>
                 </div>
@@ -1697,6 +1762,7 @@ const ArchiveEditor = ({
     onSave,
     onCancel,
     renderTemplatePreview,
+    openAiModal,
 }) => {
     const [data, setData] = useState(archive);
 
@@ -1760,6 +1826,7 @@ const ArchiveEditor = ({
                             variableValues={variableValues}
                             context={getArchiveContext()}
                             maxLength={60}
+                            onAiClick={() => openAiModal('title', (val) => setData({ ...data, title_template: val }), { type: 'Archive', name: archive.name })}
                         />
                     </div>
                 </div>
@@ -1777,6 +1844,7 @@ const ArchiveEditor = ({
                             context={getArchiveContext()}
                             multiline
                             maxLength={160}
+                            onAiClick={() => openAiModal('description', (val) => setData({ ...data, description_template: val }), { type: 'Archive', name: archive.name })}
                         />
                     </div>
                 </div>
