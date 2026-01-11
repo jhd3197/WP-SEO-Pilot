@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import apiFetch from '@wordpress/api-fetch';
 import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
 import SearchAppearance from './pages/SearchAppearance';
@@ -12,6 +13,10 @@ import AiAssistant from './pages/AiAssistant';
 import Assistants from './pages/Assistants';
 import Settings from './pages/Settings';
 import More from './pages/More';
+import Setup from './pages/Setup';
+import BulkEditor from './pages/BulkEditor';
+import ContentGaps from './pages/ContentGaps';
+import SchemaBuilder from './pages/SchemaBuilder';
 import './index.css';
 
 const viewToPage = {
@@ -27,6 +32,9 @@ const viewToPage = {
     assistants: 'wpseopilot-v2-assistants',
     settings: 'wpseopilot-v2-settings',
     more: 'wpseopilot-v2-more',
+    'bulk-editor': 'wpseopilot-v2-bulk-editor',
+    'content-gaps': 'wpseopilot-v2-content-gaps',
+    'schema-builder': 'wpseopilot-v2-schema-builder',
 };
 
 const pageToView = Object.entries(viewToPage).reduce((acc, [view, page]) => {
@@ -36,6 +44,34 @@ const pageToView = Object.entries(viewToPage).reduce((acc, [view, page]) => {
 
 const App = ({ initialView = 'dashboard' }) => {
     const [currentView, setCurrentView] = useState(initialView);
+    const [showSetup, setShowSetup] = useState(false);
+    const [setupChecked, setSetupChecked] = useState(false);
+
+    // Check setup status on mount
+    useEffect(() => {
+        const checkSetupStatus = async () => {
+            try {
+                const response = await apiFetch({ path: '/wpseopilot/v2/setup/status' });
+                if (response.success && response.data.show_wizard) {
+                    setShowSetup(true);
+                }
+            } catch (err) {
+                // Ignore errors, just show the app
+            }
+            setSetupChecked(true);
+        };
+
+        checkSetupStatus();
+    }, []);
+
+    const handleSetupComplete = () => {
+        setShowSetup(false);
+        setCurrentView('dashboard');
+    };
+
+    const handleSetupSkip = () => {
+        setShowSetup(false);
+    };
 
     const updateAdminMenuHighlight = useCallback((view) => {
         if (typeof document === 'undefined') {
@@ -161,10 +197,38 @@ const App = ({ initialView = 'dashboard' }) => {
                 return <Settings />;
             case 'more':
                 return <More />;
+            case 'bulk-editor':
+                return <BulkEditor onNavigate={handleNavigate} />;
+            case 'content-gaps':
+                return <ContentGaps onNavigate={handleNavigate} />;
+            case 'schema-builder':
+                return <SchemaBuilder onNavigate={handleNavigate} />;
             default:
                 return <Dashboard onNavigate={handleNavigate} />;
         }
     };
+
+    // Show loading while checking setup status
+    if (!setupChecked) {
+        return (
+            <div className="wp-seo-pilot-admin">
+                <div className="wp-seo-pilot-shell">
+                    <div className="content-area">
+                        <div className="loading-state">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Show setup wizard if needed
+    if (showSetup) {
+        return (
+            <div className="wp-seo-pilot-admin">
+                <Setup onComplete={handleSetupComplete} onSkip={handleSetupSkip} />
+            </div>
+        );
+    }
 
     return (
         <div className="wp-seo-pilot-admin">

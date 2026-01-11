@@ -30,6 +30,46 @@ const aiAssistants = [
     },
 ];
 
+// AI-Powered Tools
+const aiTools = [
+    {
+        id: 'bulk-editor',
+        name: 'Smart Bulk Editor',
+        description: 'Edit SEO titles and descriptions in bulk with AI-powered suggestions. Spreadsheet view for efficient editing.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+        ),
+        color: '#6366f1',
+    },
+    {
+        id: 'content-gaps',
+        name: 'Content Gaps Finder',
+        description: 'AI finds what you should write about. Discover missing topics and get content outlines automatically.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                <rect x="9" y="3" width="6" height="4" rx="1"/>
+                <path d="M12 12v4M10 14h4"/>
+            </svg>
+        ),
+        color: '#059669',
+    },
+    {
+        id: 'schema-builder',
+        name: 'Schema Builder',
+        description: 'Visual drag-and-drop schema creation. Generate structured data for rich search results with AI assistance.',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M16 18l2-2-2-2M8 18l-2-2 2-2M14 4l-4 16"/>
+            </svg>
+        ),
+        color: '#8b5cf6',
+    },
+];
+
 // Tools data sorted by popularity
 const tools = [
     // Popular Tools (working)
@@ -311,6 +351,9 @@ const Tools = ({ onNavigate }) => {
             'page-speed': 'page-speed',
             'mobile-test': 'mobile-test',
             'image-optimizer': 'image-optimizer',
+            'bulk-editor': 'bulk-editor',
+            'content-gaps': 'content-gaps',
+            'schema-builder': 'schema-builder',
         };
 
         const viewId = viewMap[tool.id];
@@ -337,6 +380,39 @@ const Tools = ({ onNavigate }) => {
                     <p>SEO utilities and helpers to optimize your website.</p>
                 </div>
             </div>
+
+            {/* AI-Powered Tools */}
+            <section className="tools-section">
+                <h2 className="tools-section__title">AI-Powered Tools</h2>
+                <div className="tools-grid tools-grid--large">
+                    {aiTools.map((tool) => (
+                        <button
+                            key={tool.id}
+                            type="button"
+                            className={`tool-card ${hoveredTool === tool.id ? 'tool-card--hover' : ''}`}
+                            onClick={() => handleToolClick(tool)}
+                            onMouseEnter={() => setHoveredTool(tool.id)}
+                            onMouseLeave={() => setHoveredTool(null)}
+                        >
+                            <div className="tool-card__icon" style={{ backgroundColor: `${tool.color}15`, color: tool.color }}>
+                                {tool.icon}
+                            </div>
+                            <div className="tool-card__content">
+                                <div className="tool-card__header">
+                                    <h3 className="tool-card__name">{tool.name}</h3>
+                                    <span className="tool-card__badge tool-card__badge--ai">AI</span>
+                                </div>
+                                <p className="tool-card__desc">{tool.description}</p>
+                            </div>
+                            <div className="tool-card__arrow" style={{ color: tool.color }}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </section>
 
             {/* AI Assistants */}
             <section className="tools-section">

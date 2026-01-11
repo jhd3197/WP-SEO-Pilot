@@ -45,6 +45,9 @@ class Admin_V2 {
         'wpseopilot-v2-assistants'         => 'assistants',
         'wpseopilot-v2-settings'           => 'settings',
         'wpseopilot-v2-more'               => 'more',
+        'wpseopilot-v2-bulk-editor'        => 'bulk-editor',
+        'wpseopilot-v2-content-gaps'       => 'content-gaps',
+        'wpseopilot-v2-schema-builder'     => 'schema-builder',
     ];
 
     /**
@@ -206,6 +209,8 @@ class Admin_V2 {
             'SearchAppearance' => 'class-searchappearance-controller.php',
             'Dashboard'        => 'class-dashboard-controller.php',
             'Assistants'       => 'class-assistants-controller.php',
+            'Setup'            => 'class-setup-controller.php',
+            'Tools'            => 'class-tools-controller.php',
         ];
 
         foreach ( $controllers as $controller => $file ) {

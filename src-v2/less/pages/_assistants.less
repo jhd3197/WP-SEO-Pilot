@@ -477,6 +477,282 @@
     }
 }
 
+// ==========================================================================
+// Assistants Management View
+// ==========================================================================
+
+// Stats Grid
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: @spacing-lg;
+    margin-bottom: @spacing-2xl;
+
+    @media (max-width: @breakpoint-lg) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: @breakpoint-sm) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.stat-card {
+    padding: @spacing-xl;
+    background: @color-surface;
+    border: 1px solid @color-border;
+    border-radius: @radius-lg;
+    text-align: center;
+}
+
+.stat-card__value {
+    font-size: 2rem;
+    font-weight: @font-weight-bold;
+    color: @color-primary;
+    margin-bottom: @spacing-xs;
+}
+
+.stat-card__label {
+    font-size: @font-size-sm;
+    color: @color-muted;
+}
+
+// Assistants Section
+.assistants-section {
+    margin-bottom: @spacing-2xl;
+
+    h2 {
+        font-size: @font-size-lg;
+        font-weight: @font-weight-semibold;
+        color: @color-text;
+        margin: 0 0 @spacing-lg;
+    }
+}
+
+// Custom assistant card with actions
+.assistant-card--custom {
+    display: flex;
+    align-items: stretch;
+    padding: 0;
+    cursor: default;
+
+    &:hover {
+        transform: none;
+    }
+}
+
+.assistant-card__main {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: @spacing-lg;
+    padding: @spacing-xl;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+
+    &:hover {
+        background: @color-surface-hover;
+    }
+}
+
+.assistant-card__usage {
+    font-size: @font-size-xs;
+    color: @color-muted;
+    margin-top: @spacing-xs;
+}
+
+.assistant-card__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: @spacing-xs;
+    padding: @spacing-md;
+    border-left: 1px solid @color-border;
+    background: @color-surface-muted;
+}
+
+// Icon buttons for edit/delete
+.icon-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: @color-surface;
+    border: 1px solid @color-border;
+    border-radius: @radius-md;
+    color: @color-muted;
+    cursor: pointer;
+    .flex-center();
+    .transition();
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        color: @color-primary;
+        border-color: @color-primary;
+    }
+
+    &--danger:hover {
+        color: @color-danger;
+        border-color: @color-danger;
+        background: @color-danger-bg;
+    }
+}
+
+// Empty state
+.empty-state {
+    padding: @spacing-3xl;
+    text-align: center;
+    background: @color-surface-muted;
+    border-radius: @radius-lg;
+    color: @color-muted;
+
+    p {
+        margin: 0 0 @spacing-lg;
+    }
+}
+
+// Badge
+.badge {
+    display: inline-block;
+    padding: @spacing-xs @spacing-sm;
+    font-size: @font-size-xs;
+    font-weight: @font-weight-medium;
+    border-radius: @radius-sm;
+    margin-left: @spacing-sm;
+    vertical-align: middle;
+
+    &--muted {
+        background: @color-surface-muted;
+        color: @color-muted;
+    }
+}
+
+// ==========================================================================
+// Create/Edit Form
+// ==========================================================================
+
+.assistants-form {
+    max-width: 700px;
+}
+
+.form-row {
+    margin-bottom: @spacing-xl;
+
+    label {
+        display: block;
+        font-size: @font-size-sm;
+        font-weight: @font-weight-medium;
+        color: @color-text;
+        margin-bottom: @spacing-sm;
+    }
+
+    input[type="text"],
+    textarea {
+        .input-base();
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+}
+
+.form-row--checkbox {
+    label {
+        display: flex;
+        align-items: center;
+        gap: @spacing-sm;
+        cursor: pointer;
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: @color-primary;
+        }
+
+        span {
+            font-weight: @font-weight-normal;
+        }
+    }
+}
+
+.form-help {
+    font-size: @font-size-sm;
+    color: @color-muted;
+    margin-top: @spacing-xs;
+}
+
+// Icon Picker
+.icon-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @spacing-sm;
+}
+
+.icon-option {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: @color-surface-muted;
+    border: 2px solid transparent;
+    border-radius: @radius-md;
+    font-size: 20px;
+    cursor: pointer;
+    .flex-center();
+    .transition();
+
+    &:hover {
+        background: @color-surface-hover;
+    }
+
+    &.active {
+        border-color: @color-primary;
+        background: @color-primary-light;
+    }
+}
+
+// Color Picker
+.color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @spacing-sm;
+}
+
+.color-option {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    .transition();
+
+    &:hover {
+        transform: scale(1.1);
+    }
+
+    &.active {
+        border-color: @color-text;
+        box-shadow: 0 0 0 2px @color-surface, 0 0 0 4px currentColor;
+    }
+}
+
+// Form Actions
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: @spacing-md;
+    margin-top: @spacing-2xl;
+    padding-top: @spacing-xl;
+    border-top: 1px solid @color-border;
+}
+
 // Responsive
 @media (max-width: @breakpoint-md) {
     .assistants-page {
@@ -500,5 +776,24 @@
 
     .assistant-chat__suggestion {
         text-align: left;
+    }
+
+    .assistant-card--custom {
+        flex-direction: column;
+    }
+
+    .assistant-card__actions {
+        flex-direction: row;
+        justify-content: flex-end;
+        border-left: none;
+        border-top: 1px solid @color-border;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+
+        .button {
+            width: 100%;
+        }
     }
 }

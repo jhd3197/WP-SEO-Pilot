@@ -78,6 +78,7 @@ const Settings = () => {
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
     const [importFile, setImportFile] = useState(null);
+    const [resettingWizard, setResettingWizard] = useState(false);
 
     // Fetch settings
     const fetchSettings = useCallback(async () => {
@@ -159,6 +160,23 @@ const Settings = () => {
         }
     };
 
+    // Reset setup wizard
+    const handleResetWizard = async () => {
+        setResettingWizard(true);
+        try {
+            await apiFetch({
+                path: '/wpseopilot/v2/setup/reset',
+                method: 'POST',
+            });
+            alert('Setup wizard has been reset. It will appear on the next page load.');
+        } catch (error) {
+            console.error('Failed to reset wizard:', error);
+            alert('Failed to reset the setup wizard.');
+        } finally {
+            setResettingWizard(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="page">
@@ -206,6 +224,8 @@ const Settings = () => {
                     onExport={handleExport}
                     onImport={handleImport}
                     onReset={handleReset}
+                    onResetWizard={handleResetWizard}
+                    resettingWizard={resettingWizard}
                     importFile={importFile}
                     setImportFile={setImportFile}
                 />
@@ -835,7 +855,7 @@ const AdvancedTab = ({ settings, updateSetting }) => {
 };
 
 // Tools Tab
-const ToolsTab = ({ settings, onExport, onImport, onReset, importFile, setImportFile }) => {
+const ToolsTab = ({ settings, onExport, onImport, onReset, onResetWizard, resettingWizard, importFile, setImportFile }) => {
     return (
         <div className="settings-layout">
             <div className="settings-main">
@@ -888,6 +908,26 @@ const ToolsTab = ({ settings, onExport, onImport, onReset, importFile, setImport
                             <h4>Reindex Content</h4>
                             <p className="muted">Rebuild internal link index and content analysis.</p>
                             <button type="button" className="button ghost">Reindex</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="panel">
+                    <h3>Setup Wizard</h3>
+                    <p className="panel-desc">Run the setup wizard again to reconfigure the plugin.</p>
+
+                    <div className="tools-actions">
+                        <div className="tool-action">
+                            <h4>Reset Setup Wizard</h4>
+                            <p className="muted">Show the setup wizard on next page load. Existing settings will be preserved.</p>
+                            <button
+                                type="button"
+                                className="button ghost"
+                                onClick={onResetWizard}
+                                disabled={resettingWizard}
+                            >
+                                {resettingWizard ? 'Resetting...' : 'Reset Wizard'}
+                            </button>
                         </div>
                     </div>
                 </section>
