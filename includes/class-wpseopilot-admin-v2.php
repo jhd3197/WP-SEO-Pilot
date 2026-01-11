@@ -190,19 +190,29 @@ class Admin_V2 {
             return;
         }
 
+        // Load base controller first
+        $base_file = $controllers_dir . 'class-rest-controller.php';
+        if ( file_exists( $base_file ) ) {
+            require_once $base_file;
+        }
+
         $controllers = [
-            'Settings',
-            'Redirects',
-            'InternalLinks',
-            'Sitemap',
-            'Audit',
-            'Ai',
+            'Settings'      => 'class-settings-controller.php',
+            'Redirects'     => 'class-redirects-controller.php',
+            'InternalLinks' => 'class-internallinks-controller.php',
+            'Sitemap'       => 'class-sitemap-controller.php',
+            'Audit'         => 'class-audit-controller.php',
+            'Ai'            => 'class-ai-controller.php',
         ];
 
-        foreach ( $controllers as $controller ) {
-            $class = "\\WPSEOPilot\\Api\\{$controller}_Controller";
-            if ( class_exists( $class ) ) {
-                ( new $class() )->register_routes();
+        foreach ( $controllers as $controller => $file ) {
+            $file_path = $controllers_dir . $file;
+            if ( file_exists( $file_path ) ) {
+                require_once $file_path;
+                $class = "\\WPSEOPilot\\Api\\{$controller}_Controller";
+                if ( class_exists( $class ) ) {
+                    ( new $class() )->register_routes();
+                }
             }
         }
     }

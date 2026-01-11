@@ -878,3 +878,469 @@ body.admin-bar .wp-seo-pilot-admin {
         grid-template-columns: 1fr;
     }
 }
+
+/* Redirects Page Styles */
+.alert-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+.alert-card.warning {
+    border-left: 4px solid var(--color-warning);
+    background: linear-gradient(90deg, rgba(192, 124, 26, 0.06), transparent 30%);
+}
+
+.alert-card .alert-header {
+    margin-bottom: 8px;
+}
+
+.alert-card .alert-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.alert-card .suggestions-table {
+    margin-top: 14px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Redirect Form */
+.redirect-form {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 180px;
+}
+
+.form-field.narrow {
+    flex: 0 0 140px;
+    min-width: 140px;
+}
+
+.form-field.button-field {
+    flex: 0 0 auto;
+    min-width: auto;
+}
+
+.form-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-muted);
+}
+
+.form-field input,
+.form-field select {
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.15);
+}
+
+.form-error {
+    color: var(--color-danger);
+    font-size: 13px;
+    margin: 8px 0 0;
+}
+
+/* Filter Form */
+.filter-form {
+    margin-bottom: 16px;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+}
+
+.filter-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-field span {
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+.filter-field select {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.filter-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.filter-checkbox span {
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+/* Log Stats */
+.log-stats {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin: 0 0 12px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+}
+
+.pagination-info {
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+.pagination-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pagination-btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-current {
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+/* Loading and Empty States */
+.loading-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-muted);
+    font-size: 14px;
+}
+
+/* Small Button Variants */
+.button.small {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+/* Redirect Exists Badge */
+.badge.redirect-exists {
+    margin-left: 8px;
+    background: rgba(34, 113, 177, 0.12);
+    color: var(--color-primary);
+    font-size: 11px;
+    padding: 2px 8px;
+}
+
+/* Danger Link Button */
+.link-button.danger {
+    color: var(--color-danger);
+}
+
+.link-button.danger:hover {
+    text-decoration: underline;
+}
+
+/* Code Inline */
+code {
+    font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+    background: rgba(34, 113, 177, 0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+/* Responsive Adjustments for Redirects */
+@media (max-width: 960px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-field,
+    .form-field.narrow {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+
+    .filter-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pagination {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* Sitemap Page Styles */
+.checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--color-primary);
+}
+
+.checkbox-row span {
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+/* Additional Pages List */
+.additional-pages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.additional-page-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-url-input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.page-priority-input {
+    width: 80px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-family: inherit;
+    font-size: 14px;
+    text-align: center;
+}
+
+.page-url-input:focus,
+.page-priority-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.15);
+}
+
+/* Sitemap Links in Sidebar */
+.sitemap-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sitemap-link-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+}
+
+.sitemap-link-item strong {
+    color: var(--color-muted);
+    font-size: 12px;
+}
+
+.sitemap-link-item a {
+    color: var(--color-primary);
+    word-break: break-all;
+    text-decoration: none;
+}
+
+.sitemap-link-item a:hover {
+    text-decoration: underline;
+}
+
+/* Stats List in Sidebar */
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* URL Display */
+.url-display {
+    display: block;
+    word-break: break-all;
+    padding: 10px 12px;
+    background: rgba(34, 113, 177, 0.06);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--color-primary);
+    margin-top: 8px;
+}
+
+/* Post Types Preview for LLM.txt */
+.post-types-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.post-type-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    background: var(--color-surface-muted);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+}
+
+.post-type-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(34, 113, 177, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.post-type-icon .dashicon {
+    font-size: 20px;
+}
+
+.post-type-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.post-type-info strong {
+    font-size: 14px;
+}
+
+.post-type-info .muted {
+    font-size: 12px;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 8px;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Responsive for Sitemap */
+@media (max-width: 960px) {
+    .additional-page-row {
+        flex-wrap: wrap;
+    }
+
+    .page-url-input {
+        flex: 1 1 100%;
+    }
+
+    .page-priority-input {
+        flex: 0 0 80px;
+    }
+}

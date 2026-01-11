@@ -86,7 +86,11 @@ add_action(
 		\WPSEOPilot\Plugin::instance()->boot();
 
 		// Initialize V2 React Admin (runs alongside V1)
-		if ( is_admin() && class_exists( '\WPSEOPilot\Admin_V2' ) ) {
+		// Also load for REST API requests so endpoints are registered
+		$is_rest_request = ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+			( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) !== false );
+
+		if ( ( is_admin() || $is_rest_request ) && class_exists( '\WPSEOPilot\Admin_V2' ) ) {
 			\WPSEOPilot\Admin_V2::get_instance();
 		}
 	}

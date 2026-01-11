@@ -34,7 +34,7 @@ abstract class REST_Controller {
      *
      * @return bool
      */
-    protected function permission_check() {
+    public function permission_check() {
         return current_user_can( 'manage_options' );
     }
 
