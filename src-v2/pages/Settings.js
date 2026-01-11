@@ -13,8 +13,6 @@ const settingsTabs = [
 
 const defaultSettings = {
     // General
-    site_name: '',
-    site_tagline: '',
     separator: '-',
     knowledge_graph_type: 'organization',
     organization_name: '',
@@ -232,45 +230,13 @@ const GeneralTab = ({ settings, updateSetting }) => {
         <div className="settings-layout">
             <div className="settings-main">
                 <section className="panel">
-                    <h3>Site Identity</h3>
-                    <p className="panel-desc">Basic information about your website used in SEO metadata.</p>
+                    <h3>Title Separator</h3>
+                    <p className="panel-desc">Character used between title parts across your site (e.g., "Page Title | Site Name").</p>
 
                     <div className="settings-row">
                         <div className="settings-label">
-                            <label htmlFor="site-name">Site Name</label>
-                            <p className="settings-help">Your brand or website name.</p>
-                        </div>
-                        <div className="settings-control">
-                            <input
-                                id="site-name"
-                                type="text"
-                                value={settings.site_name}
-                                onChange={(e) => updateSetting('site_name', e.target.value)}
-                                placeholder="My Awesome Site"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="settings-row">
-                        <div className="settings-label">
-                            <label htmlFor="site-tagline">Tagline</label>
-                            <p className="settings-help">A short description of your site.</p>
-                        </div>
-                        <div className="settings-control">
-                            <input
-                                id="site-tagline"
-                                type="text"
-                                value={settings.site_tagline}
-                                onChange={(e) => updateSetting('site_tagline', e.target.value)}
-                                placeholder="Just another WordPress site"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="settings-row">
-                        <div className="settings-label">
-                            <label htmlFor="separator">Title Separator</label>
-                            <p className="settings-help">Character used between title parts.</p>
+                            <label>Separator</label>
+                            <p className="settings-help">Click to select your preferred separator.</p>
                         </div>
                         <div className="settings-control">
                             <div className="separator-picker">
@@ -287,6 +253,11 @@ const GeneralTab = ({ settings, updateSetting }) => {
                                 ))}
                             </div>
                         </div>
+                    </div>
+
+                    <div className="settings-info-box">
+                        <strong>Site Name &amp; Tagline</strong>
+                        <p>These are managed in WordPress Settings. <a href="options-general.php">Edit in Settings &rarr; General</a></p>
                     </div>
                 </section>
 
@@ -393,9 +364,12 @@ const GeneralTab = ({ settings, updateSetting }) => {
                     <h4>Title Preview</h4>
                     <div className="title-preview">
                         <span className="title-preview__text">
-                            {settings.site_name || 'Site Name'} {settings.separator} {settings.site_tagline || 'Tagline'}
+                            Page Title {settings.separator} Site Name
                         </span>
                     </div>
+                    <p className="muted" style={{ marginTop: '8px', fontSize: '12px' }}>
+                        This is how titles will be structured across your site.
+                    </p>
                 </div>
             </aside>
         </div>
@@ -467,6 +441,10 @@ const ModulesTab = ({ settings, updateSetting }) => {
 
 // Social Tab
 const SocialTab = ({ settings, updateSetting }) => {
+    const sampleTitle = 'Your Page Title';
+    const sampleDesc = 'Your page description will appear here when shared on social media platforms.';
+    const sampleDomain = 'yoursite.com';
+
     return (
         <div className="settings-layout">
             <div className="settings-main">
@@ -543,51 +521,74 @@ const SocialTab = ({ settings, updateSetting }) => {
             </div>
 
             <aside className="settings-sidebar">
-                {/* Social Preview */}
-                <div className="social-preview">
-                    <h4>Share Preview</h4>
+                {/* Facebook Preview */}
+                <div className="social-preview social-preview--facebook">
+                    <div className="social-preview__header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        <span>Facebook</span>
+                    </div>
                     <div className="social-preview__card">
                         <div
                             className="social-preview__image"
-                            style={{
-                                backgroundImage: settings.default_og_image ? `url(${settings.default_og_image})` : 'none'
-                            }}
+                            style={{ backgroundImage: settings.default_og_image ? `url(${settings.default_og_image})` : 'none' }}
                         >
                             {!settings.default_og_image && (
                                 <div className="social-preview__placeholder">
-                                    <span>No default image set</span>
-                                    <small>1200 x 630px recommended</small>
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                                 </div>
                             )}
                         </div>
-                        <div className="social-preview__content">
-                            <span className="social-preview__site">{settings.site_name || 'Your Site'}</span>
-                            <span className="social-preview__title">{settings.site_name || 'Page Title'} {settings.separator || '-'} {settings.site_tagline || 'Your tagline here'}</span>
+                        <div className="social-preview__body">
+                            <span className="social-preview__domain">{sampleDomain}</span>
+                            <span className="social-preview__title">{sampleTitle}</span>
+                            <span className="social-preview__desc">{sampleDesc}</span>
                         </div>
-                    </div>
-                    <div className="social-preview__meta">
-                        <div className="social-preview__meta-item">
-                            <span className="social-preview__meta-label">Card Type</span>
-                            <span className="social-preview__meta-value">{settings.twitter_card_type === 'summary_large_image' ? 'Large Image' : 'Summary'}</span>
-                        </div>
-                        {settings.twitter_username && (
-                            <div className="social-preview__meta-item">
-                                <span className="social-preview__meta-label">Twitter</span>
-                                <span className="social-preview__meta-value">@{settings.twitter_username}</span>
-                            </div>
-                        )}
-                        {settings.facebook_app_id && (
-                            <div className="social-preview__meta-item">
-                                <span className="social-preview__meta-label">FB App</span>
-                                <span className="social-preview__meta-value">Connected</span>
-                            </div>
-                        )}
                     </div>
                 </div>
 
-                <div className="side-card">
-                    <h4>Advanced Customization</h4>
-                    <p className="muted">Design custom social card images in Search Appearance &rarr; Social Cards.</p>
+                {/* Twitter Preview */}
+                <div className={`social-preview social-preview--twitter ${settings.twitter_card_type === 'summary' ? 'social-preview--summary' : ''}`}>
+                    <div className="social-preview__header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        <span>X (Twitter)</span>
+                    </div>
+                    {settings.twitter_card_type === 'summary' ? (
+                        <div className="social-preview__card social-preview__card--horizontal">
+                            <div
+                                className="social-preview__image social-preview__image--square"
+                                style={{ backgroundImage: settings.default_og_image ? `url(${settings.default_og_image})` : 'none' }}
+                            >
+                                {!settings.default_og_image && (
+                                    <div className="social-preview__placeholder">
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="social-preview__body">
+                                <span className="social-preview__title">{sampleTitle}</span>
+                                <span className="social-preview__desc">{sampleDesc}</span>
+                                <span className="social-preview__domain">{sampleDomain}</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="social-preview__card">
+                            <div
+                                className="social-preview__image"
+                                style={{ backgroundImage: settings.default_og_image ? `url(${settings.default_og_image})` : 'none' }}
+                            >
+                                {!settings.default_og_image && (
+                                    <div className="social-preview__placeholder">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                                    </div>
+                                )}
+                                <span className="social-preview__domain-overlay">{sampleDomain}</span>
+                            </div>
+                            <div className="social-preview__body">
+                                <span className="social-preview__title">{sampleTitle}</span>
+                                <span className="social-preview__desc">{sampleDesc}</span>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </aside>
         </div>

@@ -13,7 +13,6 @@ const tools = [
             </svg>
         ),
         color: '#2271b1',
-        stats: { label: 'Active', value: '12' },
         popular: true,
     },
     {
@@ -27,7 +26,6 @@ const tools = [
             </svg>
         ),
         color: '#d63638',
-        stats: { label: 'Errors', value: '3' },
         popular: true,
     },
     {
@@ -42,8 +40,8 @@ const tools = [
             </svg>
         ),
         color: '#00a32a',
-        stats: { label: 'Score', value: '87' },
         popular: true,
+        comingSoon: true,
     },
     {
         id: 'ai-assistant',
@@ -58,8 +56,8 @@ const tools = [
             </svg>
         ),
         color: '#8b5cf6',
-        stats: { label: 'Credits', value: '250' },
         popular: true,
+        comingSoon: true,
     },
     {
         id: 'internal-linking',
@@ -72,7 +70,6 @@ const tools = [
             </svg>
         ),
         color: '#0891b2',
-        stats: { label: 'Links', value: '156' },
         popular: false,
     },
     {
@@ -86,8 +83,8 @@ const tools = [
             </svg>
         ),
         color: '#ea580c',
-        stats: { label: 'Types', value: '8' },
         popular: false,
+        comingSoon: true,
     },
     {
         id: 'keyword-tracker',
@@ -100,7 +97,6 @@ const tools = [
             </svg>
         ),
         color: '#059669',
-        stats: { label: 'Keywords', value: '24' },
         popular: false,
         comingSoon: true,
     },
@@ -115,7 +111,6 @@ const tools = [
             </svg>
         ),
         color: '#6366f1',
-        stats: { label: 'Posts', value: '45' },
         popular: false,
         comingSoon: true,
     },
@@ -181,12 +176,6 @@ const Tools = ({ onNavigate }) => {
                                 </div>
                                 <p className="tool-card__desc">{tool.description}</p>
                             </div>
-                            {tool.stats && !tool.comingSoon && (
-                                <div className="tool-card__stats" style={{ color: tool.color }}>
-                                    <span className="tool-card__stat-value">{tool.stats.value}</span>
-                                    <span className="tool-card__stat-label">{tool.stats.label}</span>
-                                </div>
-                            )}
                             <div className="tool-card__arrow" style={{ color: tool.color }}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M9 18l6-6-6-6"/>
