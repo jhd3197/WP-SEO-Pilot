@@ -17,6 +17,8 @@ import Setup from './pages/Setup';
 import BulkEditor from './pages/BulkEditor';
 import ContentGaps from './pages/ContentGaps';
 import SchemaBuilder from './pages/SchemaBuilder';
+import LinkHealth from './pages/LinkHealth';
+import LocalSeo from './pages/LocalSeo';
 import './index.css';
 
 const viewToPage = {
@@ -35,6 +37,8 @@ const viewToPage = {
     'bulk-editor': 'wpseopilot-bulk-editor',
     'content-gaps': 'wpseopilot-content-gaps',
     'schema-builder': 'wpseopilot-schema-builder',
+    'link-health': 'wpseopilot-link-health',
+    'local-seo': 'wpseopilot-local-seo',
 };
 
 const pageToView = Object.entries(viewToPage).reduce((acc, [view, page]) => {
@@ -203,6 +207,10 @@ const App = ({ initialView = 'dashboard' }) => {
                 return <ContentGaps onNavigate={handleNavigate} />;
             case 'schema-builder':
                 return <SchemaBuilder onNavigate={handleNavigate} />;
+            case 'link-health':
+                return <LinkHealth onNavigate={handleNavigate} />;
+            case 'local-seo':
+                return <LocalSeo />;
             default:
                 return <Dashboard onNavigate={handleNavigate} />;
         }

@@ -73,6 +73,18 @@ class Plugin {
 		$this->register( 'analytics', new Service\Analytics() );
 		$this->register( 'admin_bar', new Service\Admin_Bar() );
 		$this->register( 'dashboard_widget', new Service\Dashboard_Widget() );
+		$this->register( 'link_health', new Service\Link_Health() );
+		$this->register( 'breadcrumbs', new Service\Breadcrumbs() );
+		$this->register( 'video_schema', new Service\Video_Schema() );
+		$this->register( 'course_schema', new Service\Course_Schema() );
+		$this->register( 'software_schema', new Service\Software_Schema() );
+		$this->register( 'book_schema', new Service\Book_Schema() );
+		$this->register( 'music_schema', new Service\Music_Schema() );
+		$this->register( 'movie_schema', new Service\Movie_Schema() );
+		$this->register( 'restaurant_schema', new Service\Restaurant_Schema() );
+		$this->register( 'service_schema', new Service\Service_Schema() );
+		$this->register( 'job_posting_schema', new Service\Job_Posting_Schema() );
+		$this->register( 'indexnow', new Service\IndexNow() );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$this->register( 'cli', new Service\CLI() );
@@ -120,6 +132,8 @@ class Plugin {
 
 		( new Service\Redirect_Manager() )->create_tables();
 		( new Service\Request_Monitor() )->create_tables();
+		( new Service\Link_Health() )->create_tables();
+		( new Service\IndexNow() )->create_tables();
 		Service\Internal_Linking::activate();
 
 		add_option( 'wpseopilot_default_title_template', '{{post_title}} | {{site_title}}' );

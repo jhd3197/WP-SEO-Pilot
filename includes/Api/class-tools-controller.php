@@ -110,7 +110,96 @@ class Tools_Controller extends REST_Controller {
                 'permission_callback' => [ $this, 'permission_check' ],
             ],
         ] );
+
+		register_rest_route( $this->namespace, '/tools/schema/import', [
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'import_schema' ],
+				'permission_callback' => [ $this, 'permission_check' ],
+			],
+		] );
+
+		register_rest_route( $this->namespace, '/tools/schema/templates', [
+			[
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_schema_templates' ],
+				'permission_callback' => [ $this, 'permission_check' ],
+			],
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'save_schema_template' ],
+				'permission_callback' => [ $this, 'permission_check' ],
+			],
+		] );
     }
+
+	/**
+	 * Get schema templates.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return \WP_REST_Response
+	 */
+	public function get_schema_templates( $request ) {
+		$templates = get_option( 'wpseopilot_schema_templates', [] );
+		return $this->success( $templates );
+	}
+
+	/**
+	 * Save schema template.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return \WP_REST_Response
+	 */
+	public function save_schema_template( $request ) {
+		$params = $request->get_json_params();
+		$templates = get_option( 'wpseopilot_schema_templates', [] );
+		$templates[] = $params;
+		update_option( 'wpseopilot_schema_templates', $templates );
+		return $this->success( $templates );
+	}
+
+	/**
+	 * Import schema from URL.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return \WP_REST_Response
+	 */
+	public function import_schema( $request ) {
+		$params = $request->get_json_params();
+		$url = isset( $params['url'] ) ? esc_url_raw( $params['url'] ) : '';
+
+		if ( empty( $url ) ) {
+			return $this->error( __( 'URL is required.', 'wp-seo-pilot' ), 'missing_url', 400 );
+		}
+
+		$response = wp_remote_get( $url );
+
+		if ( is_wp_error( $response ) ) {
+			return $this->error( $response->get_error_message(), 'remote_error', 500 );
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		$dom = new \DOMDocument();
+		@$dom->loadHTML( $body );
+
+		$xpath = new \DOMXPath( $dom );
+		$scripts = $xpath->query( '//script[@type="application/ld+json"]' );
+
+		if ( $scripts->length === 0 ) {
+			return $this->error( __( 'No schema found at the specified URL.', 'wp-seo-pilot' ), 'no_schema_found', 404 );
+		}
+
+		$schema_data = json_decode( $scripts[0]->nodeValue, true );
+
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			return $this->error( __( 'Invalid JSON format in schema.', 'wp-seo-pilot' ), 'invalid_json', 400 );
+		}
+
+		return $this->success( [
+			'type' => $schema_data['@type'] ?? 'Article',
+			'data' => $schema_data,
+		] );
+	}
 
     // =========================================================================
     // BULK EDITOR

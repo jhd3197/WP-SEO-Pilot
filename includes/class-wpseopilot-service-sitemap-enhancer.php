@@ -327,6 +327,10 @@ class Sitemap_Enhancer {
 		add_rewrite_rule( '^sitemap-news\.xml$', 'index.php?wpseopilot_sitemap_news=1', 'top' );
 		add_rewrite_tag( '%wpseopilot_sitemap_news%', '1' );
 
+		// Video Sitemap
+		add_rewrite_rule( '^sitemap-video\.xml$', 'index.php?wpseopilot_sitemap_video=1', 'top' );
+		add_rewrite_tag( '%wpseopilot_sitemap_video%', '1' );
+
 		// Additional Pages Sitemap
 		add_rewrite_rule( '^additional-sitemap\.xml$', 'index.php?wpseopilot_sitemap_additional=1', 'top' );
 		add_rewrite_tag( '%wpseopilot_sitemap_additional%', '1' );
@@ -365,6 +369,11 @@ class Sitemap_Enhancer {
 
 		if ( get_query_var( 'wpseopilot_sitemap_news' ) ) {
 			$this->render_google_news_sitemap();
+			return;
+		}
+
+		if ( get_query_var( 'wpseopilot_sitemap_video' ) ) {
+			$this->render_video_sitemap();
 			return;
 		}
 
@@ -1471,6 +1480,74 @@ class Sitemap_Enhancer {
 		</news:news>
 	</url>
 	<?php endforeach; ?>
+</urlset>
+		<?php
+		exit;
+	}
+
+	/**
+	 * Render video sitemap.
+	 *
+	 * Generates a sitemap for posts containing YouTube/Vimeo videos.
+	 *
+	 * @return void
+	 */
+	private function render_video_sitemap() {
+		// Get video schema service.
+		$video_service = \WPSEOPilot\Plugin::instance()->get( 'video_schema' );
+
+		if ( ! $video_service ) {
+			$this->bail_404();
+			return;
+		}
+
+		// Get posts with videos.
+		$posts_with_videos = $video_service->get_posts_with_videos( 1000 );
+
+		if ( empty( $posts_with_videos ) ) {
+			$this->bail_404();
+			return;
+		}
+
+		nocache_headers();
+		header( 'Content-Type: application/xml; charset=UTF-8' );
+
+		echo '<?xml version="1.0" encoding="UTF-8"?>';
+		?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+	<?php foreach ( $posts_with_videos as $item ) :
+		$post = $item['post'];
+		$videos = $item['videos'];
+		foreach ( $videos as $video ) :
+			$thumbnail = '';
+			$title = get_the_title( $post );
+			$description = wp_trim_words( wp_strip_all_tags( $post->post_content ), 50 );
+
+			if ( 'youtube' === $video['platform'] ) {
+				$thumbnail = 'https://img.youtube.com/vi/' . $video['id'] . '/maxresdefault.jpg';
+				$content_loc = 'https://www.youtube.com/watch?v=' . $video['id'];
+				$player_loc = 'https://www.youtube.com/embed/' . $video['id'];
+			} elseif ( 'vimeo' === $video['platform'] ) {
+				$content_loc = 'https://vimeo.com/' . $video['id'];
+				$player_loc = 'https://player.vimeo.com/video/' . $video['id'];
+			} else {
+				continue;
+			}
+	?>
+	<url>
+		<loc><?php echo esc_url( get_permalink( $post ) ); ?></loc>
+		<video:video>
+			<video:title><?php echo esc_html( $title ); ?></video:title>
+			<video:description><?php echo esc_html( $description ); ?></video:description>
+			<?php if ( $thumbnail ) : ?>
+			<video:thumbnail_loc><?php echo esc_url( $thumbnail ); ?></video:thumbnail_loc>
+			<?php endif; ?>
+			<video:content_loc><?php echo esc_url( $content_loc ); ?></video:content_loc>
+			<video:player_loc><?php echo esc_url( $player_loc ); ?></video:player_loc>
+			<video:publication_date><?php echo esc_html( get_post_time( DATE_W3C, true, $post ) ); ?></video:publication_date>
+		</video:video>
+	</url>
+	<?php endforeach; endforeach; ?>
 </urlset>
 		<?php
 		exit;

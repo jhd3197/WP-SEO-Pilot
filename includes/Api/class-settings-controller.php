@@ -102,7 +102,85 @@ class Settings_Controller extends REST_Controller {
             update_option( 'wpseopilot_' . $key, $value );
         }
 
+        // Sync breadcrumb settings to consolidated option for the service.
+        $this->sync_breadcrumb_settings( $settings );
+
+        // Sync IndexNow settings to consolidated option for the service.
+        $this->sync_indexnow_settings( $settings );
+
         return $this->success( null, __( 'Settings saved successfully.', 'wp-seo-pilot' ) );
+    }
+
+    /**
+     * Sync breadcrumb settings to the consolidated option.
+     *
+     * @param array $settings All settings from request.
+     * @return void
+     */
+    private function sync_breadcrumb_settings( $settings ) {
+        $breadcrumb_keys = [
+            'breadcrumb_separator'        => 'separator',
+            'breadcrumb_separator_custom' => 'separator_custom',
+            'breadcrumb_show_home'        => 'show_home',
+            'breadcrumb_home_label'       => 'home_label',
+            'breadcrumb_show_current'     => 'show_current',
+            'breadcrumb_link_current'     => 'link_current',
+            'breadcrumb_truncate_length'  => 'truncate_length',
+            'breadcrumb_show_on_front'    => 'show_on_front',
+            'breadcrumb_style_preset'     => 'style_preset',
+            'module_breadcrumbs'          => 'enabled',
+        ];
+
+        $breadcrumb_settings = get_option( 'wpseopilot_breadcrumb_settings', [] );
+        $updated             = false;
+
+        foreach ( $breadcrumb_keys as $request_key => $service_key ) {
+            if ( isset( $settings[ $request_key ] ) ) {
+                $breadcrumb_settings[ $service_key ] = $settings[ $request_key ];
+                $updated = true;
+            }
+        }
+
+        if ( $updated ) {
+            update_option( 'wpseopilot_breadcrumb_settings', $breadcrumb_settings );
+        }
+    }
+
+    /**
+     * Sync IndexNow settings to the consolidated option.
+     *
+     * @param array $settings All settings from request.
+     * @return void
+     */
+    private function sync_indexnow_settings( $settings ) {
+        $indexnow_keys = [
+            'module_indexnow'              => 'enabled',
+            'indexnow_submit_on_publish'   => 'submit_on_publish',
+            'indexnow_submit_on_update'    => 'submit_on_update',
+        ];
+
+        $indexnow_settings = get_option( 'wpseopilot_indexnow_settings', [] );
+        $updated           = false;
+
+        foreach ( $indexnow_keys as $request_key => $service_key ) {
+            if ( isset( $settings[ $request_key ] ) ) {
+                $indexnow_settings[ $service_key ] = $settings[ $request_key ];
+                $updated = true;
+            }
+        }
+
+        // Generate API key when enabling IndexNow for the first time.
+        if ( $updated && ! empty( $indexnow_settings['enabled'] ) && empty( $indexnow_settings['api_key'] ) ) {
+            $indexnow_service = \WPSEOPilot\Plugin::instance()->get( 'indexnow' );
+            if ( $indexnow_service ) {
+                $indexnow_settings['api_key'] = $indexnow_service->generate_api_key();
+                flush_rewrite_rules();
+            }
+        }
+
+        if ( $updated ) {
+            update_option( 'wpseopilot_indexnow_settings', $indexnow_settings );
+        }
     }
 
     /**

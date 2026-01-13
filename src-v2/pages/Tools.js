@@ -227,19 +227,18 @@ const tools = [
         comingSoon: true,
     },
     {
-        id: 'link-checker',
-        name: 'Broken Link Checker',
-        description: 'Scan pages for broken links. Find and fix dead links before they hurt your SEO.',
+        id: 'link-health',
+        name: 'Link Health',
+        description: 'Scan your site for broken links and orphan pages. Find and fix link issues before they hurt your SEO.',
         icon: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M15 7h3a5 5 0 010 10h-3m-6 0H6a5 5 0 010-10h3"/>
                 <line x1="8" y1="12" x2="16" y2="12"/>
-                <path d="M2 2l20 20" strokeLinecap="round"/>
+                <path d="M9 12l2 2 4-4"/>
             </svg>
         ),
-        color: '#dc2626',
-        popular: false,
-        comingSoon: true,
+        color: '#059669',
+        popular: true,
     },
     {
         id: 'page-speed',
@@ -347,7 +346,7 @@ const Tools = ({ onNavigate }) => {
             'meta-validator': 'meta-validator',
             'schema-validator': 'schema-validator',
             'heading-analyzer': 'heading-analyzer',
-            'link-checker': 'link-checker',
+            'link-health': 'link-health',
             'page-speed': 'page-speed',
             'mobile-test': 'mobile-test',
             'image-optimizer': 'image-optimizer',

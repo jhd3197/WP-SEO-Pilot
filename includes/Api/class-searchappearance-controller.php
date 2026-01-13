@@ -46,6 +46,15 @@ class SearchAppearance_Controller extends REST_Controller {
         'ProfilePage'       => 'Profile Page',
         'ContactPage'       => 'Contact Page',
         'SearchResultsPage' => 'Search Results Page',
+		'Book'              => 'Book',
+		'Course'            => 'Course',
+		'Movie'             => 'Movie',
+		'MusicAlbum'        => 'Music Album',
+		'MusicPlaylist'     => 'Music Playlist',
+		'Restaurant'        => 'Restaurant',
+		'SoftwareApplication' => 'Software Application',
+		'Service'           => 'Service',
+		'JobPosting'        => 'Job Posting',
     ];
 
     /**
@@ -60,6 +69,17 @@ class SearchAppearance_Controller extends REST_Controller {
         'TechArticle'      => 'Tech Article',
         'ScholarlyArticle' => 'Scholarly Article',
     ];
+
+	/**
+	 * Schema medical type options.
+	 *
+	 * @var array
+	 */
+	private $schema_medical_options = [
+		'MedicalCondition' => 'Medical Condition',
+		'Drug'             => 'Drug',
+		'MedicalProcedure' => 'Medical Procedure',
+	];
 
     /**
      * Register routes.
@@ -202,6 +222,7 @@ class SearchAppearance_Controller extends REST_Controller {
             'schema_options'    => [
                 'page'    => $this->schema_page_options,
                 'article' => $this->schema_article_options,
+				'medical' => $this->schema_medical_options,
             ],
             'site_info'         => [
                 'name'        => get_bloginfo( 'name' ),

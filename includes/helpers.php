@@ -903,163 +903,34 @@ namespace WPSEOPilot\Helpers {
 	}
 
 	/**
-	 * Convenience wrapper for breadcrumbs markup.
+	 * Render breadcrumbs markup.
 	 *
-	 * @param WP_Post|int|null $post Post.
-	 * @param bool             $echo Whether to echo.
+	 * Uses the Breadcrumbs service for full-featured output with styling and JSON-LD schema.
+	 *
+	 * @param array|null $args Optional arguments to override settings.
+	 * @param bool       $echo Whether to echo (default true).
 	 *
 	 * @return string|null
 	 */
-	function breadcrumbs( $post = null, $echo = true ) {
-		$post    = $post ? \get_post( $post ) : \get_post();
-		$crumbs  = [];
-		$crumbs[] = [
-			'url'   => home_url( '/' ),
-			'title' => \get_bloginfo( 'name' ),
-		];
+	function breadcrumbs( $args = null, $echo = true ) {
+		$plugin  = \WPSEOPilot\Plugin::instance();
+		$service = $plugin->get( 'breadcrumbs' );
 
-		// Handle single posts/pages
-		if ( $post && is_singular() && ! is_front_page() ) {
-			// Add CPT archive link if applicable
-			$post_type = \get_post_type( $post );
-			$post_type_object = \get_post_type_object( $post_type );
-
-			if ( $post_type_object && $post_type_object->has_archive && ! in_array( $post_type, [ 'post', 'page' ], true ) ) {
-				$archive_link = \get_post_type_archive_link( $post_type );
-				if ( $archive_link ) {
-					$crumbs[] = [
-						'url'   => $archive_link,
-						'title' => $post_type_object->labels->name ?? $post_type_object->label,
-					];
-				}
-			}
-
-			$ancestors = \get_post_ancestors( $post );
-			$ancestors = array_reverse( $ancestors );
-
-			foreach ( $ancestors as $ancestor_id ) {
-				$crumbs[] = [
-					'url'   => \get_permalink( $ancestor_id ),
-					'title' => \get_the_title( $ancestor_id ),
-				];
-			}
-
-			$crumbs[] = [
-				'url'   => \get_permalink( $post ),
-				'title' => \get_the_title( $post ),
-			];
-		}
-		// Handle category archives
-		elseif ( is_category() ) {
-			$category = get_queried_object();
-			if ( $category instanceof \WP_Term ) {
-				// Add parent categories if any
-				$ancestors = get_ancestors( $category->term_id, 'category' );
-				$ancestors = array_reverse( $ancestors );
-				foreach ( $ancestors as $ancestor_id ) {
-					$ancestor_term = get_term( $ancestor_id, 'category' );
-					if ( $ancestor_term && ! is_wp_error( $ancestor_term ) ) {
-						$crumbs[] = [
-							'url'   => get_term_link( $ancestor_term ),
-							'title' => $ancestor_term->name,
-						];
-					}
-				}
-
-				$crumbs[] = [
-					'url'   => get_term_link( $category ),
-					'title' => $category->name,
-				];
-			}
-		}
-		// Handle tag archives
-		elseif ( is_tag() ) {
-			$tag = get_queried_object();
-			if ( $tag instanceof \WP_Term ) {
-				$crumbs[] = [
-					'url'   => get_term_link( $tag ),
-					'title' => $tag->name,
-				];
-			}
-		}
-		// Handle taxonomy archives
-		elseif ( is_tax() ) {
-			$term = get_queried_object();
-			if ( $term instanceof \WP_Term ) {
-				// Add parent terms if any
-				$ancestors = get_ancestors( $term->term_id, $term->taxonomy );
-				$ancestors = array_reverse( $ancestors );
-				foreach ( $ancestors as $ancestor_id ) {
-					$ancestor_term = get_term( $ancestor_id, $term->taxonomy );
-					if ( $ancestor_term && ! is_wp_error( $ancestor_term ) ) {
-						$crumbs[] = [
-							'url'   => get_term_link( $ancestor_term ),
-							'title' => $ancestor_term->name,
-						];
-					}
-				}
-
-				$crumbs[] = [
-					'url'   => get_term_link( $term ),
-					'title' => $term->name,
-				];
-			}
-		}
-		// Handle post type archives
-		elseif ( is_post_type_archive() ) {
-			$post_type = get_queried_object();
-			if ( $post_type instanceof \WP_Post_Type ) {
-				$crumbs[] = [
-					'url'   => get_post_type_archive_link( $post_type->name ),
-					'title' => $post_type->labels->name ?? $post_type->label,
-				];
-			}
-		}
-		// Handle author archives
-		elseif ( is_author() ) {
-			$author = get_queried_object();
-			if ( $author instanceof \WP_User ) {
-				$crumbs[] = [
-					'url'   => get_author_posts_url( $author->ID ),
-					'title' => $author->display_name,
-				];
-			}
-		}
-		// Handle date archives
-		elseif ( is_date() ) {
-			$crumbs[] = [
-				'url'   => '',
-				'title' => get_the_archive_title(),
-			];
-		}
-
-		$crumbs = apply_filters( 'wpseopilot_breadcrumb_links', $crumbs, $post );
-
-		if ( empty( $crumbs ) || ! is_array( $crumbs ) ) {
+		if ( ! $service ) {
 			return null;
 		}
 
-		ob_start();
-		?>
-		<nav class="wpseopilot-breadcrumb" aria-label="Breadcrumb">
-			<ol>
-				<?php
-				$total = count( $crumbs );
-				foreach ( $crumbs as $index => $crumb ) :
-					$is_last = ( $index === $total - 1 );
-				?>
-					<li>
-						<?php if ( $is_last ) : ?>
-							<span class="current"><?php echo esc_html( $crumb['title'] ); ?></span>
-						<?php else : ?>
-							<a href="<?php echo esc_url( $crumb['url'] ); ?>"><?php echo esc_html( $crumb['title'] ); ?></a>
-						<?php endif; ?>
-					</li>
-				<?php endforeach; ?>
-			</ol>
-		</nav>
-		<?php
-		$html = trim( ob_get_clean() );
+		// Support legacy signature: breadcrumbs($post, $echo).
+		if ( $args instanceof \WP_Post || is_numeric( $args ) ) {
+			$args = [];
+			$echo = ( func_num_args() > 1 ) ? (bool) func_get_arg( 1 ) : true;
+		}
+
+		if ( ! is_array( $args ) ) {
+			$args = [];
+		}
+
+		$html = $service->render( $args );
 
 		if ( $echo ) {
 			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -1072,15 +943,15 @@ namespace WPSEOPilot\Helpers {
 
 namespace {
 	/**
-	 * Global helper for template usage.
+	 * Render breadcrumbs in theme templates.
 	 *
-	 * @param \WP_Post|int|null $post Post.
-	 * @param bool              $echo Echo?
+	 * @param array|null $args Optional arguments to override settings.
+	 * @param bool       $echo Whether to echo (default true).
 	 *
 	 * @return string|null
 	 */
-	function wpseopilot_breadcrumbs( $post = null, $echo = true ) {
-		return \WPSEOPilot\Helpers\breadcrumbs( $post, $echo );
+	function wpseopilot_breadcrumbs( $args = null, $echo = true ) {
+		return \WPSEOPilot\Helpers\breadcrumbs( $args, $echo );
 	}
 
 	/**

@@ -74,9 +74,19 @@ class JsonLD {
 
 			$graph[] = apply_filters( 'wpseopilot_schema_webpage', $webpage_schema, $post );
 
-			if ( in_array( get_post_type( $post ), [ 'post', 'article' ], true ) ) {
+			// Determine schema type - check post type settings for custom type.
+			$schema_type   = 'Article';
+			$post_type     = get_post_type( $post );
+			$type_settings = get_option( 'wpseopilot_post_type_seo_settings', [] );
+
+			if ( isset( $type_settings[ $post_type ]['schema_type'] ) && ! empty( $type_settings[ $post_type ]['schema_type'] ) ) {
+				$schema_type = $type_settings[ $post_type ]['schema_type'];
+			}
+
+			// Output article-type schema for posts and related content types.
+			if ( in_array( $post_type, [ 'post', 'article' ], true ) || in_array( $schema_type, [ 'Article', 'BlogPosting', 'NewsArticle' ], true ) ) {
 				$article_schema = [
-					'@type'        => 'Article',
+					'@type'        => $schema_type,
 					'@id'          => $url . '#article',
 					'headline'     => get_the_title( $post ),
 					'author'       => [
@@ -90,6 +100,24 @@ class JsonLD {
 					'dateModified'  => get_the_modified_date( DATE_W3C, $post ),
 					'isPartOf'      => [ '@id' => $post_id ],
 				];
+
+				// Add additional fields for NewsArticle.
+				if ( 'NewsArticle' === $schema_type ) {
+					$article_schema['mainEntityOfPage'] = [
+						'@type' => 'WebPage',
+						'@id'   => $url,
+					];
+					$article_schema['publisher'] = [
+						'@type' => 'Organization',
+						'name'  => get_bloginfo( 'name' ),
+						'logo'  => [
+							'@type' => 'ImageObject',
+							'url'   => get_site_icon_url(),
+						],
+					];
+					// Word count for NewsArticle.
+					$article_schema['wordCount'] = str_word_count( wp_strip_all_tags( $post->post_content ) );
+				}
 
 				$graph[] = apply_filters( 'wpseopilot_schema_article', $article_schema, $post );
 			}

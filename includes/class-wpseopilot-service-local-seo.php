@@ -244,13 +244,132 @@ class Local_SEO {
 			return $graph;
 		}
 
-		$schema = $this->build_schema();
+		// Check if multi-location is enabled.
+		$enable_locations = get_option( 'wpseopilot_local_enable_locations', '0' );
 
-		if ( ! empty( $schema ) ) {
-			$graph[] = $schema;
+		if ( '1' === $enable_locations ) {
+			// Output schema for each enabled location.
+			$locations = get_option( 'wpseopilot_local_locations', [] );
+
+			if ( ! empty( $locations ) && is_array( $locations ) ) {
+				foreach ( $locations as $index => $location ) {
+					// Skip disabled locations.
+					if ( isset( $location['enabled'] ) && ! $location['enabled'] ) {
+						continue;
+					}
+
+					$location_schema = $this->build_location_schema( $location, $index );
+					if ( ! empty( $location_schema ) ) {
+						$graph[] = $location_schema;
+					}
+				}
+			}
+		} else {
+			// Single location mode - use primary business settings.
+			$schema = $this->build_schema();
+
+			if ( ! empty( $schema ) ) {
+				$graph[] = $schema;
+			}
 		}
 
 		return $graph;
+	}
+
+	/**
+	 * Build schema for a specific location.
+	 *
+	 * @param array $location Location data.
+	 * @param int   $index    Location index for unique ID.
+	 * @return array|null
+	 */
+	private function build_location_schema( $location, $index ) {
+		// Require at minimum a location name.
+		if ( empty( $location['name'] ) ) {
+			return null;
+		}
+
+		$site_url      = home_url( '/' );
+		$business_type = ! empty( $location['type'] ) ? $location['type'] : 'LocalBusiness';
+
+		$schema = [
+			'@type' => $business_type,
+			'@id'   => $site_url . '#location-' . $index,
+			'name'  => $location['name'],
+			'url'   => $site_url,
+		];
+
+		// Use primary business logo.
+		$logo = get_option( 'wpseopilot_local_logo', '' );
+		if ( ! empty( $logo ) ) {
+			$schema['logo'] = $logo;
+		}
+
+		// Phone.
+		if ( ! empty( $location['phone'] ) ) {
+			$schema['telephone'] = $location['phone'];
+		}
+
+		// Email.
+		if ( ! empty( $location['email'] ) ) {
+			$schema['email'] = $location['email'];
+		}
+
+		// Address.
+		$address = $this->build_location_address( $location );
+		if ( ! empty( $address ) ) {
+			$schema['address'] = $address;
+		}
+
+		// Geo Coordinates.
+		if ( ! empty( $location['latitude'] ) && ! empty( $location['longitude'] ) ) {
+			$schema['geo'] = [
+				'@type'     => 'GeoCoordinates',
+				'latitude'  => (float) $location['latitude'],
+				'longitude' => (float) $location['longitude'],
+			];
+		}
+
+		// Opening hours from primary settings (shared across locations for now).
+		$opening_hours = $this->build_opening_hours();
+		if ( ! empty( $opening_hours ) ) {
+			$schema['openingHoursSpecification'] = $opening_hours;
+		}
+
+		return $schema;
+	}
+
+	/**
+	 * Build postal address for a location.
+	 *
+	 * @param array $location Location data.
+	 * @return array|null
+	 */
+	private function build_location_address( $location ) {
+		// Require at least street and city.
+		if ( empty( $location['street'] ) || empty( $location['city'] ) ) {
+			return null;
+		}
+
+		$address = [
+			'@type'           => 'PostalAddress',
+			'streetAddress'   => $location['street'],
+			'addressLocality' => $location['city'],
+		];
+
+		if ( ! empty( $location['state'] ) ) {
+			$address['addressRegion'] = $location['state'];
+		}
+
+		if ( ! empty( $location['zip'] ) ) {
+			$address['postalCode'] = $location['zip'];
+		}
+
+		if ( ! empty( $location['country'] ) ) {
+			$address['addressCountry'] = $location['country'];
+		}
+
+		return $address;
 	}
 
 	/**

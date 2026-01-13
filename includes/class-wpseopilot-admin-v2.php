@@ -60,6 +60,8 @@ class Admin_V2 {
         'wpseopilot-bulk-editor'        => 'bulk-editor',
         'wpseopilot-content-gaps'       => 'content-gaps',
         'wpseopilot-schema-builder'     => 'schema-builder',
+        'wpseopilot-link-health'        => 'link-health',
+        'wpseopilot-local-seo'          => 'local-seo',
         // Legacy V2 URLs (backwards compatibility)
         'wpseopilot-v2'                    => 'dashboard',
         'wpseopilot-v2-dashboard'          => 'dashboard',
@@ -77,6 +79,7 @@ class Admin_V2 {
         'wpseopilot-v2-bulk-editor'        => 'bulk-editor',
         'wpseopilot-v2-content-gaps'       => 'content-gaps',
         'wpseopilot-v2-schema-builder'     => 'schema-builder',
+        'wpseopilot-v2-link-health'        => 'link-health',
     ];
 
     /**
@@ -207,6 +210,8 @@ class Admin_V2 {
             'bulk-editor'      => __( 'Bulk Editor', 'wp-seo-pilot' ),
             'content-gaps'     => __( 'Content Gaps', 'wp-seo-pilot' ),
             'schema-builder'   => __( 'Schema Builder', 'wp-seo-pilot' ),
+            'link-health'      => __( 'Link Health', 'wp-seo-pilot' ),
+            'local-seo'        => __( 'Local SEO', 'wp-seo-pilot' ),
         ];
 
         foreach ( $hidden_subpages as $slug => $title ) {
@@ -340,6 +345,9 @@ class Admin_V2 {
             'Setup'            => 'class-setup-controller.php',
             'Tools'            => 'class-tools-controller.php',
             'Updater'          => 'class-updater-controller.php',
+            'Link_Health'      => 'class-link-health-controller.php',
+            'Breadcrumbs'      => 'class-breadcrumbs-controller.php',
+            'IndexNow'         => 'class-indexnow-controller.php',
         ];
 
         foreach ( $controllers as $controller => $file ) {

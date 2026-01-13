@@ -8,6 +8,7 @@ import { analytics } from '../utils/analytics';
 const settingsTabs = [
     { id: 'general', label: 'General' },
     { id: 'modules', label: 'Modules' },
+    { id: 'breadcrumbs', label: 'Breadcrumbs' },
     { id: 'social', label: 'Social' },
     { id: 'advanced', label: 'Advanced' },
     { id: 'tools', label: 'Tools' },
@@ -43,9 +44,23 @@ const defaultSettings = {
     module_internal_linking: true,
     module_schema: true,
     module_breadcrumbs: false,
+    // Breadcrumbs settings
+    breadcrumb_separator: '>',
+    breadcrumb_separator_custom: '',
+    breadcrumb_show_home: true,
+    breadcrumb_home_label: '',
+    breadcrumb_show_current: true,
+    breadcrumb_link_current: false,
+    breadcrumb_truncate_length: 0,
+    breadcrumb_show_on_front: false,
+    breadcrumb_style_preset: 'default',
     module_analytics: false,
     module_search_console: false,
     module_ai_assistant: true,
+    module_indexnow: false,
+    // IndexNow settings
+    indexnow_submit_on_publish: true,
+    indexnow_submit_on_update: true,
     // Social
     default_og_image: '',
     twitter_card_type: 'summary_large_image',
@@ -218,6 +233,10 @@ const Settings = () => {
 
             {activeTab === 'modules' && (
                 <ModulesTab settings={settings} updateSetting={updateSetting} />
+            )}
+
+            {activeTab === 'breadcrumbs' && (
+                <BreadcrumbsTab settings={settings} updateSetting={updateSetting} />
             )}
 
             {activeTab === 'social' && (
@@ -419,6 +438,7 @@ const ModulesTab = ({ settings, updateSetting }) => {
         { key: 'module_llm_txt', name: 'LLM.txt', desc: 'Generate llm.txt file for AI crawlers and LLMs.', icon: '🤖' },
         { key: 'module_local_seo', name: 'Local SEO', desc: 'Local business schema and location pages.', icon: '📍' },
         { key: 'module_ai_assistant', name: 'AI Assistant', desc: 'AI-powered content optimization suggestions.', icon: '✨' },
+        { key: 'module_indexnow', name: 'IndexNow', desc: 'Instant URL submission to search engines (Bing, Yandex).', icon: '⚡' },
         { key: 'module_search_console', name: 'Search Console', desc: 'Google Search Console integration.', icon: '🔍' },
     ];
 
@@ -487,6 +507,262 @@ const ModulesTab = ({ settings, updateSetting }) => {
                 <div className="side-card warning">
                     <h4>Dependencies</h4>
                     <p className="muted">Some modules require others. For example, "404 Error Log" works best with "Redirects" enabled.</p>
+                </div>
+            </aside>
+        </div>
+    );
+};
+
+// Breadcrumbs Tab
+const BreadcrumbsTab = ({ settings, updateSetting }) => {
+    const separatorOptions = [
+        { value: '>', label: 'Angle bracket (>)' },
+        { value: '/', label: 'Slash (/)' },
+        { value: '|', label: 'Pipe (|)' },
+        { value: '-', label: 'Dash (-)' },
+        { value: 'arrow', label: 'Arrow (→)' },
+        { value: 'chevron', label: 'Chevron (›)' },
+        { value: 'custom', label: 'Custom' },
+    ];
+
+    const stylePresets = [
+        { value: 'default', label: 'Default', desc: 'Gray background with rounded corners' },
+        { value: 'minimal', label: 'Minimal', desc: 'Clean text without background' },
+        { value: 'rounded', label: 'Rounded', desc: 'Pill-shaped items' },
+        { value: 'pills', label: 'Pills', desc: 'Arrow-shaped connected items' },
+        { value: 'none', label: 'No Styling', desc: 'Unstyled for custom CSS' },
+    ];
+
+    const isEnabled = settings.module_breadcrumbs;
+
+    return (
+        <div className="settings-layout">
+            <div className="settings-main">
+                {/* Enable/Disable Section */}
+                <section className="panel">
+                    <div className="panel-header">
+                        <div>
+                            <h3>Breadcrumbs Navigation</h3>
+                            <p className="panel-desc">Add SEO-friendly breadcrumb navigation to your pages.</p>
+                        </div>
+                        <label className="toggle">
+                            <input
+                                type="checkbox"
+                                checked={isEnabled}
+                                onChange={(e) => updateSetting('module_breadcrumbs', e.target.checked)}
+                            />
+                            <span className="toggle-track" />
+                        </label>
+                    </div>
+
+                    {!isEnabled && (
+                        <div className="notice notice-info">
+                            <p>Enable breadcrumbs to configure settings below.</p>
+                        </div>
+                    )}
+                </section>
+
+                {isEnabled && (
+                    <>
+                        {/* Display Settings */}
+                        <section className="panel">
+                            <h3>Display Settings</h3>
+                            <p className="panel-desc">Configure how breadcrumbs appear on your site.</p>
+
+                            <div className="settings-row">
+                                <div className="settings-label">
+                                    <label htmlFor="breadcrumb-separator">Separator</label>
+                                    <p className="settings-help">Character between breadcrumb items.</p>
+                                </div>
+                                <div className="settings-control">
+                                    <select
+                                        id="breadcrumb-separator"
+                                        value={settings.breadcrumb_separator}
+                                        onChange={(e) => updateSetting('breadcrumb_separator', e.target.value)}
+                                    >
+                                        {separatorOptions.map(opt => (
+                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {settings.breadcrumb_separator === 'custom' && (
+                                <div className="settings-row">
+                                    <div className="settings-label">
+                                        <label htmlFor="breadcrumb-separator-custom">Custom Separator</label>
+                                        <p className="settings-help">Enter your custom separator character or HTML.</p>
+                                    </div>
+                                    <div className="settings-control">
+                                        <input
+                                            id="breadcrumb-separator-custom"
+                                            type="text"
+                                            value={settings.breadcrumb_separator_custom}
+                                            onChange={(e) => updateSetting('breadcrumb_separator_custom', e.target.value)}
+                                            placeholder="e.g., •"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="settings-row">
+                                <div className="settings-label">
+                                    <label htmlFor="breadcrumb-style">Style Preset</label>
+                                    <p className="settings-help">Visual style for breadcrumbs.</p>
+                                </div>
+                                <div className="settings-control">
+                                    <select
+                                        id="breadcrumb-style"
+                                        value={settings.breadcrumb_style_preset}
+                                        onChange={(e) => updateSetting('breadcrumb_style_preset', e.target.value)}
+                                    >
+                                        {stylePresets.map(opt => (
+                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="settings-row">
+                                <div className="settings-label">
+                                    <label htmlFor="breadcrumb-truncate">Truncate Length</label>
+                                    <p className="settings-help">Max characters per item. 0 = no truncation.</p>
+                                </div>
+                                <div className="settings-control">
+                                    <input
+                                        id="breadcrumb-truncate"
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        value={settings.breadcrumb_truncate_length}
+                                        onChange={(e) => updateSetting('breadcrumb_truncate_length', parseInt(e.target.value, 10) || 0)}
+                                    />
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Home Link Settings */}
+                        <section className="panel">
+                            <h3>Home Link</h3>
+                            <p className="panel-desc">Configure the home link in breadcrumbs.</p>
+
+                            <div className="settings-row">
+                                <div className="settings-label">
+                                    <label htmlFor="breadcrumb-show-home">Show Home Link</label>
+                                    <p className="settings-help">Include a link to the homepage in breadcrumbs.</p>
+                                </div>
+                                <div className="settings-control">
+                                    <label className="toggle">
+                                        <input
+                                            id="breadcrumb-show-home"
+                                            type="checkbox"
+                                            checked={settings.breadcrumb_show_home}
+                                            onChange={(e) => updateSetting('breadcrumb_show_home', e.target.checked)}
+                                        />
+                                        <span className="toggle-track" />
+                                    </label>
+                                </div>
+                            </div>
+
+                            {settings.breadcrumb_show_home && (
+                                <div className="settings-row">
+                                    <div className="settings-label">
+                                        <label htmlFor="breadcrumb-home-label">Home Label</label>
+                                        <p className="settings-help">Text for the home link. Leave empty for "Home".</p>
+                                    </div>
+                                    <div className="settings-control">
+                                        <input
+                                            id="breadcrumb-home-label"
+                                            type="text"
+                                            value={settings.breadcrumb_home_label}
+                                            onChange={(e) => updateSetting('breadcrumb_home_label', e.target.value)}
+                                            placeholder="Home"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </section>
+
+                        {/* Current Page Settings */}
+                        <section className="panel">
+                            <h3>Current Page</h3>
+                            <p className="panel-desc">Configure how the current page appears in breadcrumbs.</p>
+
+                            <div className="settings-row">
+                                <div className="settings-label">
+                                    <label htmlFor="breadcrumb-show-current">Show Current Page</label>
+                                    <p className="settings-help">Display the current page title in breadcrumbs.</p>
+                                </div>
+                                <div className="settings-control">
+                                    <label className="toggle">
+                                        <input
+                                            id="breadcrumb-show-current"
+                                            type="checkbox"
+                                            checked={settings.breadcrumb_show_current}
+                                            onChange={(e) => updateSetting('breadcrumb_show_current', e.target.checked)}
+                                        />
+                                        <span className="toggle-track" />
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="settings-row">
+                                <div className="settings-label">
+                                    <label htmlFor="breadcrumb-link-current">Link Current Page</label>
+                                    <p className="settings-help">Make the current page title a clickable link.</p>
+                                </div>
+                                <div className="settings-control">
+                                    <label className="toggle">
+                                        <input
+                                            id="breadcrumb-link-current"
+                                            type="checkbox"
+                                            checked={settings.breadcrumb_link_current}
+                                            onChange={(e) => updateSetting('breadcrumb_link_current', e.target.checked)}
+                                        />
+                                        <span className="toggle-track" />
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="settings-row">
+                                <div className="settings-label">
+                                    <label htmlFor="breadcrumb-show-front">Show on Front Page</label>
+                                    <p className="settings-help">Display breadcrumbs on the homepage.</p>
+                                </div>
+                                <div className="settings-control">
+                                    <label className="toggle">
+                                        <input
+                                            id="breadcrumb-show-front"
+                                            type="checkbox"
+                                            checked={settings.breadcrumb_show_on_front}
+                                            onChange={(e) => updateSetting('breadcrumb_show_on_front', e.target.checked)}
+                                        />
+                                        <span className="toggle-track" />
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                    </>
+                )}
+            </div>
+
+            <aside className="settings-sidebar">
+                <div className="side-card">
+                    <h4>Usage</h4>
+                    <p className="muted">Add breadcrumbs to your theme using:</p>
+                    <code className="code-block">[wpseopilot_breadcrumbs]</code>
+                    <p className="muted" style={{ marginTop: '8px' }}>Or in PHP:</p>
+                    <code className="code-block">wpseopilot_breadcrumbs();</code>
+                </div>
+
+                <div className="side-card">
+                    <h4>Gutenberg Block</h4>
+                    <p className="muted">Search for "WP SEO Pilot Breadcrumbs" in the block inserter to add breadcrumbs to any page.</p>
+                </div>
+
+                <div className="side-card success">
+                    <h4>Schema Markup</h4>
+                    <p className="muted">BreadcrumbList JSON-LD schema is automatically added when breadcrumbs are enabled.</p>
                 </div>
             </aside>
         </div>
@@ -838,6 +1114,43 @@ const AdvancedTab = ({ settings, updateSetting }) => {
                         </div>
                     </div>
                 </section>
+
+                {settings.module_indexnow && (
+                    <section className="panel">
+                        <h3>IndexNow Settings</h3>
+                        <p className="panel-desc">Configure instant URL submission to search engines.</p>
+
+                        <div className="settings-row compact">
+                            <div className="settings-label">
+                                <label>Submit on Publish</label>
+                                <p className="settings-help">Automatically submit URLs when new content is published.</p>
+                            </div>
+                            <div className="settings-control">
+                                <label className="toggle">
+                                    <input type="checkbox" checked={settings.indexnow_submit_on_publish} onChange={(e) => updateSetting('indexnow_submit_on_publish', e.target.checked)} />
+                                    <span className="toggle-track" />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="settings-row compact">
+                            <div className="settings-label">
+                                <label>Submit on Update</label>
+                                <p className="settings-help">Automatically submit URLs when existing content is updated.</p>
+                            </div>
+                            <div className="settings-control">
+                                <label className="toggle">
+                                    <input type="checkbox" checked={settings.indexnow_submit_on_update} onChange={(e) => updateSetting('indexnow_submit_on_update', e.target.checked)} />
+                                    <span className="toggle-track" />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="settings-info">
+                            <p className="muted">IndexNow instantly notifies Bing, Yandex, Seznam, and Naver when your content changes. An API key is automatically generated when you enable the module.</p>
+                        </div>
+                    </section>
+                )}
 
                 <section className="panel panel--deprecated">
                     <h3>API Keys <span className="deprecated-badge">Deprecated</span></h3>
