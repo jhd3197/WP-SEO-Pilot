@@ -63,6 +63,25 @@ spl_autoload_register(
 			return;
 		}
 
+	// Handle Service namespace (in includes/Service/ directory)
+	if ( 0 === strpos( $class, 'WPSEOPilot\\Service\\' ) ) {
+		$class_name = str_replace( 'WPSEOPilot\\Service\\', '', $class );
+		$slug       = strtolower( str_replace( [ '_' ], '-', $class_name ) );
+		$candidates = [
+			WPSEOPILOT_PATH . 'includes/Service/class-wpseopilot-service-' . $slug . '.php',
+			WPSEOPILOT_PATH . 'includes/class-wpseopilot-service-' . $slug . '.php',
+			WPSEOPILOT_PATH . 'includes/Service/class-' . $slug . '.php',
+		];
+
+		foreach ( $candidates as $file ) {
+			if ( file_exists( $file ) ) {
+				require_once $file;
+				break;
+			}
+		}
+		return;
+	}
+
 		$path = strtolower(
 			str_replace(
 				[ '\\', '_' ],
@@ -102,6 +121,11 @@ add_action(
 			\WPSEOPilot\Integration\AI_Pilot::init();
 		}
 
+		// Initialize WooCommerce integration (Product schema for WC products).
+		if ( class_exists( '\WPSEOPilot\Integration\WooCommerce' ) ) {
+			( new \WPSEOPilot\Integration\WooCommerce() )->boot();
+		}
+
 		// Initialize V2 React Admin (runs alongside V1)
 		// Also load for REST API requests so endpoints are registered
 		$is_rest_request = ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
@@ -109,6 +133,47 @@ add_action(
 
 		if ( ( is_admin() || $is_rest_request ) && class_exists( '\WPSEOPilot\Admin_V2' ) ) {
 			\WPSEOPilot\Admin_V2::get_instance();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Video_Schema' ) ) {
+			new \WPSEOPilot\Service\Video_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Course_Schema' ) ) {
+			new \WPSEOPilot\Service\Course_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Software_Schema' ) ) {
+			new \WPSEOPilot\Service\Software_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Book_Schema' ) ) {
+			new \WPSEOPilot\Service\Book_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Music_Schema' ) ) {
+			new \WPSEOPilot\Service\Music_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Movie_Schema' ) ) {
+			new \WPSEOPilot\Service\Movie_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Restaurant_Schema' ) ) {
+			new \WPSEOPilot\Service\Restaurant_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Service_Schema' ) ) {
+			new \WPSEOPilot\Service\Service_Schema();
+		}
+
+		if ( class_exists( '\WPSEOPilot\Service\Job_Posting_Schema' ) ) {
+			new \WPSEOPilot\Service\Job_Posting_Schema();
+		}
+
+		// Initialize Schema Blocks (FAQ and HowTo Gutenberg blocks with schema).
+		if ( class_exists( '\WPSEOPilot\Service\Schema_Blocks' ) ) {
+			( new \WPSEOPilot\Service\Schema_Blocks() )->boot();
 		}
 	}
 );

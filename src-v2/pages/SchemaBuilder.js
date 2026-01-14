@@ -14,6 +14,14 @@ const schemaTypes = [
     { id: 'WebSite', name: 'Website', icon: '🌐', description: 'Website information' },
     { id: 'BreadcrumbList', name: 'Breadcrumbs', icon: '🔗', description: 'Navigation breadcrumbs' },
     { id: 'VideoObject', name: 'Video', icon: '🎬', description: 'Video content' },
+	{ id: 'Course', name: 'Course', icon: '🎓', description: 'Educational courses' },
+    { id: 'SoftwareApplication', name: 'Software', icon: '💻', description: 'Software applications' },
+    { id: 'Book', name: 'Book', icon: '📚', description: 'Books and literature' },
+    { id: 'MusicAlbum', name: 'Music', icon: '🎵', description: 'Music albums and playlists' },
+    { id: 'Movie', name: 'Movie', icon: '🎬', description: 'Films and movies' },
+    { id: 'Restaurant', name: 'Restaurant', icon: '🍽️', description: 'Restaurants and eateries' },
+    { id: 'Service', name: 'Service', icon: '🛠️', description: 'Offered services' },
+    { id: 'JobPosting', name: 'Job Posting', icon: '💼', description: 'Job opportunities' },
 ];
 
 const schemaFields = {
@@ -108,6 +116,53 @@ const schemaFields = {
         { key: 'contentUrl', label: 'Video URL', type: 'url' },
         { key: 'embedUrl', label: 'Embed URL', type: 'url' },
     ],
+	Course: [
+        { key: 'name', label: 'Course Name', type: 'text', required: true },
+        { key: 'description', label: 'Description', type: 'textarea' },
+        { key: 'provider', label: 'Provider Name', type: 'text' },
+		{ key: 'courseCode', label: 'Course Code', type: 'text' },
+    ],
+    SoftwareApplication: [
+        { key: 'name', label: 'Software Name', type: 'text', required: true },
+        { key: 'operatingSystem', label: 'Operating System', type: 'text' },
+        { key: 'applicationCategory', label: 'Application Category', type: 'text' },
+    ],
+    Book: [
+        { key: 'name', label: 'Book Title', type: 'text', required: true },
+        { key: 'author', label: 'Author Name', type: 'text' },
+        { key: 'isbn', label: 'ISBN', type: 'text' },
+        { key: 'bookEdition', label: 'Book Edition', type: 'text' },
+    ],
+    MusicAlbum: [
+        { key: 'name', label: 'Album Name', type: 'text', required: true },
+        { key: 'byArtist', label: 'Artist Name', type: 'text' },
+        { key: 'numTracks', label: 'Number of Tracks', type: 'number' },
+    ],
+    Movie: [
+        { key: 'name', label: 'Movie Title', type: 'text', required: true },
+        { key: 'director', label: 'Director Name', type: 'text' },
+        { key: 'dateCreated', label: 'Date Created', type: 'date' },
+    ],
+    Restaurant: [
+        { key: 'name', label: 'Restaurant Name', type: 'text', required: true },
+        { key: 'servesCuisine', label: 'Serves Cuisine', type: 'text' },
+        { key: 'priceRange', label: 'Price Range', type: 'text' },
+    ],
+    Service: [
+        { key: 'name', label: 'Service Name', type: 'text', required: true },
+        { key: 'serviceType', label: 'Service Type', type: 'text' },
+        { key: 'provider', label: 'Provider Name', type: 'text' },
+        { key: 'areaServed', label: 'Area Served', type: 'text' },
+    ],
+    JobPosting: [
+        { key: 'title', label: 'Job Title', type: 'text', required: true },
+        { key: 'description', label: 'Description', type: 'textarea' },
+        { key: 'hiringOrganization', label: 'Hiring Organization', type: 'text' },
+        { key: 'employmentType', label: 'Employment Type', type: 'text' },
+        { key: 'datePosted', label: 'Date Posted', type: 'date' },
+        { key: 'validThrough', label: 'Valid Through', type: 'date' },
+        { key: 'jobLocation', label: 'Job Location', type: 'text' },
+    ],
 };
 
 const SchemaBuilder = ({ onNavigate }) => {
@@ -121,6 +176,22 @@ const SchemaBuilder = ({ onNavigate }) => {
     const [postUrl, setPostUrl] = useState('');
     const [detecting, setDetecting] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [templates, setTemplates] = useState([]);
+    const [importUrl, setImportUrl] = useState('');
+    const [importing, setImporting] = useState(false);
+
+    useEffect(() => {
+        // Fetch templates from server
+        apiFetch({ path: '/wpseopilot/v2/tools/schema/templates' })
+            .then(setTemplates)
+            .catch(err => console.error('Failed to fetch templates:', err));
+    }, []);
+
+    useEffect(() => {
+        if (generatedSchema) {
+            handleValidate();
+        }
+    }, [generatedSchema]);
 
     const handleTypeSelect = (type) => {
         setSelectedType(type);
@@ -211,6 +282,81 @@ const SchemaBuilder = ({ onNavigate }) => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
+
+    const handleSaveTemplate = () => {
+        const templateName = prompt('Enter a name for this template:');
+        if (templateName) {
+            const newTemplate = {
+                name: templateName,
+                type: selectedType,
+                data: formData,
+            };
+            
+            apiFetch({
+                path: '/wpseopilot/v2/tools/schema/templates',
+                method: 'POST',
+                data: newTemplate,
+            })
+            .then(() => {
+                setTemplates([...templates, newTemplate]);
+                alert('Template saved!');
+            })
+            .catch(err => console.error('Failed to save template:', err));
+        }
+    };
+
+    const handleApplyTemplate = (template) => {
+        setSelectedType(template.type);
+        setFormData(template.data);
+    };
+
+	const handleImportSchema = async () => {
+        if (!importUrl) return;
+
+        setImporting(true);
+        try {
+            const response = await apiFetch({
+                path: '/wpseopilot/v2/tools/schema/import',
+                method: 'POST',
+                data: { url: importUrl },
+            });
+
+            if (response.success) {
+                setSelectedType(response.data.type);
+                setFormData(response.data.data);
+                alert('Schema imported successfully!');
+            }
+        } catch (error) {
+            console.error('Failed to import schema:', error);
+            alert('Failed to import schema. Check the URL and try again.');
+        } finally {
+            setImporting(false);
+        }
+    };
+
+	const handleSaveSchema = async () => {
+		if (!generatedSchema) return;
+	
+		setSaving(true);
+		try {
+			const response = await apiFetch({
+				path: '/wpseopilot/v2/tools/schema/save',
+				method: 'POST',
+				data: {
+					schema: generatedSchema,
+					post_id: new URLSearchParams(window.location.search).get('post'),
+				},
+			});
+	
+			if (response.success) {
+				alert('Schema saved successfully!');
+			}
+		} catch (error) {
+			console.error('Failed to save schema:', error);
+		} finally {
+			setSaving(false);
+		}
+	};
 
     const renderField = (field) => {
         const value = formData[field.key] || '';
@@ -320,6 +466,33 @@ const SchemaBuilder = ({ onNavigate }) => {
                                 </div>
                             </div>
 
+                            <div className="schema-import">
+                                <h3>Import from URL</h3>
+                                <div className="import-input">
+                                    <input
+                                        type="url"
+                                        value={importUrl}
+                                        onChange={(e) => setImportUrl(e.target.value)}
+                                        placeholder="Enter a URL to import schema from..."
+                                    />
+                                    <button
+                                        type="button"
+                                        className="button button--secondary"
+                                        onClick={handleImportSchema}
+                                        disabled={importing || !importUrl}
+                                    >
+                                        {importing ? (
+                                            <span className="spinner-small"></span>
+                                        ) : (
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                            </svg>
+                                        )}
+                                        Import
+                                    </button>
+                                </div>
+                            </div>
+
                             <div className="schema-types">
                                 <h3>Or Choose Schema Type</h3>
                                 <div className="schema-types-grid">
@@ -394,6 +567,15 @@ const SchemaBuilder = ({ onNavigate }) => {
                                             </>
                                         )}
                                     </button>
+									{generatedSchema && (
+										<button
+											type="button"
+											className="button"
+											onClick={handleSaveTemplate}
+										>
+											Save as Template
+										</button>
+									)}
                                 </div>
                             </div>
                         </>
@@ -472,9 +654,35 @@ const SchemaBuilder = ({ onNavigate }) => {
                                     <line x1="10" y1="14" x2="21" y2="3"/>
                                 </svg>
                             </a>
+							<button
+								type="button"
+								className="button button--primary"
+								onClick={handleSaveSchema}
+								disabled={saving}
+							>
+								{saving ? 'Saving...' : 'Save Schema'}
+							</button>
                         </div>
                     </div>
                 )}
+				{templates.length > 0 && (
+					<div className="schema-templates">
+						<h3>Saved Templates</h3>
+						<div className="templates-grid">
+							{templates.map((template, idx) => (
+								<button
+									key={idx}
+									type="button"
+									className="template-card"
+									onClick={() => handleApplyTemplate(template)}
+								>
+									<span className="template-name">{template.name}</span>
+									<span className="template-type">{template.type}</span>
+								</button>
+							))}
+						</div>
+					</div>
+				)}
             </div>
         </div>
     );

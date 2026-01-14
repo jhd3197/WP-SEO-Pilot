@@ -380,23 +380,27 @@ namespace WPSEOPilot\Helpers {
 
 		$default_summary = \__( 'Add content to generate a score.', 'wp-seo-pilot' );
 		$default_result  = [
-			'score'         => 0,
-			'level'         => 'low',
-			'label'         => \__( 'Needs attention', 'wp-seo-pilot' ),
-			'summary'       => $default_summary,
-			'has_keyphrase' => false,
-			'metrics'       => [],
+			'score'                => 0,
+			'level'                => 'low',
+			'label'                => \__( 'Needs attention', 'wp-seo-pilot' ),
+			'summary'              => $default_summary,
+			'has_keyphrase'        => false,
+			'metrics'              => [],
+			'secondary_keyphrases' => [],
 		];
 
 		if ( ! $post instanceof WP_Post ) {
 			return $default_result;
 		}
 
-		// Get SEO meta including focus keyphrase.
-		$meta            = get_post_meta( $post );
-		$all_meta        = (array) \get_post_meta( $post->ID, '_wpseopilot_meta', true );
-		$focus_keyphrase = isset( $all_meta['focus_keyphrase'] ) ? trim( sanitize_text_field( $all_meta['focus_keyphrase'] ) ) : '';
-		$has_keyphrase   = ! empty( $focus_keyphrase );
+		// Get SEO meta including focus keyphrase and secondary keyphrases.
+		$meta                  = get_post_meta( $post );
+		$all_meta              = (array) \get_post_meta( $post->ID, '_wpseopilot_meta', true );
+		$focus_keyphrase       = isset( $all_meta['focus_keyphrase'] ) ? trim( sanitize_text_field( $all_meta['focus_keyphrase'] ) ) : '';
+		$has_keyphrase         = ! empty( $focus_keyphrase );
+		$secondary_keyphrases  = isset( $all_meta['secondary_keyphrases'] ) && is_array( $all_meta['secondary_keyphrases'] )
+			? array_filter( array_map( 'sanitize_text_field', $all_meta['secondary_keyphrases'] ) )
+			: [];
 
 		$title_text  = trim( $meta['title'] ?: $post->post_title );
 		$desc_text   = trim( $meta['description'] );
@@ -654,6 +658,57 @@ namespace WPSEOPilot\Helpers {
 		}
 
 		// =====================================================
+		// SECONDARY KEYPHRASES (informational only, no score impact)
+		// =====================================================
+		$secondary_analysis = [];
+		if ( ! empty( $secondary_keyphrases ) ) {
+			foreach ( $secondary_keyphrases as $idx => $sec_keyphrase ) {
+				if ( empty( $sec_keyphrase ) ) {
+					continue;
+				}
+
+				$sec_in_title   = contains_keyphrase( $title_text, $sec_keyphrase );
+				$sec_in_desc    = contains_keyphrase( $desc_text, $sec_keyphrase );
+				$sec_in_content = contains_keyphrase( $content_text, $sec_keyphrase );
+				$sec_in_h1      = $has_h1 && contains_keyphrase( $h1_text, $sec_keyphrase );
+				$sec_density    = calculate_keyphrase_density( $content_text, $sec_keyphrase, $word_count );
+
+				$sec_checks_passed = (int) $sec_in_title + (int) $sec_in_desc + (int) $sec_in_content + (int) $sec_in_h1;
+
+				$secondary_analysis[] = [
+					'keyphrase'  => $sec_keyphrase,
+					'in_title'   => $sec_in_title,
+					'in_desc'    => $sec_in_desc,
+					'in_content' => $sec_in_content,
+					'in_h1'      => $sec_in_h1,
+					'density'    => round( $sec_density, 2 ),
+					'coverage'   => $sec_checks_passed . '/4',
+					'status'     => $sec_checks_passed >= 2 ? 'good' : ( $sec_checks_passed >= 1 ? 'fair' : 'poor' ),
+				];
+
+				// Add informational metric for the analysis tab.
+				$sec_status = sprintf(
+					/* translators: %1$s: coverage score, %2$.1f: density percentage */
+					\__( 'Coverage: %1$s • Density: %2$.1f%%', 'wp-seo-pilot' ),
+					$sec_checks_passed . '/4',
+					$sec_density
+				);
+
+				$metrics[] = [
+					'key'         => 'secondary_keyphrase_' . ( $idx + 1 ),
+					'label'       => sprintf( \__( 'Secondary: "%s"', 'wp-seo-pilot' ), $sec_keyphrase ),
+					'issue_label' => sprintf( \__( 'Secondary #%d', 'wp-seo-pilot' ), $idx + 1 ),
+					'status'      => $sec_status,
+					'score'       => 0, // Informational only.
+					'max'         => 0,
+					'is_pass'     => $sec_checks_passed >= 2,
+					'category'    => 'secondary_keyword',
+					'value'       => $sec_checks_passed,
+				];
+			}
+		}
+
+		// =====================================================
 		// CONTENT STRUCTURE (15 points max)
 		// =====================================================
 
@@ -891,175 +946,47 @@ namespace WPSEOPilot\Helpers {
 		}
 
 		$result = [
-			'score'         => $total_score,
-			'level'         => $level,
-			'label'         => $label,
-			'summary'       => $summary,
-			'has_keyphrase' => $has_keyphrase,
-			'metrics'       => $metrics,
+			'score'                => $total_score,
+			'level'                => $level,
+			'label'                => $label,
+			'summary'              => $summary,
+			'has_keyphrase'        => $has_keyphrase,
+			'metrics'              => $metrics,
+			'secondary_keyphrases' => $secondary_analysis,
 		];
 
 		return \apply_filters( 'wpseopilot_seo_score', $result, $post );
 	}
 
 	/**
-	 * Convenience wrapper for breadcrumbs markup.
+	 * Render breadcrumbs markup.
 	 *
-	 * @param WP_Post|int|null $post Post.
-	 * @param bool             $echo Whether to echo.
+	 * Uses the Breadcrumbs service for full-featured output with styling and JSON-LD schema.
+	 *
+	 * @param array|null $args Optional arguments to override settings.
+	 * @param bool       $echo Whether to echo (default true).
 	 *
 	 * @return string|null
 	 */
-	function breadcrumbs( $post = null, $echo = true ) {
-		$post    = $post ? \get_post( $post ) : \get_post();
-		$crumbs  = [];
-		$crumbs[] = [
-			'url'   => home_url( '/' ),
-			'title' => \get_bloginfo( 'name' ),
-		];
+	function breadcrumbs( $args = null, $echo = true ) {
+		$plugin  = \WPSEOPilot\Plugin::instance();
+		$service = $plugin->get( 'breadcrumbs' );
 
-		// Handle single posts/pages
-		if ( $post && is_singular() && ! is_front_page() ) {
-			// Add CPT archive link if applicable
-			$post_type = \get_post_type( $post );
-			$post_type_object = \get_post_type_object( $post_type );
-
-			if ( $post_type_object && $post_type_object->has_archive && ! in_array( $post_type, [ 'post', 'page' ], true ) ) {
-				$archive_link = \get_post_type_archive_link( $post_type );
-				if ( $archive_link ) {
-					$crumbs[] = [
-						'url'   => $archive_link,
-						'title' => $post_type_object->labels->name ?? $post_type_object->label,
-					];
-				}
-			}
-
-			$ancestors = \get_post_ancestors( $post );
-			$ancestors = array_reverse( $ancestors );
-
-			foreach ( $ancestors as $ancestor_id ) {
-				$crumbs[] = [
-					'url'   => \get_permalink( $ancestor_id ),
-					'title' => \get_the_title( $ancestor_id ),
-				];
-			}
-
-			$crumbs[] = [
-				'url'   => \get_permalink( $post ),
-				'title' => \get_the_title( $post ),
-			];
-		}
-		// Handle category archives
-		elseif ( is_category() ) {
-			$category = get_queried_object();
-			if ( $category instanceof \WP_Term ) {
-				// Add parent categories if any
-				$ancestors = get_ancestors( $category->term_id, 'category' );
-				$ancestors = array_reverse( $ancestors );
-				foreach ( $ancestors as $ancestor_id ) {
-					$ancestor_term = get_term( $ancestor_id, 'category' );
-					if ( $ancestor_term && ! is_wp_error( $ancestor_term ) ) {
-						$crumbs[] = [
-							'url'   => get_term_link( $ancestor_term ),
-							'title' => $ancestor_term->name,
-						];
-					}
-				}
-
-				$crumbs[] = [
-					'url'   => get_term_link( $category ),
-					'title' => $category->name,
-				];
-			}
-		}
-		// Handle tag archives
-		elseif ( is_tag() ) {
-			$tag = get_queried_object();
-			if ( $tag instanceof \WP_Term ) {
-				$crumbs[] = [
-					'url'   => get_term_link( $tag ),
-					'title' => $tag->name,
-				];
-			}
-		}
-		// Handle taxonomy archives
-		elseif ( is_tax() ) {
-			$term = get_queried_object();
-			if ( $term instanceof \WP_Term ) {
-				// Add parent terms if any
-				$ancestors = get_ancestors( $term->term_id, $term->taxonomy );
-				$ancestors = array_reverse( $ancestors );
-				foreach ( $ancestors as $ancestor_id ) {
-					$ancestor_term = get_term( $ancestor_id, $term->taxonomy );
-					if ( $ancestor_term && ! is_wp_error( $ancestor_term ) ) {
-						$crumbs[] = [
-							'url'   => get_term_link( $ancestor_term ),
-							'title' => $ancestor_term->name,
-						];
-					}
-				}
-
-				$crumbs[] = [
-					'url'   => get_term_link( $term ),
-					'title' => $term->name,
-				];
-			}
-		}
-		// Handle post type archives
-		elseif ( is_post_type_archive() ) {
-			$post_type = get_queried_object();
-			if ( $post_type instanceof \WP_Post_Type ) {
-				$crumbs[] = [
-					'url'   => get_post_type_archive_link( $post_type->name ),
-					'title' => $post_type->labels->name ?? $post_type->label,
-				];
-			}
-		}
-		// Handle author archives
-		elseif ( is_author() ) {
-			$author = get_queried_object();
-			if ( $author instanceof \WP_User ) {
-				$crumbs[] = [
-					'url'   => get_author_posts_url( $author->ID ),
-					'title' => $author->display_name,
-				];
-			}
-		}
-		// Handle date archives
-		elseif ( is_date() ) {
-			$crumbs[] = [
-				'url'   => '',
-				'title' => get_the_archive_title(),
-			];
-		}
-
-		$crumbs = apply_filters( 'wpseopilot_breadcrumb_links', $crumbs, $post );
-
-		if ( empty( $crumbs ) || ! is_array( $crumbs ) ) {
+		if ( ! $service ) {
 			return null;
 		}
 
-		ob_start();
-		?>
-		<nav class="wpseopilot-breadcrumb" aria-label="Breadcrumb">
-			<ol>
-				<?php
-				$total = count( $crumbs );
-				foreach ( $crumbs as $index => $crumb ) :
-					$is_last = ( $index === $total - 1 );
-				?>
-					<li>
-						<?php if ( $is_last ) : ?>
-							<span class="current"><?php echo esc_html( $crumb['title'] ); ?></span>
-						<?php else : ?>
-							<a href="<?php echo esc_url( $crumb['url'] ); ?>"><?php echo esc_html( $crumb['title'] ); ?></a>
-						<?php endif; ?>
-					</li>
-				<?php endforeach; ?>
-			</ol>
-		</nav>
-		<?php
-		$html = trim( ob_get_clean() );
+		// Support legacy signature: breadcrumbs($post, $echo).
+		if ( $args instanceof \WP_Post || is_numeric( $args ) ) {
+			$args = [];
+			$echo = ( func_num_args() > 1 ) ? (bool) func_get_arg( 1 ) : true;
+		}
+
+		if ( ! is_array( $args ) ) {
+			$args = [];
+		}
+
+		$html = $service->render( $args );
 
 		if ( $echo ) {
 			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -1072,15 +999,15 @@ namespace WPSEOPilot\Helpers {
 
 namespace {
 	/**
-	 * Global helper for template usage.
+	 * Render breadcrumbs in theme templates.
 	 *
-	 * @param \WP_Post|int|null $post Post.
-	 * @param bool              $echo Echo?
+	 * @param array|null $args Optional arguments to override settings.
+	 * @param bool       $echo Whether to echo (default true).
 	 *
 	 * @return string|null
 	 */
-	function wpseopilot_breadcrumbs( $post = null, $echo = true ) {
-		return \WPSEOPilot\Helpers\breadcrumbs( $post, $echo );
+	function wpseopilot_breadcrumbs( $args = null, $echo = true ) {
+		return \WPSEOPilot\Helpers\breadcrumbs( $args, $echo );
 	}
 
 	/**
