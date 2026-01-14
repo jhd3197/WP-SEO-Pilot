@@ -63,17 +63,24 @@ spl_autoload_register(
 			return;
 		}
 
-		// Handle Service namespace (in includes/Service/ directory)
-		if ( 0 === strpos( $class, 'WPSEOPilot\\Service\\' ) ) {
-			$class_name = str_replace( 'WPSEOPilot\\Service\\', '', $class );
-			$file_name  = 'class-' . strtolower( str_replace( [ '_' ], '-', $class_name ) ) . '.php';
-			$file       = WPSEOPILOT_PATH . 'includes/Service/' . $file_name;
+	// Handle Service namespace (in includes/Service/ directory)
+	if ( 0 === strpos( $class, 'WPSEOPilot\\Service\\' ) ) {
+		$class_name = str_replace( 'WPSEOPilot\\Service\\', '', $class );
+		$slug       = strtolower( str_replace( [ '_' ], '-', $class_name ) );
+		$candidates = [
+			WPSEOPILOT_PATH . 'includes/Service/class-wpseopilot-service-' . $slug . '.php',
+			WPSEOPILOT_PATH . 'includes/class-wpseopilot-service-' . $slug . '.php',
+			WPSEOPILOT_PATH . 'includes/Service/class-' . $slug . '.php',
+		];
 
+		foreach ( $candidates as $file ) {
 			if ( file_exists( $file ) ) {
 				require_once $file;
+				break;
 			}
-			return;
 		}
+		return;
+	}
 
 		$path = strtolower(
 			str_replace(
