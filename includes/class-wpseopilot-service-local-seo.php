@@ -2,7 +2,7 @@
 /**
  * Local SEO service for business schema and local search optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

@@ -2,7 +2,7 @@
 /**
  * Settings REST Controller
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
@@ -198,7 +198,7 @@ class Settings_Controller extends REST_Controller {
 
         // Generate API key when enabling IndexNow for the first time.
         if ( $updated && ! empty( $indexnow_settings['enabled'] ) && empty( $indexnow_settings['api_key'] ) ) {
-            $indexnow_service = \WPSEOPilot\Plugin::instance()->get( 'indexnow' );
+            $indexnow_service = \SamanLabs\SEO\Plugin::instance()->get( 'indexnow' );
             if ( $indexnow_service ) {
                 $indexnow_settings['api_key'] = $indexnow_service->generate_api_key();
                 flush_rewrite_rules();

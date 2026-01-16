@@ -2,13 +2,13 @@
 /**
  * Internal Links REST Controller
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
 namespace SamanLabs\SEO\Api;
 
-use WPSEOPilot\Internal_Linking\Repository;
+use SamanLabs\SEO\Internal_Linking\Repository;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

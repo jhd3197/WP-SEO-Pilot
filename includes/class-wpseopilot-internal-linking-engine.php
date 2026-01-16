@@ -2,7 +2,7 @@
 /**
  * Internal linking runtime engine.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Internal_Linking;

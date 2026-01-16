@@ -2,7 +2,7 @@
 /**
  * Book Schema service for book schema optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

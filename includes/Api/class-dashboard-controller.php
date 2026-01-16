@@ -2,14 +2,14 @@
 /**
  * Dashboard REST Controller
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
 namespace SamanLabs\SEO\Api;
 
-use WPSEOPilot\Service\Post_Meta;
-use function WPSEOPilot\Helpers\calculate_seo_score;
+use SamanLabs\SEO\Service\Post_Meta;
+use function SamanLabs\SEO\Helpers\calculate_seo_score;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -199,7 +199,7 @@ class Dashboard_Controller extends REST_Controller {
 
         foreach ( $posts as $post ) {
             $score_data = null;
-            if ( function_exists( 'WPSEOPilot\Helpers\calculate_seo_score' ) ) {
+            if ( function_exists( 'SamanLabs\SEO\Helpers\calculate_seo_score' ) ) {
                 $score_data = calculate_seo_score( $post );
             }
 

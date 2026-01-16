@@ -4,7 +4,7 @@
  *
  * Provides instant URL submission to search engines via the IndexNow protocol.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

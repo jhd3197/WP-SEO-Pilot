@@ -2,13 +2,13 @@
 /**
  * Internal Linking module service provider.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
 
-use WPSEOPilot\Internal_Linking\Engine as Linking_Engine;
-use WPSEOPilot\Internal_Linking\Repository;
+use SamanLabs\SEO\Internal_Linking\Engine as Linking_Engine;
+use SamanLabs\SEO\Internal_Linking\Repository;
 
 defined( 'ABSPATH' ) || exit;
 

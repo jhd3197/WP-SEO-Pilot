@@ -2,7 +2,7 @@
 /**
  * Base Assistant Class
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 

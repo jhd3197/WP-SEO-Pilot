@@ -2,7 +2,7 @@
 /**
  * Adds enrichment to WP core sitemaps plus optional custom sitemap.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
@@ -1494,7 +1494,7 @@ class Sitemap_Enhancer {
 	 */
 	private function render_video_sitemap() {
 		// Get video schema service.
-		$video_service = \WPSEOPilot\Plugin::instance()->get( 'video_schema' );
+		$video_service = \SamanLabs\SEO\Plugin::instance()->get( 'video_schema' );
 
 		if ( ! $video_service ) {
 			$this->bail_404();

@@ -5,7 +5,7 @@
  * Central integration layer for WP AI Pilot.
  * All AI functionality is delegated to WP AI Pilot.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Integration;

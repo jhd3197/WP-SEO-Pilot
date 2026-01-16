@@ -4,14 +4,14 @@
  *
  * Handles REST API endpoints for plugin updates management.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
 namespace SamanLabs\SEO\Api;
 
-use WPSEOPilot\Updater\GitHub_Updater;
-use WPSEOPilot\Updater\Plugin_Installer;
+use SamanLabs\SEO\Updater\GitHub_Updater;
+use SamanLabs\SEO\Updater\Plugin_Installer;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

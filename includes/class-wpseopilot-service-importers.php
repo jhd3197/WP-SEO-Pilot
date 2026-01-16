@@ -2,7 +2,7 @@
 /**
  * Export integrations with other SEO plugins.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

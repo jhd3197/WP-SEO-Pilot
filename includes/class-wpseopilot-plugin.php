@@ -2,7 +2,7 @@
 /**
  * Core plugin bootstrap.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO;

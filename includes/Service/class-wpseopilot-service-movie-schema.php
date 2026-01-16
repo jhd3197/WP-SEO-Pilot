@@ -2,7 +2,7 @@
 /**
  * Movie Schema service for movie schema optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

@@ -2,7 +2,7 @@
 /**
  * Detects other SEO plugins to avoid double-outputting.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

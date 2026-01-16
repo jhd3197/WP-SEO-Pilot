@@ -2,13 +2,13 @@
 /**
  * Lightweight Audit and reporting.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
 
 use WP_Post;
-use function WPSEOPilot\Helpers\generate_title_from_template;
+use function SamanLabs\SEO\Helpers\generate_title_from_template;
 
 defined( 'ABSPATH' ) || exit;
 

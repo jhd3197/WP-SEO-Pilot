@@ -4,7 +4,7 @@
  *
  * Provides breadcrumb navigation with JSON-LD schema support.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

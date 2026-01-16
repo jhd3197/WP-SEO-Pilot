@@ -2,7 +2,7 @@
 /**
  * Course Schema service for course schema optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

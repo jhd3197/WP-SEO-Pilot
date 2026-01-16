@@ -2,12 +2,12 @@
 /**
  * REST API Controller for IndexNow.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Api;
 
-use WPSEOPilot\Plugin;
+use SamanLabs\SEO\Plugin;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -268,7 +268,7 @@ class IndexNow_Controller extends REST_Controller {
 	/**
 	 * Get IndexNow service.
 	 *
-	 * @return \WPSEOPilot\Service\IndexNow|null
+	 * @return \SamanLabs\SEO\Service\IndexNow|null
 	 */
 	private function get_service() {
 		return Plugin::instance()->get( 'indexnow' );

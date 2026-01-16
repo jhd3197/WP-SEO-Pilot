@@ -5,7 +5,7 @@
  * Checks GitHub releases for plugin updates and integrates
  * with WordPress update system. Supports both stable and beta releases.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 

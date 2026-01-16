@@ -2,7 +2,7 @@
 /**
  * Simple dynamic OG/Twitter card builder.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

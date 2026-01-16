@@ -4,7 +4,7 @@
  *
  * Analyzes pages for mobile-friendliness.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 

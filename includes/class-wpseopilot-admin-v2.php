@@ -4,14 +4,14 @@
  *
  * Handles the React-based admin interface.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
 namespace SamanLabs\SEO;
 
-use WPSEOPilot\Integration\AI_Pilot;
-use WPSEOPilot\Updater\GitHub_Updater;
+use SamanLabs\SEO\Integration\AI_Pilot;
+use SamanLabs\SEO\Updater\GitHub_Updater;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -369,7 +369,7 @@ class Admin_V2 {
             $file_path = $controllers_dir . $file;
             if ( file_exists( $file_path ) ) {
                 require_once $file_path;
-                $class = "\\WPSEOPilot\\Api\\{$controller}_Controller";
+                $class = "\\SamanLabs\SEO\\Api\\{$controller}_Controller";
                 if ( class_exists( $class ) ) {
                     ( new $class() )->register_routes();
                 }

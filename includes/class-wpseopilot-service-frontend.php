@@ -2,16 +2,16 @@
 /**
  * Frontend rendering of meta tags, Open Graph, JSON-LD, etc.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
 
 use WP_Post;
-use function WPSEOPilot\Helpers\breadcrumbs;
-use function WPSEOPilot\Helpers\generate_content_snippet;
-use function WPSEOPilot\Helpers\generate_title_from_template;
-use function WPSEOPilot\Helpers\replace_template_variables;
+use function SamanLabs\SEO\Helpers\breadcrumbs;
+use function SamanLabs\SEO\Helpers\generate_content_snippet;
+use function SamanLabs\SEO\Helpers\generate_title_from_template;
+use function SamanLabs\SEO\Helpers\replace_template_variables;
 
 defined( 'ABSPATH' ) || exit;
 

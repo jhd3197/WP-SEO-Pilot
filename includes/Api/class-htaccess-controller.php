@@ -4,7 +4,7 @@
  *
  * Provides endpoints for editing the .htaccess file.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 

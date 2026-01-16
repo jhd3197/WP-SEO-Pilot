@@ -2,7 +2,7 @@
 /**
  * Redirect manager with custom storage + frontend hook.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

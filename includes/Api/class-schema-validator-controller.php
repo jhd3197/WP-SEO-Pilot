@@ -4,7 +4,7 @@
  *
  * Validates JSON-LD structured data from URLs.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 

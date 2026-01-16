@@ -2,7 +2,7 @@
 /**
  * Setup Wizard REST Controller
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 

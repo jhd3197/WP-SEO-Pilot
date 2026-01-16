@@ -5,13 +5,13 @@
  * Displays WP SEO Pilot menu in WordPress admin bar.
  * Shows SEO score indicator on single posts/pages, navigation links everywhere else.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
 
 use WP_Post;
-use function WPSEOPilot\Helpers\calculate_seo_score;
+use function SamanLabs\SEO\Helpers\calculate_seo_score;
 
 defined( 'ABSPATH' ) || exit;
 

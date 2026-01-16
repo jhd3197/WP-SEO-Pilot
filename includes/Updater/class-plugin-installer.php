@@ -4,7 +4,7 @@
  *
  * Handles installation, activation, and updates of managed plugins.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 

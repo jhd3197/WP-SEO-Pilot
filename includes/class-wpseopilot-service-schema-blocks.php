@@ -4,7 +4,7 @@
  *
  * Registers FAQ and HowTo Gutenberg blocks with schema markup support.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

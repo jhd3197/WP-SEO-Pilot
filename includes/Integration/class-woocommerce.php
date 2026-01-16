@@ -4,7 +4,7 @@
  *
  * Adds Product schema support for WooCommerce products.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Integration;

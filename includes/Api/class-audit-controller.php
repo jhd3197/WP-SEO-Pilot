@@ -2,15 +2,15 @@
 /**
  * Audit REST Controller
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
 namespace SamanLabs\SEO\Api;
 
-use WPSEOPilot\Service\Post_Meta;
-use function WPSEOPilot\Helpers\generate_title_from_template;
-use function WPSEOPilot\Helpers\calculate_seo_score;
+use SamanLabs\SEO\Service\Post_Meta;
+use function SamanLabs\SEO\Helpers\generate_title_from_template;
+use function SamanLabs\SEO\Helpers\calculate_seo_score;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -266,7 +266,7 @@ class Audit_Controller extends REST_Controller {
         $post_type_descriptions = get_option( 'wpseopilot_post_type_meta_descriptions', [] );
 
         $title_suggestion = '';
-        if ( function_exists( 'WPSEOPilot\Helpers\generate_title_from_template' ) ) {
+        if ( function_exists( 'SamanLabs\SEO\Helpers\generate_title_from_template' ) ) {
             $title_suggestion = generate_title_from_template( $post );
         }
         if ( empty( $title_suggestion ) ) {
@@ -606,7 +606,7 @@ class Audit_Controller extends REST_Controller {
             $post_type_descriptions = get_option( 'wpseopilot_post_type_meta_descriptions', [] );
 
             $title_suggestion = '';
-            if ( function_exists( 'WPSEOPilot\Helpers\generate_title_from_template' ) ) {
+            if ( function_exists( 'SamanLabs\SEO\Helpers\generate_title_from_template' ) ) {
                 $title_suggestion = generate_title_from_template( $post );
             }
             if ( empty( $title_suggestion ) ) {
@@ -670,7 +670,7 @@ class Audit_Controller extends REST_Controller {
         }
 
         $title_suggestion = '';
-        if ( function_exists( 'WPSEOPilot\Helpers\generate_title_from_template' ) ) {
+        if ( function_exists( 'SamanLabs\SEO\Helpers\generate_title_from_template' ) ) {
             $title_suggestion = generate_title_from_template( $post );
         }
         if ( empty( $title_suggestion ) ) {

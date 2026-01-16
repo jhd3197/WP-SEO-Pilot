@@ -2,7 +2,7 @@
 /**
  * Global Admin Top Bar
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO;

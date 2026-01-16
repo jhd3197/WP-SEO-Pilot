@@ -35,13 +35,13 @@ spl_autoload_register(
 	static function ( $class ) {
 		$class = ltrim( $class, '\\' );
 
-		if ( 0 !== strpos( $class, 'WPSEOPilot\\' ) ) {
+		if ( 0 !== strpos( $class, 'SamanLabs\SEO\\' ) ) {
 			return;
 		}
 
 		// Handle Api namespace separately (in includes/Api/ directory)
-		if ( 0 === strpos( $class, 'WPSEOPilot\\Api\\' ) ) {
-			$class_name = str_replace( 'WPSEOPilot\\Api\\', '', $class );
+		if ( 0 === strpos( $class, 'SamanLabs\SEO\\Api\\' ) ) {
+			$class_name = str_replace( 'SamanLabs\SEO\\Api\\', '', $class );
 			$file_name  = 'class-' . strtolower( str_replace( [ '_' ], '-', $class_name ) ) . '.php';
 			$file       = SAMANLABS_SEO_PATH . 'includes/Api/' . $file_name;
 
@@ -52,8 +52,8 @@ spl_autoload_register(
 		}
 
 		// Handle Integration namespace (in includes/Integration/ directory)
-		if ( 0 === strpos( $class, 'WPSEOPilot\\Integration\\' ) ) {
-			$class_name = str_replace( 'WPSEOPilot\\Integration\\', '', $class );
+		if ( 0 === strpos( $class, 'SamanLabs\SEO\\Integration\\' ) ) {
+			$class_name = str_replace( 'SamanLabs\SEO\\Integration\\', '', $class );
 			$file_name  = 'class-' . strtolower( str_replace( [ '_' ], '-', $class_name ) ) . '.php';
 			$file       = SAMANLABS_SEO_PATH . 'includes/Integration/' . $file_name;
 
@@ -64,8 +64,8 @@ spl_autoload_register(
 		}
 
 	// Handle Service namespace (in includes/Service/ directory)
-	if ( 0 === strpos( $class, 'WPSEOPilot\\Service\\' ) ) {
-		$class_name = str_replace( 'WPSEOPilot\\Service\\', '', $class );
+	if ( 0 === strpos( $class, 'SamanLabs\SEO\\Service\\' ) ) {
+		$class_name = str_replace( 'SamanLabs\SEO\\Service\\', '', $class );
 		$slug       = strtolower( str_replace( [ '_' ], '-', $class_name ) );
 		$candidates = [
 			SAMANLABS_SEO_PATH . 'includes/Service/class-wpseopilot-service-' . $slug . '.php',
@@ -110,20 +110,20 @@ if ( file_exists( SAMANLABS_SEO_PATH . 'test-analytics-simple.php' ) ) {
 add_action(
 	'plugins_loaded',
 	static function () {
-		if ( ! class_exists( '\WPSEOPilot\Plugin' ) ) {
+		if ( ! class_exists( '\SamanLabs\SEO\Plugin' ) ) {
 			return;
 		}
 
-		\WPSEOPilot\Plugin::instance()->boot();
+		\SamanLabs\SEO\Plugin::instance()->boot();
 
 		// Initialize WP AI Pilot integration (registers assistants, hooks for AI features).
-		if ( class_exists( '\WPSEOPilot\Integration\AI_Pilot' ) ) {
-			\WPSEOPilot\Integration\AI_Pilot::init();
+		if ( class_exists( '\SamanLabs\SEO\Integration\AI_Pilot' ) ) {
+			\SamanLabs\SEO\Integration\AI_Pilot::init();
 		}
 
 		// Initialize WooCommerce integration (Product schema for WC products).
-		if ( class_exists( '\WPSEOPilot\Integration\WooCommerce' ) ) {
-			( new \WPSEOPilot\Integration\WooCommerce() )->boot();
+		if ( class_exists( '\SamanLabs\SEO\Integration\WooCommerce' ) ) {
+			( new \SamanLabs\SEO\Integration\WooCommerce() )->boot();
 		}
 
 		// Initialize V2 React Admin (runs alongside V1)
@@ -131,52 +131,52 @@ add_action(
 		$is_rest_request = ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
 			( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) !== false );
 
-		if ( ( is_admin() || $is_rest_request ) && class_exists( '\WPSEOPilot\Admin_V2' ) ) {
-			\WPSEOPilot\Admin_V2::get_instance();
+		if ( ( is_admin() || $is_rest_request ) && class_exists( '\SamanLabs\SEO\Admin_V2' ) ) {
+			\SamanLabs\SEO\Admin_V2::get_instance();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Video_Schema' ) ) {
-			new \WPSEOPilot\Service\Video_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Video_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Video_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Course_Schema' ) ) {
-			new \WPSEOPilot\Service\Course_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Course_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Course_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Software_Schema' ) ) {
-			new \WPSEOPilot\Service\Software_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Software_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Software_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Book_Schema' ) ) {
-			new \WPSEOPilot\Service\Book_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Book_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Book_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Music_Schema' ) ) {
-			new \WPSEOPilot\Service\Music_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Music_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Music_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Movie_Schema' ) ) {
-			new \WPSEOPilot\Service\Movie_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Movie_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Movie_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Restaurant_Schema' ) ) {
-			new \WPSEOPilot\Service\Restaurant_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Restaurant_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Restaurant_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Service_Schema' ) ) {
-			new \WPSEOPilot\Service\Service_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Service_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Service_Schema();
 		}
 
-		if ( class_exists( '\WPSEOPilot\Service\Job_Posting_Schema' ) ) {
-			new \WPSEOPilot\Service\Job_Posting_Schema();
+		if ( class_exists( '\SamanLabs\SEO\Service\Job_Posting_Schema' ) ) {
+			new \SamanLabs\SEO\Service\Job_Posting_Schema();
 		}
 
 		// Initialize Schema Blocks (FAQ and HowTo Gutenberg blocks with schema).
-		if ( class_exists( '\WPSEOPilot\Service\Schema_Blocks' ) ) {
-			( new \WPSEOPilot\Service\Schema_Blocks() )->boot();
+		if ( class_exists( '\SamanLabs\SEO\Service\Schema_Blocks' ) ) {
+			( new \SamanLabs\SEO\Service\Schema_Blocks() )->boot();
 		}
 	}
 );
 
-register_activation_hook( __FILE__, [ '\WPSEOPilot\Plugin', 'activate' ] );
-register_deactivation_hook( __FILE__, [ '\WPSEOPilot\Plugin', 'deactivate' ] );
+register_activation_hook( __FILE__, [ '\SamanLabs\SEO\Plugin', 'activate' ] );
+register_deactivation_hook( __FILE__, [ '\SamanLabs\SEO\Plugin', 'deactivate' ] );

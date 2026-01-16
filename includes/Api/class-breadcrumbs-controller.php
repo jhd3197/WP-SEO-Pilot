@@ -2,7 +2,7 @@
 /**
  * REST API Controller for Breadcrumbs.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Api;
@@ -12,7 +12,7 @@ use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
-use WPSEOPilot\Plugin;
+use SamanLabs\SEO\Plugin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -102,7 +102,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 	/**
 	 * Get breadcrumb service.
 	 *
-	 * @return \WPSEOPilot\Service\Breadcrumbs|null
+	 * @return \SamanLabs\SEO\Service\Breadcrumbs|null
 	 */
 	private function get_service() {
 		return Plugin::instance()->get( 'breadcrumbs' );

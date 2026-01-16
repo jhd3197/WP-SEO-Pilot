@@ -2,7 +2,7 @@
 /**
  * Software Schema service for software application schema optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

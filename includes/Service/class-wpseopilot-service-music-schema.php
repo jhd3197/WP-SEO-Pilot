@@ -2,7 +2,7 @@
 /**
  * Music Schema service for music schema optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

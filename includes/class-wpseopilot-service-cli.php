@@ -2,7 +2,7 @@
 /**
  * WP-CLI integration.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

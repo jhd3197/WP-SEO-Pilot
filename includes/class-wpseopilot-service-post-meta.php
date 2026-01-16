@@ -2,7 +2,7 @@
 /**
  * Handles per-post SEO metadata registration and persistence.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

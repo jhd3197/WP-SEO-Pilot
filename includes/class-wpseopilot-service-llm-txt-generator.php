@@ -2,7 +2,7 @@
 /**
  * Generates llm.txt file for AI crawlers and LLMs.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

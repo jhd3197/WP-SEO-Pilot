@@ -2,14 +2,14 @@
 /**
  * AI admin experience.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
 
 use WP_Post;
-use function WPSEOPilot\Helpers\generate_content_snippet;
-use function WPSEOPilot\Helpers\generate_title_from_template;
+use function SamanLabs\SEO\Helpers\generate_content_snippet;
+use function SamanLabs\SEO\Helpers\generate_title_from_template;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -2,7 +2,7 @@
 /**
  * Video Schema service for video schema optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

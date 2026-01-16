@@ -5,7 +5,7 @@
  * Scans content for broken links, detects orphan pages,
  * and provides link health reports.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

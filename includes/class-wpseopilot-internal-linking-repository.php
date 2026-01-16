@@ -2,7 +2,7 @@
 /**
  * Data store for Internal Linking module.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Internal_Linking;

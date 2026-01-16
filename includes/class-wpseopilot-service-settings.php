@@ -2,7 +2,7 @@
 /**
  * Handles plugin options and settings UI.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

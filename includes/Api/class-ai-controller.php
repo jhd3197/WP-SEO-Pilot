@@ -4,13 +4,13 @@
  *
  * Simplified controller that delegates all AI operations to WP AI Pilot.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
 namespace SamanLabs\SEO\Api;
 
-use WPSEOPilot\Integration\AI_Pilot;
+use SamanLabs\SEO\Integration\AI_Pilot;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

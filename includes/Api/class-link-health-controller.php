@@ -2,7 +2,7 @@
 /**
  * REST API Controller for Link Health.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Api;
@@ -12,7 +12,7 @@ use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
-use WPSEOPilot\Service\Link_Health;
+use SamanLabs\SEO\Service\Link_Health;
 
 defined( 'ABSPATH' ) || exit;
 

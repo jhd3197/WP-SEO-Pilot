@@ -2,7 +2,7 @@
 /**
  * Job Posting Schema service for job posting schema optimization.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

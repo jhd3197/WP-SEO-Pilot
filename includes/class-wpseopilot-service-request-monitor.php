@@ -2,7 +2,7 @@
 /**
  * Logs 404s and surfaces suggestions.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

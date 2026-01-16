@@ -2,17 +2,17 @@
 /**
  * Admin UX: meta boxes, Gutenberg sidebar, quick actions.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
 
 defined( 'ABSPATH' ) || exit;
 
-use WPSEOPilot\Integration\AI_Pilot;
-use function WPSEOPilot\Helpers\calculate_seo_score;
-use function WPSEOPilot\Helpers\generate_title_from_template;
-use function WPSEOPilot\Helpers\replace_template_variables;
+use SamanLabs\SEO\Integration\AI_Pilot;
+use function SamanLabs\SEO\Helpers\calculate_seo_score;
+use function SamanLabs\SEO\Helpers\generate_title_from_template;
+use function SamanLabs\SEO\Helpers\replace_template_variables;
 
 /**
  * Admin UI controller.

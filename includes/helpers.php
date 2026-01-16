@@ -2,7 +2,7 @@
 /**
  * Shared helper functions.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Helpers {
@@ -969,7 +969,7 @@ namespace SamanLabs\SEO\Helpers {
 	 * @return string|null
 	 */
 	function breadcrumbs( $args = null, $echo = true ) {
-		$plugin  = \WPSEOPilot\Plugin::instance();
+		$plugin  = \SamanLabs\SEO\Plugin::instance();
 		$service = $plugin->get( 'breadcrumbs' );
 
 		if ( ! $service ) {
@@ -1007,7 +1007,7 @@ namespace {
 	 * @return string|null
 	 */
 	function wpseopilot_breadcrumbs( $args = null, $echo = true ) {
-		return \WPSEOPilot\Helpers\breadcrumbs( $args, $echo );
+		return \SamanLabs\SEO\Helpers\breadcrumbs( $args, $echo );
 	}
 
 	/**
@@ -1020,7 +1020,7 @@ namespace {
 	 * @return int|\WP_Error Redirect ID or WP_Error.
 	 */
 	function wpseopilot_create_redirect( $source, $target, $status_code = 301 ) {
-		$plugin = \WPSEOPilot\Plugin::instance();
+		$plugin = \SamanLabs\SEO\Plugin::instance();
 		$svc    = $plugin->get( 'redirects' );
 
 		if ( ! $svc ) {

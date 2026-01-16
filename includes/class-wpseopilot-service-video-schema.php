@@ -4,7 +4,7 @@
  *
  * Detects YouTube and Vimeo videos in post content and generates VideoObject schema.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

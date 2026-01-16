@@ -2,7 +2,7 @@
 /**
  * Social Settings Admin UI
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
@@ -41,7 +41,7 @@ class Social_Settings {
 	 * @return void
 	 */
 	public function render_redirect_notice() {
-		\WPSEOPilot\Admin_Topbar::render( 'social' );
+		\SamanLabs\SEO\Admin_Topbar::render( 'social' );
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Social Settings Moved', 'wp-seo-pilot' ); ?></h1>

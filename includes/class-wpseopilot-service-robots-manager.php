@@ -2,7 +2,7 @@
 /**
  * Robots.txt overrides.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;

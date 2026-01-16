@@ -5,13 +5,13 @@
  * Simplified controller that delegates AI chat to WP AI Pilot.
  * Keeps custom assistants CRUD and usage tracking local.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
 namespace SamanLabs\SEO\Api;
 
-use WPSEOPilot\Integration\AI_Pilot;
+use SamanLabs\SEO\Integration\AI_Pilot;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

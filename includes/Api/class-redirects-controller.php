@@ -2,7 +2,7 @@
 /**
  * Redirects REST Controller
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  * @since 0.2.0
  */
 
@@ -738,7 +738,7 @@ class Redirects_Controller extends REST_Controller {
      * @return \WP_REST_Response|\WP_Error
      */
     public function create_redirect( $request ) {
-        $manager = new \WPSEOPilot\Service\Redirect_Manager();
+        $manager = new \SamanLabs\SEO\Service\Redirect_Manager();
 
         $source      = $request->get_param( 'source' );
         $target      = $request->get_param( 'target' );
@@ -770,7 +770,7 @@ class Redirects_Controller extends REST_Controller {
      * @return \WP_REST_Response|\WP_Error
      */
     public function update_redirect( $request ) {
-        $manager = new \WPSEOPilot\Service\Redirect_Manager();
+        $manager = new \SamanLabs\SEO\Service\Redirect_Manager();
 
         $id   = $request->get_param( 'id' );
         $data = [];
@@ -803,7 +803,7 @@ class Redirects_Controller extends REST_Controller {
      * @return \WP_REST_Response|\WP_Error
      */
     public function delete_redirect( $request ) {
-        $manager = new \WPSEOPilot\Service\Redirect_Manager();
+        $manager = new \SamanLabs\SEO\Service\Redirect_Manager();
 
         $id     = $request->get_param( 'id' );
         $result = $manager->delete_redirect( $id );
@@ -840,8 +840,8 @@ class Redirects_Controller extends REST_Controller {
             $ids
         ) );
 
-        if ( class_exists( '\WPSEOPilot\Service\Redirect_Manager' ) ) {
-            \WPSEOPilot\Service\Redirect_Manager::flush_cache();
+        if ( class_exists( '\SamanLabs\SEO\Service\Redirect_Manager' ) ) {
+            \SamanLabs\SEO\Service\Redirect_Manager::flush_cache();
         }
 
         return $this->success( [ 'deleted' => $deleted ], sprintf( __( '%d redirects deleted.', 'wp-seo-pilot' ), $deleted ) );
@@ -1033,7 +1033,7 @@ class Redirects_Controller extends REST_Controller {
         $data      = $request->get_param( 'data' );
         $overwrite = $request->get_param( 'overwrite' );
 
-        $manager = new \WPSEOPilot\Service\Redirect_Manager();
+        $manager = new \SamanLabs\SEO\Service\Redirect_Manager();
 
         $imported = 0;
         $skipped  = 0;
@@ -1109,7 +1109,7 @@ class Redirects_Controller extends REST_Controller {
      * Import a single redirect.
      *
      * @param array                                $data      Redirect data.
-     * @param \WPSEOPilot\Service\Redirect_Manager $manager   Redirect manager instance.
+     * @param \SamanLabs\SEO\Service\Redirect_Manager $manager   Redirect manager instance.
      * @param bool                                 $overwrite Whether to overwrite existing.
      * @return bool|string True on success, 'skipped' if skipped, error message on failure.
      */
@@ -1486,7 +1486,7 @@ class Redirects_Controller extends REST_Controller {
         $source = $entry->request_uri;
 
         // Create the redirect
-        $manager = new \WPSEOPilot\Service\Redirect_Manager();
+        $manager = new \SamanLabs\SEO\Service\Redirect_Manager();
         $result  = $manager->create_redirect( $source, $target, $status_code );
 
         if ( is_wp_error( $result ) ) {
@@ -1605,7 +1605,7 @@ class Redirects_Controller extends REST_Controller {
      */
     public function ignore_404_entry( $request ) {
         $id      = $request->get_param( 'id' );
-        $monitor = new \WPSEOPilot\Service\Request_Monitor();
+        $monitor = new \SamanLabs\SEO\Service\Request_Monitor();
 
         if ( $monitor->ignore_entry( $id ) ) {
             return $this->success( null, __( 'Entry ignored.', 'wp-seo-pilot' ) );
@@ -1622,7 +1622,7 @@ class Redirects_Controller extends REST_Controller {
      */
     public function unignore_404_entry( $request ) {
         $id      = $request->get_param( 'id' );
-        $monitor = new \WPSEOPilot\Service\Request_Monitor();
+        $monitor = new \SamanLabs\SEO\Service\Request_Monitor();
 
         if ( $monitor->unignore_entry( $id ) ) {
             return $this->success( null, __( 'Entry unignored.', 'wp-seo-pilot' ) );
@@ -1638,7 +1638,7 @@ class Redirects_Controller extends REST_Controller {
      * @return \WP_REST_Response|\WP_Error
      */
     public function get_ignore_patterns( $request ) {
-        $monitor  = new \WPSEOPilot\Service\Request_Monitor();
+        $monitor  = new \SamanLabs\SEO\Service\Request_Monitor();
         $patterns = $monitor->get_ignore_patterns();
 
         $data = [];
@@ -1666,7 +1666,7 @@ class Redirects_Controller extends REST_Controller {
         $is_regex = $request->get_param( 'is_regex' );
         $reason   = $request->get_param( 'reason' );
 
-        $monitor = new \WPSEOPilot\Service\Request_Monitor();
+        $monitor = new \SamanLabs\SEO\Service\Request_Monitor();
         $id      = $monitor->add_ignore_pattern( $pattern, $is_regex, $reason );
 
         if ( false === $id ) {
@@ -1692,7 +1692,7 @@ class Redirects_Controller extends REST_Controller {
      */
     public function delete_ignore_pattern( $request ) {
         $id      = $request->get_param( 'id' );
-        $monitor = new \WPSEOPilot\Service\Request_Monitor();
+        $monitor = new \SamanLabs\SEO\Service\Request_Monitor();
 
         if ( $monitor->delete_ignore_pattern( $id ) ) {
             return $this->success( null, __( 'Pattern deleted.', 'wp-seo-pilot' ) );

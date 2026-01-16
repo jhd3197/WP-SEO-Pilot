@@ -2,12 +2,12 @@
 /**
  * JSON-LD payload builder.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 namespace SamanLabs\SEO\Service;
 
-use function WPSEOPilot\Helpers\breadcrumbs;
+use function SamanLabs\SEO\Helpers\breadcrumbs;
 
 defined( 'ABSPATH' ) || exit;
 
