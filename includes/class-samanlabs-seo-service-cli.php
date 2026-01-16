@@ -81,7 +81,7 @@ class CLI {
 					}
 
 					global $wpdb;
-					$table = $wpdb->prefix . 'wpseopilot_redirects';
+					$table = $wpdb->prefix . 'samanlabs_seo_redirects';
 
 					foreach ( $data as $row ) {
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Importing redirect rows requires direct writes to the custom table.
@@ -111,7 +111,7 @@ class CLI {
 
 					if ( false === $data ) {
 						global $wpdb;
-						$table = esc_sql( $wpdb->prefix . 'wpseopilot_redirects' );
+						$table = esc_sql( $wpdb->prefix . 'samanlabs_seo_redirects' );
 						$query = "SELECT id, source, target, status_code, hits, last_hit FROM `{$table}`";
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name already sanitized via esc_sql(), and results are cached immediately after.
 						$raw_data = $wpdb->get_results( $query, ARRAY_A );

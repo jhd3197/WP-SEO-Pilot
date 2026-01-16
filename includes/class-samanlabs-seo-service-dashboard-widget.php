@@ -28,7 +28,7 @@ class Dashboard_Widget {
      */
     public function __construct() {
         global $wpdb;
-        $this->log_table = $wpdb->prefix . 'wpseopilot_404_log';
+        $this->log_table = $wpdb->prefix . 'samanlabs_seo_404_log';
     }
 
     /**
@@ -259,7 +259,7 @@ class Dashboard_Widget {
         ) );
 
         // Need redirect - entries without an existing redirect
-        $redirects_table = $wpdb->prefix . 'wpseopilot_redirects';
+        $redirects_table = $wpdb->prefix . 'samanlabs_seo_redirects';
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $redirects_exist = $wpdb->get_var( $wpdb->prepare(
             "SHOW TABLES LIKE %s",

@@ -29,7 +29,7 @@ class Tools_Controller extends REST_Controller {
      */
     public function __construct() {
         global $wpdb;
-        $this->custom_models_table = $wpdb->prefix . 'wpseopilot_custom_models';
+        $this->custom_models_table = $wpdb->prefix . 'samanlabs_seo_custom_models';
     }
 
     /**

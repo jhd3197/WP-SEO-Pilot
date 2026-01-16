@@ -36,8 +36,8 @@ class Request_Monitor {
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->table          = $wpdb->prefix . 'wpseopilot_404_log';
-		$this->patterns_table = $wpdb->prefix . 'wpseopilot_404_ignore_patterns';
+		$this->table          = $wpdb->prefix . 'samanlabs_seo_404_log';
+		$this->patterns_table = $wpdb->prefix . 'samanlabs_seo_404_ignore_patterns';
 	}
 
 	/**
@@ -579,7 +579,7 @@ class Request_Monitor {
 	private function annotate_redirect_status( $rows ) {
 		global $wpdb;
 
-		$redirect_table = $wpdb->prefix . 'wpseopilot_redirects';
+		$redirect_table = $wpdb->prefix . 'samanlabs_seo_redirects';
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Table existence check avoids hard errors on older installs.
 		$has_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $redirect_table ) );

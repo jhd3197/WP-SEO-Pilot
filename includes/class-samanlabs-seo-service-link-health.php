@@ -39,8 +39,8 @@ class Link_Health {
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->links_table = $wpdb->prefix . 'wpseopilot_link_health';
-		$this->scans_table = $wpdb->prefix . 'wpseopilot_link_scans';
+		$this->links_table = $wpdb->prefix . 'samanlabs_seo_link_health';
+		$this->scans_table = $wpdb->prefix . 'samanlabs_seo_link_scans';
 	}
 
 	/**

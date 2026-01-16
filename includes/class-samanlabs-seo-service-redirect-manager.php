@@ -39,7 +39,7 @@ class Redirect_Manager {
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->table = $wpdb->prefix . 'wpseopilot_redirects';
+		$this->table = $wpdb->prefix . 'samanlabs_seo_redirects';
 	}
 
 	/**

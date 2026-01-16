@@ -42,8 +42,8 @@ class Assistants_Controller extends REST_Controller {
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->custom_assistants_table = $wpdb->prefix . 'wpseopilot_custom_assistants';
-		$this->usage_table             = $wpdb->prefix . 'wpseopilot_assistant_usage';
+		$this->custom_assistants_table = $wpdb->prefix . 'samanlabs_seo_custom_assistants';
+		$this->usage_table             = $wpdb->prefix . 'samanlabs_seo_assistant_usage';
 	}
 
 	/**

@@ -39,8 +39,8 @@ class Dashboard_Controller extends REST_Controller {
      */
     public function __construct() {
         global $wpdb;
-        $this->redirects_table = $wpdb->prefix . 'wpseopilot_redirects';
-        $this->log_table       = $wpdb->prefix . 'wpseopilot_404_log';
+        $this->redirects_table = $wpdb->prefix . 'samanlabs_seo_redirects';
+        $this->log_table       = $wpdb->prefix . 'samanlabs_seo_404_log';
     }
 
     /**

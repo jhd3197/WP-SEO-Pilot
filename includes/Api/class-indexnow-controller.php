@@ -610,7 +610,7 @@ class IndexNow_Controller extends REST_Controller {
 			return $this->error( __( 'Post not found.', 'saman-labs-seo' ), 'not_found', 404 );
 		}
 
-		$table = $wpdb->prefix . 'wpseopilot_indexnow_log';
+		$table = $wpdb->prefix . 'samanlabs_seo_indexnow_log';
 
 		// Get the most recent submission for this post.
 		$latest = $wpdb->get_row( $wpdb->prepare(
@@ -760,7 +760,7 @@ class IndexNow_Controller extends REST_Controller {
 		$query = new \WP_Query( $args );
 		$posts = [];
 
-		$log_table = $wpdb->prefix . 'wpseopilot_indexnow_log';
+		$log_table = $wpdb->prefix . 'samanlabs_seo_indexnow_log';
 
 		foreach ( $query->posts as $post ) {
 			// Get latest submission for this post.
