@@ -3,7 +3,7 @@
  * Plugin Name: Saman Labs SEO
  * Plugin URI:  https://github.com/jhd3197/saman-labs-seo
  * Description: Opinionated all-in-one SEO toolkit that keeps titles, metadata, structured data, redirects, and audits in sync with WordPress.
- * Version:     1.0.0
+ * Version:     2.0.0
  * Author:      Juan Denis
  * Author URI:  https://github.com/jhd3197
  * Text Domain: saman-labs-seo
@@ -15,7 +15,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'SAMANLABS_SEO_VERSION' ) ) {
-	define( 'SAMANLABS_SEO_VERSION', '1.0.0' );
+	define( 'SAMANLABS_SEO_VERSION', '2.0.0' );
 }
 
 if ( ! defined( 'SAMANLABS_SEO_PATH' ) ) {
