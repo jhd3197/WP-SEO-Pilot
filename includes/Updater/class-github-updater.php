@@ -76,27 +76,27 @@ class GitHub_Updater {
         $this->plugins = [
             'saman-seo/saman-seo.php' => [
                 'slug'        => 'saman-seo',
-                'repo'        => 'Saman/Saman-SEO',
+                'repo'        => 'SamanLabs/Saman-SEO',
                 'name'        => 'Saman SEO',
                 'description' => 'AI-powered SEO optimization for WordPress',
-                'icon'        => 'https://raw.githubusercontent.com/Saman/Saman-SEO/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/Saman/Saman-SEO/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-SEO/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-SEO/main/assets/images/banner-772x250.png',
             ],
             'saman-ai/saman-ai.php' => [
                 'slug'        => 'saman-ai',
                 'repo'        => 'Saman/Saman-AI',
                 'name'        => 'Saman AI',
                 'description' => 'Centralized AI management for WordPress',
-                'icon'        => 'https://raw.githubusercontent.com/Saman/Saman-AI/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/Saman/Saman-AI/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-AI/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-AI/main/assets/images/banner-772x250.png',
             ],
             'saman-security/saman-security.php' => [
                 'slug'        => 'saman-security',
-                'repo'        => 'Saman/Saman-Security',
+                'repo'        => 'SamanLabs/Saman-Security',
                 'name'        => 'Saman Security',
                 'description' => 'Core security suite with firewall, malware scans, and hardening',
-                'icon'        => 'https://raw.githubusercontent.com/Saman/Saman-Security/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/Saman/Saman-Security/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-Security/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-Security/main/assets/images/banner-772x250.png',
             ],
         ];
 
