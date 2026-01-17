@@ -20,12 +20,12 @@ class Social_Card_Generator {
 	 * @return void
 	 */
 	public function boot() {
-		// Check if module is enabled
-		if ( '1' !== get_option( 'samanlabs_seo_enable_og_preview', '1' ) ) {
+		// Check if module is enabled.
+		if ( ! \SamanLabs\SEO\Helpers\module_enabled( 'social_cards' ) ) {
 			return;
 		}
 
-		// Allow further filtering
+		// Allow further filtering.
 		if ( ! apply_filters( 'samanlabs_seo_feature_toggle', true, 'social_card_generator' ) ) {
 			return;
 		}
