@@ -27,7 +27,7 @@ class Settings {
 		'samanlabs_seo_post_type_settings' => [],
 		'samanlabs_seo_taxonomy_settings' => [],
 		'samanlabs_seo_archive_settings' => [],
-		'samanlabs_seo_ai_model' => 'gpt-4o-mini',
+		// AI prompt customization (model selection handled by Saman Labs AI)
 		'samanlabs_seo_ai_prompt_system' => 'You are an SEO assistant generating concise metadata. Respond with plain text only.',
 		'samanlabs_seo_ai_prompt_title' => 'Write an SEO meta title (max 60 characters) that is compelling and includes the primary topic.',
 		'samanlabs_seo_ai_prompt_description' => 'Write a concise SEO meta description (max 155 characters) summarizing the content and inviting clicks.',
@@ -39,7 +39,6 @@ class Settings {
 		'samanlabs_seo_homepage_organization_name' => '',
 		'samanlabs_seo_homepage_organization_logo' => '',
 		'samanlabs_seo_title_separator' => '-',
-		'samanlabs_seo_openai_api_key' => '',
 		'samanlabs_seo_default_meta_description' => '',
 		'samanlabs_seo_default_og_image' => '',
 		'samanlabs_seo_social_defaults' => [
@@ -138,12 +137,10 @@ class Settings {
 		register_setting( $group, 'samanlabs_seo_post_type_social_defaults', [ $this, 'sanitize_post_type_social_defaults' ] );
 		register_setting( $group, 'samanlabs_seo_social_card_design', [ $this, 'sanitize_social_card_design' ] );
 
-		// Other settings
-		register_setting( 'samanlabs_seo_ai_tuning', 'samanlabs_seo_ai_model', [ $this, 'sanitize_ai_model' ] );
+		// AI prompt customization (model selection and API keys handled by Saman Labs AI)
 		register_setting( 'samanlabs_seo_ai_tuning', 'samanlabs_seo_ai_prompt_system', 'sanitize_textarea_field' );
 		register_setting( 'samanlabs_seo_ai_tuning', 'samanlabs_seo_ai_prompt_title', 'sanitize_textarea_field' );
 		register_setting( 'samanlabs_seo_ai_tuning', 'samanlabs_seo_ai_prompt_description', 'sanitize_textarea_field' );
-		register_setting( 'samanlabs_seo_ai_key', 'samanlabs_seo_openai_api_key', [ $this, 'sanitize_api_key' ] );
 		
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_homepage_description_prompt', 'sanitize_textarea_field' );
 		register_setting( 'samanlabs_seo_knowledge', 'samanlabs_seo_homepage_knowledge_type', [ $this, 'sanitize_knowledge_type' ] );
@@ -511,23 +508,6 @@ class Settings {
 	}
 
 	/**
-	 * Ensure selected AI model is supported.
-	 *
-	 * @param string $value Model identifier.
-	 *
-	 * @return string
-	 */
-	public function sanitize_ai_model( $value ) {
-		$models = $this->get_ai_models();
-
-		if ( isset( $models[ $value ] ) ) {
-			return $value;
-		}
-
-		return 'gpt-4o-mini';
-	}
-
-	/**
 	 * Sanitize knowledge graph representation type.
 	 *
 	 * @param string $value Submitted value.
@@ -784,19 +764,6 @@ class Settings {
 	}
 
 	/**
-	 * Sanitize stored OpenAI API key.
-	 *
-	 * @param string $value Value.
-	 *
-	 * @return string
-	 */
-	public function sanitize_api_key( $value ) {
-		$value = sanitize_text_field( $value );
-
-		return trim( $value );
-	}
-
-	/**
 	 * Sanitize social card design settings.
 	 *
 	 * @param array|string $value Value.
@@ -821,21 +788,6 @@ class Settings {
 			'layout'           => in_array( $value['layout'] ?? '', [ 'default', 'centered', 'minimal', 'bold' ], true )
 			                      ? $value['layout']
 			                      : 'default',
-		];
-	}
-
-	/**
-	 * Provide allowed OpenAI model list.
-	 *
-	 * @return array<string,string>
-	 */
-	public function get_ai_models() {
-		return [
-			'gpt-4o-mini'          => __( 'GPT-4o mini (fast, affordable)', 'saman-labs-seo' ),
-			'gpt-4o'               => __( 'GPT-4o (highest quality)', 'saman-labs-seo' ),
-			'gpt-4.1-mini'         => __( 'GPT-4.1 mini', 'saman-labs-seo' ),
-			'gpt-4.1'              => __( 'GPT-4.1', 'saman-labs-seo' ),
-			'gpt-3.5-turbo'        => __( 'GPT-3.5 Turbo', 'saman-labs-seo' ),
 		];
 	}
 
