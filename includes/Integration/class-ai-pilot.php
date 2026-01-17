@@ -156,7 +156,7 @@ class AI_Pilot {
 
 		wp_ai_pilot()->register_plugin( [
 			'slug'        => 'saman-labs-seo',
-			'file'        => 'saman-labs-seo/saman-labs-seo.php',
+			'file'        => 'saman-seo/saman-seo.php',
 			'name'        => 'Saman SEO',
 			'permissions' => [ 'generate', 'chat', 'assistants' ],
 		] );
@@ -175,7 +175,7 @@ class AI_Pilot {
 			'id'                 => 'seo-general',
 			'name'               => __( 'SEO Assistant', 'saman-labs-seo' ),
 			'description'        => __( 'Your helpful SEO buddy for all things search optimization.', 'saman-labs-seo' ),
-			'plugin'             => 'saman-labs-seo/saman-labs-seo.php',
+			'plugin'             => 'saman-seo/saman-seo.php',
 			'system_prompt'      => self::get_general_seo_prompt(),
 			'icon'               => 'dashicons-search',
 			'color'              => '#3b82f6',
@@ -196,7 +196,7 @@ class AI_Pilot {
 			'id'                 => 'seo-reporter',
 			'name'               => __( 'SEO Reporter', 'saman-labs-seo' ),
 			'description'        => __( 'Your weekly SEO buddy that gives you the rundown on your site.', 'saman-labs-seo' ),
-			'plugin'             => 'saman-labs-seo/saman-labs-seo.php',
+			'plugin'             => 'saman-seo/saman-seo.php',
 			'system_prompt'      => self::get_reporter_prompt(),
 			'icon'               => 'dashicons-chart-bar',
 			'color'              => '#8b5cf6',
@@ -552,7 +552,7 @@ Return ONLY the description text. No quotes, no explanation, no alternatives.";
 		// Filter to Saman Labs SEO assistants.
 		return array_filter( $all, function ( $assistant ) {
 			return isset( $assistant['plugin'] ) &&
-			       $assistant['plugin'] === 'saman-labs-seo/saman-labs-seo.php';
+			       $assistant['plugin'] === 'saman-seo/saman-seo.php';
 		} );
 	}
 }
