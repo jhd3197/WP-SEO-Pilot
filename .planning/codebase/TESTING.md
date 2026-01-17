@@ -1,7 +1,7 @@
 # Testing
 
 > Generated: 2026-01-16
-> Plugin: WP SEO Pilot
+> Plugin: Saman SEO
 
 ## Current State
 

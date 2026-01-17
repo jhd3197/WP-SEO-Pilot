@@ -57,7 +57,7 @@ class Dashboard_Widget {
 
         wp_add_dashboard_widget(
             'samanlabs_seo_404_widget',
-            __( '404 Monitor - WP SEO Pilot', 'saman-labs-seo' ),
+            __( '404 Monitor - Saman SEO', 'saman-labs-seo' ),
             [ $this, 'render_widget' ]
         );
     }

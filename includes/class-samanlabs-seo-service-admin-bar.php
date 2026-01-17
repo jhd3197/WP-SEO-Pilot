@@ -2,7 +2,7 @@
 /**
  * Admin Bar SEO Command Center
  *
- * Displays WP SEO Pilot menu in WordPress admin bar.
+ * Displays Saman SEO menu in WordPress admin bar.
  * Shows SEO score indicator on single posts/pages, navigation links everywhere else.
  *
  * @package SamanLabs\SEO
@@ -221,11 +221,11 @@ class Admin_Bar {
 		// Build the main menu item (just branding)
 		$wp_admin_bar->add_node( [
 			'id'    => 'samanlabs-seo-seo',
-			'title' => '<svg class="samanlabs-seo-ab-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg><span class="samanlabs-seo-ab-text">WP SEO Pilot</span>',
+			'title' => '<svg class="samanlabs-seo-ab-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg><span class="samanlabs-seo-ab-text">Saman SEO</span>',
 			'href'  => admin_url( 'admin.php?page=samanlabs-seo' ),
 			'meta'  => [
 				'class' => 'samanlabs-seo-admin-bar-item',
-				'title' => __( 'WP SEO Pilot', 'saman-labs-seo' ),
+				'title' => __( 'Saman SEO', 'saman-labs-seo' ),
 			],
 		] );
 

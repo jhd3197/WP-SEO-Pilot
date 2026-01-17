@@ -1,6 +1,6 @@
 <?php
 /**
- * WP SEO Pilot Admin Loader
+ * Saman SEO Admin Loader
  *
  * Handles the React-based admin interface.
  *
@@ -175,8 +175,8 @@ class Admin_V2 {
     public function register_menu() {
         // Main menu
         add_menu_page(
-            __( 'WP SEO Pilot', 'saman-labs-seo' ),
-            __( 'WP SEO Pilot', 'saman-labs-seo' ),
+            __( 'Saman SEO', 'saman-labs-seo' ),
+            __( 'Saman SEO', 'saman-labs-seo' ),
             'manage_options',
             self::MENU_SLUG,
             [ $this, 'render_app' ],

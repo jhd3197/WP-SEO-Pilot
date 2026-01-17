@@ -65,7 +65,7 @@ class Schema_Validator_Controller extends REST_Controller {
         // Fetch the page content
         $response = wp_remote_get( $url, [
             'timeout'    => 15,
-            'user-agent' => 'WP SEO Pilot Schema Validator/1.0',
+            'user-agent' => 'Saman SEO Schema Validator/1.0',
             'sslverify'  => false,
         ] );
 

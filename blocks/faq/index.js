@@ -1,5 +1,5 @@
 /**
- * WP SEO Pilot FAQ Block
+ * Saman SEO FAQ Block
  *
  * Creates an FAQ section with automatic FAQPage schema markup.
  *

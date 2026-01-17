@@ -1,10 +1,10 @@
 # Saman Labs SEO
 
-> Rebrand and refactor of WP SEO Pilot to Saman Labs SEO with clean AI plugin dependency
+> Rebrand and refactor of Saman SEO to Saman Labs SEO with clean AI plugin dependency
 
 ## Vision
 
-Transform WP SEO Pilot into Saman Labs SEO — a focused SEO plugin that delegates AI functionality to the separate Saman Labs AI plugin. Clean rebrand with working feature toggles.
+Transform Saman SEO into Saman Labs SEO — a focused SEO plugin that delegates AI functionality to the separate Saman Labs AI plugin. Clean rebrand with working feature toggles.
 
 ## Requirements
 

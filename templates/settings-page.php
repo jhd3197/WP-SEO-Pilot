@@ -353,7 +353,7 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 							</label>
 						</div>
 						<p class="samanlabs-seo-module-description">
-							<?php esc_html_e( 'Help improve WP SEO Pilot by sending anonymous usage data. No personal information or user data is collected - only plugin activation and feature usage.', 'saman-labs-seo' ); ?>
+							<?php esc_html_e( 'Help improve Saman SEO by sending anonymous usage data. No personal information or user data is collected - only plugin activation and feature usage.', 'saman-labs-seo' ); ?>
 						</p>
 					</div>
 				</div>

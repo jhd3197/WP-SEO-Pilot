@@ -215,7 +215,7 @@ const Settings = () => {
             <div className="page-header">
                 <div>
                     <h1>Settings</h1>
-                    <p>Configure WP SEO Pilot features, integrations, and preferences.</p>
+                    <p>Configure Saman SEO features, integrations, and preferences.</p>
                 </div>
                 <div className="page-header__actions">
                     {saved && <span className="save-indicator">Saved</span>}
@@ -932,7 +932,7 @@ const AdvancedTab = ({ settings, updateSetting }) => {
             <div className="settings-main">
                 <section className="panel">
                     <h3>User Interface</h3>
-                    <p className="panel-desc">Customize how WP SEO Pilot appears in your WordPress admin.</p>
+                    <p className="panel-desc">Customize how Saman SEO appears in your WordPress admin.</p>
 
                     <div className="settings-row compact">
                         <div className="settings-label">

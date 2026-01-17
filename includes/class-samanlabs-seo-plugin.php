@@ -90,7 +90,7 @@ class Plugin {
 			$this->register( 'cli', new Service\CLI() );
 		}
 
-		// Note: AI Pilot integration is handled in wp-seo-pilot.php via AI_Pilot::init()
+		// Note: AI Pilot integration is handled in saman-seo.php via AI_Pilot::init()
 
 		do_action( 'samanlabs_seo_booted', $this );
 	}

@@ -1,5 +1,5 @@
 /**
- * WP SEO Pilot HowTo Block
+ * Saman SEO HowTo Block
  *
  * Creates a step-by-step guide with automatic HowTo schema markup.
  *

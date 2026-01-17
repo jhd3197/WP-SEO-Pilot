@@ -204,7 +204,7 @@ class Admin_UI {
 
 		add_meta_box(
 			'samanlabs-seo-meta',
-			__( 'WP SEO Pilot', 'saman-labs-seo' ),
+			__( 'Saman SEO', 'saman-labs-seo' ),
 			[ $this, 'render_meta_box' ],
 			[ 'post', 'page' ],
 			'side',

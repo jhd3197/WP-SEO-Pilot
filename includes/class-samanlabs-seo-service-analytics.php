@@ -165,7 +165,7 @@ class Analytics {
 
 			// Page tracking
 			_paq.push(['setCustomUrl', '" . admin_url( 'admin.php?page=' . esc_js( $page ) ) . "']);
-			_paq.push(['setDocumentTitle', 'WP SEO Pilot - {$page_title}']);
+			_paq.push(['setDocumentTitle', 'Saman SEO - {$page_title}']);
 			_paq.push(['trackPageView']);
 
 			// Enable features

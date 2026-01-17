@@ -267,7 +267,7 @@ const AiAssistant = () => {
                                     </div>
                                     <div className="ai-provider-status__content">
                                         <h4>Install WP AI Pilot</h4>
-                                        <p>AI features in WP SEO Pilot are now powered by WP AI Pilot. Install it to enable AI-powered title and description generation.</p>
+                                        <p>AI features in Saman SEO are now powered by WP AI Pilot. Install it to enable AI-powered title and description generation.</p>
                                         <a
                                             href="plugin-install.php?s=wp+ai+pilot&tab=search"
                                             className="button primary"

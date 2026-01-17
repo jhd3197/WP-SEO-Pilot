@@ -5,8 +5,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 // Font inheritance fix
-.wp-seo-pilot-admin button,
-.wp-seo-pilot-admin input {
+.saman-seo-admin button,
+.saman-seo-admin input {
     font-family: inherit;
 }
 
@@ -25,7 +25,7 @@ body[class*="samanlabs-seo"] #wpbody-content {
 }
 
 // Main admin container
-.wp-seo-pilot-admin {
+.saman-seo-admin {
     // CSS Custom Properties (for runtime theming if needed)
     --color-primary: @color-primary;
     --color-primary-strong: @color-primary-hover;
@@ -50,26 +50,26 @@ body[class*="samanlabs-seo"] #wpbody-content {
         @color-background;
 }
 
-body.admin-bar .wp-seo-pilot-admin {
+body.admin-bar .saman-seo-admin {
     min-height: calc(100vh - 32px);
 }
 
 @media (max-width: @breakpoint-md) {
-    body.admin-bar .wp-seo-pilot-admin {
+    body.admin-bar .saman-seo-admin {
         min-height: calc(100vh - 46px);
     }
 }
 
 // Shell container
-.wp-seo-pilot-shell {
+.saman-seo-shell {
     max-width: 1400px;
     margin: 0 auto;
 }
 
 // Box sizing reset
-.wp-seo-pilot-admin *,
-.wp-seo-pilot-admin *::before,
-.wp-seo-pilot-admin *::after {
+.saman-seo-admin *,
+.saman-seo-admin *::before,
+.saman-seo-admin *::after {
     box-sizing: border-box;
 }
 

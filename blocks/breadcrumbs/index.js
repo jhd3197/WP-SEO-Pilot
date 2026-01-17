@@ -1,5 +1,5 @@
 /**
- * WP SEO Pilot Breadcrumbs Block
+ * Saman SEO Breadcrumbs Block
  *
  * @package WPSEOPilot
  */

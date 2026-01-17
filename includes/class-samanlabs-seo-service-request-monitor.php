@@ -194,7 +194,7 @@ class Request_Monitor {
 				"Site: %3\$s\n\n" .
 				"You may want to create a redirect for this URL to improve user experience and SEO.\n\n" .
 				"View and manage 404 errors:\n%4\$s\n\n" .
-				"--\nThis notification was sent by WP SEO Pilot.\nYou can disable these notifications in Settings > Advanced > 404 Monitor.",
+				"--\nThis notification was sent by Saman SEO.\nYou can disable these notifications in Settings > Advanced > 404 Monitor.",
 				'saman-labs-seo'
 			),
 			$request_uri,

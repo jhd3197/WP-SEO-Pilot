@@ -75,7 +75,7 @@ class LLM_TXT_Generator {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$plugin_info = get_plugin_data( SAMANLABS_SEO_PATH . 'wp-seo-pilot.php', false, false );
+		$plugin_info = get_plugin_data( SAMANLABS_SEO_PATH . 'saman-seo.php', false, false );
 		$plugin_version = $plugin_info['Version'] ?? SAMANLABS_SEO_VERSION;
 
 		$output[] = sprintf(

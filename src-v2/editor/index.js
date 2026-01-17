@@ -1,5 +1,5 @@
 /**
- * WP SEO Pilot V2 - Gutenberg Editor Sidebar
+ * Saman SEO V2 - Gutenberg Editor Sidebar
  *
  * Registers a sidebar panel in the block editor for SEO settings.
  */
@@ -176,11 +176,11 @@ const SEOSidebar = () => {
     return (
         <>
             <PluginSidebarMoreMenuItem target="samanlabs-seo-sidebar" icon={<PluginIcon />}>
-                WP SEO Pilot
+                Saman SEO
             </PluginSidebarMoreMenuItem>
             <PluginSidebar
                 name="samanlabs-seo-sidebar"
-                title="WP SEO Pilot"
+                title="Saman SEO"
                 icon={<PluginIcon />}
             >
                 <SEOPanel

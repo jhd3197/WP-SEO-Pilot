@@ -150,4 +150,4 @@ With Phase 7 complete, Milestone 1 (Full rebrand and architecture refactor) is n
 6. Feature Toggle Fix ✅
 7. Final Testing & Cleanup ✅
 
-The plugin is now fully rebranded from WP SEO Pilot to Saman Labs SEO (version 2.0.0).
+The plugin is now fully rebranded from Saman SEO to Saman Labs SEO (version 2.0.0).

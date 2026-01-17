@@ -299,8 +299,8 @@ class Settings {
 	 */
 	public function register_menu() {
 		add_menu_page(
-			__( 'WP SEO Pilot', 'saman-labs-seo' ),
-			__( 'WP SEO Pilot', 'saman-labs-seo' ),
+			__( 'Saman SEO', 'saman-labs-seo' ),
+			__( 'Saman SEO', 'saman-labs-seo' ),
 			'manage_options',
 			'samanlabs-seo',
 			[ $this, 'render_settings_page' ],

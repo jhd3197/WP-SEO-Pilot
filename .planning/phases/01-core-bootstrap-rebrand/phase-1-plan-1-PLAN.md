@@ -4,7 +4,7 @@
 
 ## Objective
 
-Transform the plugin bootstrap from WP SEO Pilot to Saman Labs SEO by renaming the main plugin file, updating all constants, and changing the root namespace throughout the codebase.
+Transform the plugin bootstrap from Saman SEO to Saman Labs SEO by renaming the main plugin file, updating all constants, and changing the root namespace throughout the codebase.
 
 ## Context
 

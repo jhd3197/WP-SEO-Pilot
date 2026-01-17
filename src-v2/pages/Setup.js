@@ -134,7 +134,7 @@ const Setup = ({ onComplete, onSkip }) => {
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
                         </div>
-                        <h1>Welcome to WP SEO Pilot</h1>
+                        <h1>Welcome to Saman SEO</h1>
                         <p className="setup-step__subtitle">
                             Let's get your site ready for search engines. This will only take a minute.
                         </p>
@@ -417,7 +417,7 @@ const Setup = ({ onComplete, onSkip }) => {
                         </div>
                         <h1>You're All Set!</h1>
                         <p className="setup-step__subtitle">
-                            WP SEO Pilot is configured and ready to help you rank higher.
+                            Saman SEO is configured and ready to help you rank higher.
                         </p>
 
                         <div className="setup-summary">

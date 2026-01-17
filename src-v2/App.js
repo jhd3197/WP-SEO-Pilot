@@ -252,8 +252,8 @@ const App = ({ initialView = 'dashboard' }) => {
     // Show loading while checking setup status
     if (!setupChecked) {
         return (
-            <div className="wp-seo-pilot-admin">
-                <div className="wp-seo-pilot-shell">
+            <div className="saman-seo-admin">
+                <div className="saman-seo-shell">
                     <div className="content-area">
                         <div className="loading-state">Loading...</div>
                     </div>
@@ -265,7 +265,7 @@ const App = ({ initialView = 'dashboard' }) => {
     // Show setup wizard if needed
     if (showSetup) {
         return (
-            <div className="wp-seo-pilot-admin">
+            <div className="saman-seo-admin">
                 <Suspense fallback={<PageLoader />}>
                     <Setup onComplete={handleSetupComplete} onSkip={handleSetupSkip} />
                 </Suspense>
@@ -274,8 +274,8 @@ const App = ({ initialView = 'dashboard' }) => {
     }
 
     return (
-        <div className="wp-seo-pilot-admin">
-            <div className="wp-seo-pilot-shell">
+        <div className="saman-seo-admin">
+            <div className="saman-seo-shell">
                 <Header currentView={currentView} onNavigate={handleNavigate} />
                 <div className="content-area">
                     <Suspense fallback={<PageLoader />}>

@@ -36,7 +36,7 @@ jobs:
       - name: Extract version from plugin file
         id: get_version
         run: |
-          VERSION=$(grep -oP "^\s*\*\s*Version:\s*\K[\d.]+" wp-seo-pilot.php | head -1)
+          VERSION=$(grep -oP "^\s*\*\s*Version:\s*\K[\d.]+" saman-seo.php | head -1)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Base version: $VERSION"
 
@@ -91,26 +91,26 @@ jobs:
       - name: Create plugin zip
         run: |
           # Create temp directory for clean plugin
-          mkdir -p wp-seo-pilot
+          mkdir -p saman-seo
 
           # Copy only production files
-          cp -r assets wp-seo-pilot/
-          cp -r build-v2 wp-seo-pilot/
-          cp -r build-editor wp-seo-pilot/
-          cp -r build-admin-list wp-seo-pilot/
-          cp -r includes wp-seo-pilot/
-          cp -r languages wp-seo-pilot/ 2>/dev/null || mkdir -p wp-seo-pilot/languages
-          cp wp-seo-pilot.php wp-seo-pilot/
-          cp readme.txt wp-seo-pilot/ 2>/dev/null || true
-          cp LICENSE wp-seo-pilot/ 2>/dev/null || true
+          cp -r assets saman-seo/
+          cp -r build-v2 saman-seo/
+          cp -r build-editor saman-seo/
+          cp -r build-admin-list saman-seo/
+          cp -r includes saman-seo/
+          cp -r languages saman-seo/ 2>/dev/null || mkdir -p saman-seo/languages
+          cp saman-seo.php saman-seo/
+          cp readme.txt saman-seo/ 2>/dev/null || true
+          cp LICENSE saman-seo/ 2>/dev/null || true
 
           # Create the zip
-          zip -r wp-seo-pilot-${{ steps.beta_number.outputs.zip_version }}.zip wp-seo-pilot
+          zip -r saman-seo-${{ steps.beta_number.outputs.zip_version }}.zip saman-seo
 
           # Cleanup
-          rm -rf wp-seo-pilot
+          rm -rf saman-seo
 
-          echo "Created wp-seo-pilot-${{ steps.beta_number.outputs.zip_version }}.zip"
+          echo "Created saman-seo-${{ steps.beta_number.outputs.zip_version }}.zip"
 
       - name: Prepare release notes
         id: release_notes
@@ -148,11 +148,11 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.beta_number.outputs.tag }}
-          name: WP SEO Pilot ${{ steps.beta_number.outputs.beta_version }} (Beta)
+          name: Saman SEO ${{ steps.beta_number.outputs.beta_version }} (Beta)
           body_path: release_notes.md
           draft: false
           prerelease: true
-          files: wp-seo-pilot-${{ steps.beta_number.outputs.zip_version }}.zip
+          files: saman-seo-${{ steps.beta_number.outputs.zip_version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -162,4 +162,4 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Version:** ${{ steps.beta_number.outputs.beta_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Tag:** ${{ steps.beta_number.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Zip:** wp-seo-pilot-${{ steps.beta_number.outputs.zip_version }}.zip" >> $GITHUB_STEP_SUMMARY
+          echo "- **Zip:** saman-seo-${{ steps.beta_number.outputs.zip_version }}.zip" >> $GITHUB_STEP_SUMMARY

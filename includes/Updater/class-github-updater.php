@@ -74,29 +74,29 @@ class GitHub_Updater {
      */
     private function register_plugins() {
         $this->plugins = [
-            'wp-seo-pilot/wp-seo-pilot.php' => [
-                'slug'        => 'saman-labs-seo',
-                'repo'        => 'jhd3197/WP-SEO-Pilot',
-                'name'        => 'WP SEO Pilot',
+            'saman-seo/saman-seo.php' => [
+                'slug'        => 'saman-seo',
+                'repo'        => 'SamanLabs/Saman-SEO',
+                'name'        => 'Saman SEO',
                 'description' => 'AI-powered SEO optimization for WordPress',
-                'icon'        => 'https://raw.githubusercontent.com/jhd3197/WP-SEO-Pilot/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/jhd3197/WP-SEO-Pilot/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-SEO/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-SEO/main/assets/images/banner-772x250.png',
             ],
-            'saman-labs-ai/saman-labs-ai.php' => [
-                'slug'        => 'saman-labs-ai',
-                'repo'        => 'jhd3197/Saman-Labs-AI',
-                'name'        => 'Saman Labs AI',
+            'saman-ai/saman-ai.php' => [
+                'slug'        => 'saman-ai',
+                'repo'        => 'SamanLabs/Saman-AI',
+                'name'        => 'Saman AI',
                 'description' => 'Centralized AI management for WordPress',
-                'icon'        => 'https://raw.githubusercontent.com/jhd3197/Saman-Labs-AI/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/jhd3197/Saman-Labs-AI/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-AI/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-AI/main/assets/images/banner-772x250.png',
             ],
-            'wp-security-pilot/wp-security-pilot.php' => [
-                'slug'        => 'wp-security-pilot',
-                'repo'        => 'jhd3197/WP-Security-Pilot',
-                'name'        => 'WP Security Pilot',
+            'saman-security/saman-security.php' => [
+                'slug'        => 'saman-security',
+                'repo'        => 'SamanLabs/Saman-Security',
+                'name'        => 'Saman Security',
                 'description' => 'Core security suite with firewall, malware scans, and hardening',
-                'icon'        => 'https://raw.githubusercontent.com/jhd3197/WP-Security-Pilot/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/jhd3197/WP-Security-Pilot/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-Security/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-Security/main/assets/images/banner-772x250.png',
             ],
         ];
 
@@ -462,12 +462,12 @@ class GitHub_Updater {
             'name'           => $plugin_data['name'],
             'slug'           => $plugin_data['slug'],
             'version'        => $remote['version'],
-            'author'         => '<a href="https://github.com/jhd3197">Juan Denis</a>',
-            'author_profile' => 'https://github.com/jhd3197',
+            'author'         => '<a href="https://SamanLabs.com">SamanLabs</a>',
+            'author_profile' => 'https://SamanLabs.com',
             'requires'       => '5.0',
             'tested'         => get_bloginfo( 'version' ),
             'requires_php'   => '7.4',
-            'homepage'       => 'https://github.com/' . $plugin_data['repo'],
+            'homepage'       => 'https://github.com/SamanLabs/Saman-SEO',
             'download_link'  => $remote['download_url'],
             'trunk'          => $remote['download_url'],
             'last_updated'   => $remote['published_at'],

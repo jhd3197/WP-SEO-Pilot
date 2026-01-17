@@ -1,5 +1,5 @@
 /**
- * WP SEO Pilot - Admin List SEO Badge
+ * Saman SEO - Admin List SEO Badge
  *
  * Hydrates SEO score badges in the WordPress admin post list.
  */

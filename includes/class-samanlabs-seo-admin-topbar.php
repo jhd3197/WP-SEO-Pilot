@@ -29,7 +29,7 @@ class Admin_Topbar {
 				<div class="samanlabs-seo-topbar-left">
 					<div class="samanlabs-seo-branding">
 						<span class="dashicons dashicons-airplane"></span>
-						<h1><?php esc_html_e( 'WP SEO Pilot', 'saman-labs-seo' ); ?></h1>
+						<h1><?php esc_html_e( 'Saman SEO', 'saman-labs-seo' ); ?></h1>
 					</div>
 
 					<?php if ( ! empty( $section_label ) ) : ?>
