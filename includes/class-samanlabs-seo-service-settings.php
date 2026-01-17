@@ -57,6 +57,8 @@ class Settings {
 		'samanlabs_seo_global_robots' => 'index, follow',
 		'samanlabs_seo_hreflang_map' => '',
 		'samanlabs_seo_robots_txt' => '',
+		// Legacy enable_* options - @deprecated Use samanlabs_seo_module_* options instead.
+		// Kept for backward compatibility; the module_enabled() helper handles migration.
 		'samanlabs_seo_enable_sitemap_enhancer' => '1',
 		'samanlabs_seo_enable_redirect_manager' => '1',
 		'samanlabs_seo_enable_404_logging' => '1',
@@ -64,6 +66,19 @@ class Settings {
 		'samanlabs_seo_enable_llm_txt' => '1',
 		'samanlabs_seo_enable_local_seo' => '0',
 		'samanlabs_seo_enable_analytics' => '1',
+
+		// New module toggle options (used by React UI).
+		'samanlabs_seo_module_sitemap' => '1',
+		'samanlabs_seo_module_redirects' => '1',
+		'samanlabs_seo_module_404_log' => '1',
+		'samanlabs_seo_module_llm_txt' => '1',
+		'samanlabs_seo_module_local_seo' => '0',
+		'samanlabs_seo_module_social_cards' => '1',
+		'samanlabs_seo_module_analytics' => '1',
+		'samanlabs_seo_module_admin_bar' => '1',
+		'samanlabs_seo_module_internal_links' => '1',
+		'samanlabs_seo_module_ai_assistant' => '1',
+
 		'samanlabs_seo_social_card_design' => [
 			'background_color' => '#1a1a36',
 			'accent_color'     => '#5a84ff',
@@ -157,6 +172,7 @@ class Settings {
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_global_robots', 'sanitize_text_field' );
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_hreflang_map', [ $this, 'sanitize_json' ] );
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_robots_txt', 'sanitize_textarea_field' );
+		// Legacy enable_* options - @deprecated Use samanlabs_seo_module_* options instead.
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_enable_sitemap_enhancer', [ $this, 'sanitize_bool' ] );
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_enable_redirect_manager', [ $this, 'sanitize_bool' ] );
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_enable_404_logging', [ $this, 'sanitize_bool' ] );
@@ -164,6 +180,18 @@ class Settings {
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_enable_llm_txt', [ $this, 'sanitize_bool' ] );
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_enable_local_seo', [ $this, 'sanitize_bool' ] );
 		register_setting( 'samanlabs-seo', 'samanlabs_seo_enable_analytics', [ $this, 'sanitize_bool' ] );
+
+		// New module toggle options (used by React UI).
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_sitemap', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_redirects', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_404_log', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_llm_txt', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_local_seo', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_social_cards', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_analytics', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_admin_bar', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_internal_links', [ $this, 'sanitize_bool' ] );
+		register_setting( 'samanlabs-seo', 'samanlabs_seo_module_ai_assistant', [ $this, 'sanitize_bool' ] );
 	}
 
 	/**
