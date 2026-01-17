@@ -140,8 +140,7 @@ class Plugin {
 		add_option( 'samanlabs_seo_post_type_title_templates', [] );
 		add_option( 'samanlabs_seo_post_type_meta_descriptions', [] );
 		add_option( 'samanlabs_seo_post_type_keywords', [] );
-		add_option( 'samanlabs_seo_openai_api_key', '' );
-		add_option( 'samanlabs_seo_ai_model', 'gpt-4o-mini' );
+		// AI prompt customization (API keys and model selection handled by Saman Labs AI plugin)
 		add_option( 'samanlabs_seo_ai_prompt_system', 'You are an SEO assistant generating concise metadata. Respond with plain text only.' );
 		add_option( 'samanlabs_seo_ai_prompt_title', 'Write an SEO meta title (max 60 characters) that is compelling and includes the primary topic.' );
 		add_option( 'samanlabs_seo_ai_prompt_description', 'Write a concise SEO meta description (max 155 characters) summarizing the content and inviting clicks.' );
