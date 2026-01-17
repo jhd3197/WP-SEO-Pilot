@@ -147,6 +147,7 @@ class Plugin {
 		add_option( 'samanlabs_seo_default_meta_description', '' );
 		add_option( 'samanlabs_seo_default_og_image', '' );
 		add_option( 'samanlabs_seo_show_tour', '1' );
+		// Legacy enable options (kept for backward compatibility).
 		add_option( 'samanlabs_seo_enable_sitemap_enhancer', '1' );
 		add_option( 'samanlabs_seo_enable_redirect_manager', '1' );
 		add_option( 'samanlabs_seo_enable_404_logging', '1' );
@@ -157,6 +158,18 @@ class Plugin {
 		add_option( 'samanlabs_seo_llm_txt_include_excerpt', '1' );
 		add_option( 'samanlabs_seo_enable_analytics', '1' );
 		add_option( 'samanlabs_seo_enable_admin_bar', '1' );
+
+		// New module toggle options (used by React UI).
+		add_option( 'samanlabs_seo_module_sitemap', '1' );
+		add_option( 'samanlabs_seo_module_redirects', '1' );
+		add_option( 'samanlabs_seo_module_404_log', '1' );
+		add_option( 'samanlabs_seo_module_llm_txt', '1' );
+		add_option( 'samanlabs_seo_module_local_seo', '0' );
+		add_option( 'samanlabs_seo_module_social_cards', '1' );
+		add_option( 'samanlabs_seo_module_analytics', '1' );
+		add_option( 'samanlabs_seo_module_admin_bar', '1' );
+		add_option( 'samanlabs_seo_module_internal_links', '1' );
+		add_option( 'samanlabs_seo_module_ai_assistant', '1' );
 
 		// Sitemap settings defaults
 		add_option( 'samanlabs_seo_sitemap_enabled', '1' );
@@ -175,11 +188,11 @@ class Plugin {
 		add_option( 'samanlabs_seo_sitemap_google_news_post_types', [] );
 		add_option( 'samanlabs_seo_sitemap_additional_pages', [] );
 
-		if ( '1' === get_option( 'samanlabs_seo_enable_sitemap_enhancer', '1' ) ) {
+		if ( \SamanLabs\SEO\Helpers\module_enabled( 'sitemap' ) ) {
 			( new Service\Sitemap_Enhancer() )->register_custom_sitemap();
 		}
 
-		if ( '1' === get_option( 'samanlabs_seo_enable_llm_txt', '1' ) ) {
+		if ( \SamanLabs\SEO\Helpers\module_enabled( 'llm_txt' ) ) {
 			( new Service\LLM_TXT_Generator() )->register_rewrite_rules();
 		}
 
