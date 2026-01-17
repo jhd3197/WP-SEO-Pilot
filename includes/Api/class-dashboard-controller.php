@@ -438,7 +438,7 @@ class Dashboard_Controller extends REST_Controller {
                 'main'   => $enabled,
                 'rss'    => get_option( 'samanlabs_seo_sitemap_enable_rss', '0' ) === '1',
                 'news'   => get_option( 'samanlabs_seo_sitemap_enable_google_news', '0' ) === '1',
-                'llm'    => get_option( 'samanlabs_seo_enable_llm_txt', '0' ) === '1',
+                'llm'    => \SamanLabs\SEO\Helpers\module_enabled( 'llm_txt' ),
             ],
         ];
     }
@@ -520,7 +520,7 @@ class Dashboard_Controller extends REST_Controller {
     private function get_404_data() {
         global $wpdb;
 
-        $logging_enabled = get_option( 'samanlabs_seo_enable_404_logging', '1' ) === '1';
+        $logging_enabled = \SamanLabs\SEO\Helpers\module_enabled( '404_log' );
 
         // Check if table exists
         $table_exists = $wpdb->get_var( $wpdb->prepare(
@@ -581,7 +581,7 @@ class Dashboard_Controller extends REST_Controller {
      */
     private function get_schema_data() {
         $org_name = get_option( 'samanlabs_seo_homepage_organization_name', '' );
-        $local_enabled = get_option( 'samanlabs_seo_enable_local_seo', '0' ) === '1';
+        $local_enabled = \SamanLabs\SEO\Helpers\module_enabled( 'local_seo' );
 
         $schema_types = [ 'Website', 'WebPage' ];
         if ( ! empty( $org_name ) ) {
