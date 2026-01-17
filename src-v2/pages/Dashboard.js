@@ -36,7 +36,7 @@ const Dashboard = ({ onNavigate }) => {
     const fetchDashboard = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await apiFetch({ path: '/samanlabs-seo/v1/dashboard' });
+            const res = await apiFetch({ path: '/saman-seo/v1/dashboard' });
             if (res.success) {
                 setData(res.data);
             }
@@ -56,7 +56,7 @@ const Dashboard = ({ onNavigate }) => {
         setDismissing(id);
         try {
             await apiFetch({
-                path: `/samanlabs-seo/v1/dashboard/notifications/${id}/dismiss`,
+                path: `/saman-seo/v1/dashboard/notifications/${id}/dismiss`,
                 method: 'POST',
             });
             setData(prev => ({

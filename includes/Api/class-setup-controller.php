@@ -2,13 +2,13 @@
 /**
  * Setup Wizard REST Controller
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
-use SamanLabs\SEO\Integration\AI_Pilot;
+use Saman\SEO\Integration\AI_Pilot;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -76,9 +76,9 @@ class Setup_Controller extends REST_Controller {
      * @return \WP_REST_Response
      */
     public function get_status( $request ) {
-        $completed = get_option( 'samanlabs_seo_setup_completed', false );
-        $skipped = get_option( 'samanlabs_seo_setup_skipped', false );
-        $setup_data = get_option( 'samanlabs_seo_setup_data', [] );
+        $completed = get_option( 'SAMAN_SEO_setup_completed', false );
+        $skipped = get_option( 'SAMAN_SEO_setup_skipped', false );
+        $setup_data = get_option( 'SAMAN_SEO_setup_data', [] );
 
         return $this->success( [
             'completed'   => (bool) $completed,
@@ -104,8 +104,8 @@ class Setup_Controller extends REST_Controller {
         if ( ! AI_Pilot::is_installed() ) {
             return $this->success( [
                 'success'      => false,
-                'message'      => __( 'Saman Labs AI is not installed. Please install Saman Labs AI to use AI features.', 'saman-labs-seo' ),
-                'install_url'  => admin_url( 'plugin-install.php?s=saman-labs-ai&tab=search&type=term' ),
+                'message'      => __( 'Saman Labs AI is not installed. Please install Saman Labs AI to use AI features.', 'saman-seo' ),
+                'install_url'  => admin_url( 'plugin-install.php?s=saman-ai&tab=search&type=term' ),
                 'status'       => 'not_installed',
             ] );
         }
@@ -114,7 +114,7 @@ class Setup_Controller extends REST_Controller {
         if ( ! AI_Pilot::is_active() ) {
             return $this->success( [
                 'success'      => false,
-                'message'      => __( 'Saman Labs AI is installed but not activated. Please activate it in your plugins.', 'saman-labs-seo' ),
+                'message'      => __( 'Saman Labs AI is installed but not activated. Please activate it in your plugins.', 'saman-seo' ),
                 'plugins_url'  => admin_url( 'plugins.php' ),
                 'status'       => 'not_active',
             ] );
@@ -124,8 +124,8 @@ class Setup_Controller extends REST_Controller {
         if ( ! AI_Pilot::is_ready() ) {
             return $this->success( [
                 'success'      => false,
-                'message'      => __( 'Saman Labs AI is active but not configured. Please configure your AI provider in Saman Labs AI settings.', 'saman-labs-seo' ),
-                'settings_url' => admin_url( 'admin.php?page=samanlabs-ai' ),
+                'message'      => __( 'Saman Labs AI is active but not configured. Please configure your AI provider in Saman Labs AI settings.', 'saman-seo' ),
+                'settings_url' => admin_url( 'admin.php?page=Saman-ai' ),
                 'status'       => 'not_configured',
             ] );
         }
@@ -133,7 +133,7 @@ class Setup_Controller extends REST_Controller {
         // All good - Saman Labs AI is ready
         return $this->success( [
             'success'   => true,
-            'message'   => __( 'Saman Labs AI is ready! AI features are available.', 'saman-labs-seo' ),
+            'message'   => __( 'Saman Labs AI is ready! AI features are available.', 'saman-seo' ),
             'status'    => 'ready',
             'providers' => $status['providers'] ?? [],
             'models'    => $status['models'] ?? [],
@@ -160,19 +160,19 @@ class Setup_Controller extends REST_Controller {
             'completed_at'  => current_time( 'mysql' ),
         ];
 
-        update_option( 'samanlabs_seo_setup_data', $setup_data );
+        update_option( 'SAMAN_SEO_setup_data', $setup_data );
 
         // AI settings are now managed by Saman Labs AI plugin
         // Only save provider preference for compatibility
         if ( ! empty( $params['ai_provider'] ) ) {
-            update_option( 'samanlabs_seo_ai_active_provider', sanitize_text_field( $params['ai_provider'] ) );
+            update_option( 'SAMAN_SEO_ai_active_provider', sanitize_text_field( $params['ai_provider'] ) );
         }
 
         // Save module settings
         $modules_to_toggle = [
-            'enable_sitemap'   => 'samanlabs_seo_module_sitemap',
-            'enable_404_log'   => 'samanlabs_seo_module_404_log',
-            'enable_redirects' => 'samanlabs_seo_module_redirects',
+            'enable_sitemap'   => 'SAMAN_SEO_module_sitemap',
+            'enable_404_log'   => 'SAMAN_SEO_module_404_log',
+            'enable_redirects' => 'SAMAN_SEO_module_redirects',
         ];
 
         foreach ( $modules_to_toggle as $param_key => $option_key ) {
@@ -183,14 +183,14 @@ class Setup_Controller extends REST_Controller {
 
         // Save title template
         if ( ! empty( $params['title_template'] ) ) {
-            update_option( 'samanlabs_seo_title_template', sanitize_text_field( $params['title_template'] ) );
+            update_option( 'SAMAN_SEO_title_template', sanitize_text_field( $params['title_template'] ) );
         }
 
         // Mark setup as completed
-        update_option( 'samanlabs_seo_setup_completed', true );
-        delete_option( 'samanlabs_seo_setup_skipped' );
+        update_option( 'SAMAN_SEO_setup_completed', true );
+        delete_option( 'SAMAN_SEO_setup_skipped' );
 
-        return $this->success( null, __( 'Setup completed successfully!', 'saman-labs-seo' ) );
+        return $this->success( null, __( 'Setup completed successfully!', 'saman-seo' ) );
     }
 
     /**
@@ -200,9 +200,9 @@ class Setup_Controller extends REST_Controller {
      * @return \WP_REST_Response
      */
     public function skip_setup( $request ) {
-        update_option( 'samanlabs_seo_setup_skipped', true );
+        update_option( 'SAMAN_SEO_setup_skipped', true );
 
-        return $this->success( null, __( 'Setup skipped.', 'saman-labs-seo' ) );
+        return $this->success( null, __( 'Setup skipped.', 'saman-seo' ) );
     }
 
     /**
@@ -212,10 +212,10 @@ class Setup_Controller extends REST_Controller {
      * @return \WP_REST_Response
      */
     public function reset_setup( $request ) {
-        delete_option( 'samanlabs_seo_setup_completed' );
-        delete_option( 'samanlabs_seo_setup_skipped' );
-        delete_option( 'samanlabs_seo_setup_data' );
+        delete_option( 'SAMAN_SEO_setup_completed' );
+        delete_option( 'SAMAN_SEO_setup_skipped' );
+        delete_option( 'SAMAN_SEO_setup_data' );
 
-        return $this->success( null, __( 'Setup wizard reset. It will show on next page load.', 'saman-labs-seo' ) );
+        return $this->success( null, __( 'Setup wizard reset. It will show on next page load.', 'saman-seo' ) );
     }
 }

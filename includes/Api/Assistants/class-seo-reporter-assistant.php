@@ -2,11 +2,11 @@
 /**
  * SEO Reporter Assistant
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Api\Assistants;
+namespace Saman\SEO\Api\Assistants;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -32,7 +32,7 @@ class SEO_Reporter_Assistant extends Base_Assistant {
      * @return string
      */
     public function get_name() {
-        return __( 'SEO Reporter', 'saman-labs-seo' );
+        return __( 'SEO Reporter', 'saman-seo' );
     }
 
     /**
@@ -41,7 +41,7 @@ class SEO_Reporter_Assistant extends Base_Assistant {
      * @return string
      */
     public function get_description() {
-        return __( 'Your weekly SEO buddy that gives you the rundown on your site.', 'saman-labs-seo' );
+        return __( 'Your weekly SEO buddy that gives you the rundown on your site.', 'saman-seo' );
     }
 
     /**
@@ -91,7 +91,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
      * @return string
      */
     public function get_initial_message() {
-        return __( "Hey! I can give you a quick rundown of your site's SEO health. Want me to take a look?", 'saman-labs-seo' );
+        return __( "Hey! I can give you a quick rundown of your site's SEO health. Want me to take a look?", 'saman-seo' );
     }
 
     /**
@@ -101,10 +101,10 @@ GOOD: 'Looked at your site. Here's what's up:'";
      */
     public function get_suggested_prompts() {
         return [
-            __( 'Give me a quick SEO report', 'saman-labs-seo' ),
-            __( 'What SEO issues should I fix first?', 'saman-labs-seo' ),
-            __( 'Check my meta titles and descriptions', 'saman-labs-seo' ),
-            __( 'Find posts missing SEO data', 'saman-labs-seo' ),
+            __( 'Give me a quick SEO report', 'saman-seo' ),
+            __( 'What SEO issues should I fix first?', 'saman-seo' ),
+            __( 'Check my meta titles and descriptions', 'saman-seo' ),
+            __( 'Find posts missing SEO data', 'saman-seo' ),
         ];
     }
 
@@ -117,11 +117,11 @@ GOOD: 'Looked at your site. Here's what's up:'";
         return [
             [
                 'id'    => 'generate_report',
-                'label' => __( 'Generate Report', 'saman-labs-seo' ),
+                'label' => __( 'Generate Report', 'saman-seo' ),
             ],
             [
                 'id'    => 'find_issues',
-                'label' => __( 'Find Issues', 'saman-labs-seo' ),
+                'label' => __( 'Find Issues', 'saman-seo' ),
             ],
         ];
     }
@@ -157,7 +157,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
         return [
             'message' => $message,
             'actions' => [
-                [ 'id' => 'find_issues', 'label' => __( 'Show me the issues', 'saman-labs-seo' ) ],
+                [ 'id' => 'find_issues', 'label' => __( 'Show me the issues', 'saman-seo' ) ],
             ],
             'data'    => $report,
         ];
@@ -172,12 +172,12 @@ GOOD: 'Looked at your site. Here's what's up:'";
         $issues = [];
 
         // Check posts without meta descriptions
-        $posts_without_desc = $this->get_posts_without_meta( '_samanlabs_seo_description' );
+        $posts_without_desc = $this->get_posts_without_meta( '_SAMAN_SEO_description' );
         if ( ! empty( $posts_without_desc ) ) {
             $issues[] = [
                 'type'    => 'warning',
                 'message' => sprintf(
-                    __( '%d posts are missing meta descriptions', 'saman-labs-seo' ),
+                    __( '%d posts are missing meta descriptions', 'saman-seo' ),
                     count( $posts_without_desc )
                 ),
                 'count'   => count( $posts_without_desc ),
@@ -186,12 +186,12 @@ GOOD: 'Looked at your site. Here's what's up:'";
         }
 
         // Check posts without meta titles
-        $posts_without_title = $this->get_posts_without_meta( '_samanlabs_seo_title' );
+        $posts_without_title = $this->get_posts_without_meta( '_SAMAN_SEO_title' );
         if ( ! empty( $posts_without_title ) ) {
             $issues[] = [
                 'type'    => 'info',
                 'message' => sprintf(
-                    __( '%d posts are using default titles (no custom SEO title)', 'saman-labs-seo' ),
+                    __( '%d posts are using default titles (no custom SEO title)', 'saman-seo' ),
                     count( $posts_without_title )
                 ),
                 'count'   => count( $posts_without_title ),
@@ -204,7 +204,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
             $issues[] = [
                 'type'    => 'warning',
                 'message' => sprintf(
-                    __( '%d posts have titles longer than 60 characters', 'saman-labs-seo' ),
+                    __( '%d posts have titles longer than 60 characters', 'saman-seo' ),
                     count( $long_titles )
                 ),
                 'count'   => count( $long_titles ),
@@ -214,15 +214,15 @@ GOOD: 'Looked at your site. Here's what's up:'";
 
         if ( empty( $issues ) ) {
             return [
-                'message' => __( "Looking good! I didn't find any major SEO issues.", 'saman-labs-seo' ),
+                'message' => __( "Looking good! I didn't find any major SEO issues.", 'saman-seo' ),
                 'actions' => [],
                 'data'    => [ 'issues' => [] ],
             ];
         }
 
-        $message = __( "Found some things to fix:\n\n", 'saman-labs-seo' );
+        $message = __( "Found some things to fix:\n\n", 'saman-seo' );
         foreach ( $issues as $issue ) {
-            $emoji = $issue['type'] === 'warning' ? '⚠️' : 'ℹ️';
+            $emoji = $issue['type'] === 'warning' ? 'ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â' : 'ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¹ÃƒÂ¯Ã‚Â¸Ã‚Â';
             $message .= $emoji . ' ' . $issue['message'] . "\n";
         }
 
@@ -255,8 +255,8 @@ GOOD: 'Looked at your site. Here's what's up:'";
         $data['stats']['total_pages'] = $page_count->publish ?? 0;
 
         // Posts without meta
-        $data['stats']['posts_without_description'] = count( $this->get_posts_without_meta( '_samanlabs_seo_description' ) );
-        $data['stats']['posts_without_title'] = count( $this->get_posts_without_meta( '_samanlabs_seo_title' ) );
+        $data['stats']['posts_without_description'] = count( $this->get_posts_without_meta( '_SAMAN_SEO_description' ) );
+        $data['stats']['posts_without_title'] = count( $this->get_posts_without_meta( '_SAMAN_SEO_title' ) );
         $data['stats']['posts_with_long_titles'] = count( $this->get_posts_with_long_titles() );
 
         return $data;
@@ -271,12 +271,12 @@ GOOD: 'Looked at your site. Here's what's up:'";
     private function format_report( $report ) {
         $stats = $report['stats'];
 
-        $message = __( "Here's your site's SEO snapshot:\n\n", 'saman-labs-seo' );
+        $message = __( "Here's your site's SEO snapshot:\n\n", 'saman-seo' );
 
         // Content overview
-        $message .= "📊 **Content**\n";
-        $message .= sprintf( __( "- %d published posts\n", 'saman-labs-seo' ), $stats['total_posts'] );
-        $message .= sprintf( __( "- %d published pages\n\n", 'saman-labs-seo' ), $stats['total_pages'] );
+        $message .= "ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â  **Content**\n";
+        $message .= sprintf( __( "- %d published posts\n", 'saman-seo' ), $stats['total_posts'] );
+        $message .= sprintf( __( "- %d published pages\n\n", 'saman-seo' ), $stats['total_pages'] );
 
         // Issues summary
         $has_issues = false;
@@ -284,7 +284,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
         if ( $stats['posts_without_description'] > 0 ) {
             $has_issues = true;
             $message .= sprintf(
-                __( "⚠️ %d posts missing meta descriptions\n", 'saman-labs-seo' ),
+                __( "ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â %d posts missing meta descriptions\n", 'saman-seo' ),
                 $stats['posts_without_description']
             );
         }
@@ -292,13 +292,13 @@ GOOD: 'Looked at your site. Here's what's up:'";
         if ( $stats['posts_with_long_titles'] > 0 ) {
             $has_issues = true;
             $message .= sprintf(
-                __( "⚠️ %d posts have titles too long for search results\n", 'saman-labs-seo' ),
+                __( "ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â %d posts have titles too long for search results\n", 'saman-seo' ),
                 $stats['posts_with_long_titles']
             );
         }
 
         if ( ! $has_issues ) {
-            $message .= __( "✅ No major issues found! Your basics look good.\n", 'saman-labs-seo' );
+            $message .= __( "ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ No major issues found! Your basics look good.\n", 'saman-seo' );
         }
 
         return $message;

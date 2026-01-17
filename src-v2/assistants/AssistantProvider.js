@@ -48,7 +48,7 @@ export const AssistantProvider = ({ children, assistantId, initialMessage = '' }
 
         try {
             const response = await apiFetch({
-                path: '/samanlabs-seo/v1/assistants/chat',
+                path: '/saman-seo/v1/assistants/chat',
                 method: 'POST',
                 data: {
                     assistant: assistantId,
@@ -85,7 +85,7 @@ export const AssistantProvider = ({ children, assistantId, initialMessage = '' }
 
         try {
             const response = await apiFetch({
-                path: '/samanlabs-seo/v1/assistants/action',
+                path: '/saman-seo/v1/assistants/action',
                 method: 'POST',
                 data: {
                     assistant: assistantId,

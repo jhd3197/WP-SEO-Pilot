@@ -4,13 +4,13 @@
  *
  * Simplified controller that delegates all AI operations to Saman Labs AI.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
-use SamanLabs\SEO\Integration\AI_Pilot;
+use Saman\SEO\Integration\AI_Pilot;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -95,7 +95,7 @@ class Ai_Controller extends REST_Controller {
 
 		if ( empty( $content ) ) {
 			return $this->error(
-				__( 'Content is required for AI generation.', 'saman-labs-seo' ),
+				__( 'Content is required for AI generation.', 'saman-seo' ),
 				'missing_content',
 				400
 			);
@@ -107,7 +107,7 @@ class Ai_Controller extends REST_Controller {
 
 			if ( ! $status['installed'] ) {
 				return $this->error(
-					__( 'Saman Labs AI is required for AI features. Please install it from the More page.', 'saman-labs-seo' ),
+					__( 'Saman Labs AI is required for AI features. Please install it from the More page.', 'saman-seo' ),
 					'ai_not_installed',
 					400
 				);
@@ -115,14 +115,14 @@ class Ai_Controller extends REST_Controller {
 
 			if ( ! $status['active'] ) {
 				return $this->error(
-					__( 'Saman Labs AI is installed but not activated. Please activate it.', 'saman-labs-seo' ),
+					__( 'Saman Labs AI is installed but not activated. Please activate it.', 'saman-seo' ),
 					'ai_not_active',
 					400
 				);
 			}
 
 			return $this->error(
-				__( 'Saman Labs AI needs configuration. Please add an API key in Saman Labs AI settings.', 'saman-labs-seo' ),
+				__( 'Saman Labs AI needs configuration. Please add an API key in Saman Labs AI settings.', 'saman-seo' ),
 				'ai_not_configured',
 				400
 			);
@@ -159,8 +159,8 @@ class Ai_Controller extends REST_Controller {
 			$results['description'] = trim( $result );
 		}
 
-		return $this->success( $results, __( 'AI generation completed.', 'saman-labs-seo' ), [
-			'provider' => 'samanlabs-ai',
+		return $this->success( $results, __( 'AI generation completed.', 'saman-seo' ), [
+			'provider' => 'Saman-ai',
 		] );
 	}
 
@@ -184,19 +184,19 @@ class Ai_Controller extends REST_Controller {
 				'active'       => $status['active'],
 				'ready'        => $status['ready'],
 				'version'      => $status['version'] ?? null,
-				'settings_url' => admin_url( 'admin.php?page=samanlabs-ai' ),
+				'settings_url' => admin_url( 'admin.php?page=Saman-ai' ),
 			],
 		];
 
 		if ( $ready ) {
-			$response['message']      = __( 'Connected to Saman Labs AI', 'saman-labs-seo' );
+			$response['message']      = __( 'Connected to Saman Labs AI', 'saman-seo' );
 			$response['models_count'] = count( AI_Pilot::get_models() );
 		} elseif ( $status['installed'] && ! $status['active'] ) {
-			$response['message'] = __( 'Saman Labs AI needs to be activated', 'saman-labs-seo' );
+			$response['message'] = __( 'Saman Labs AI needs to be activated', 'saman-seo' );
 		} elseif ( $status['installed'] && ! $status['ready'] ) {
-			$response['message'] = __( 'Saman Labs AI needs configuration', 'saman-labs-seo' );
+			$response['message'] = __( 'Saman Labs AI needs configuration', 'saman-seo' );
 		} else {
-			$response['message'] = __( 'Install Saman Labs AI to enable AI features', 'saman-labs-seo' );
+			$response['message'] = __( 'Install Saman Labs AI to enable AI features', 'saman-seo' );
 		}
 
 		return $this->success( $response );
@@ -236,9 +236,9 @@ class Ai_Controller extends REST_Controller {
 	 */
 	public function get_settings( $request ) {
 		$settings = [
-			'ai_prompt_system'      => get_option( 'samanlabs_seo_ai_prompt_system', 'You are an SEO assistant generating concise metadata. Respond with plain text only.' ),
-			'ai_prompt_title'       => get_option( 'samanlabs_seo_ai_prompt_title', 'Write an SEO meta title (max 60 characters) that is compelling and includes the primary topic.' ),
-			'ai_prompt_description' => get_option( 'samanlabs_seo_ai_prompt_description', 'Write a concise SEO meta description (max 155 characters) summarizing the content and inviting clicks.' ),
+			'ai_prompt_system'      => get_option( 'SAMAN_SEO_ai_prompt_system', 'You are an SEO assistant generating concise metadata. Respond with plain text only.' ),
+			'ai_prompt_title'       => get_option( 'SAMAN_SEO_ai_prompt_title', 'Write an SEO meta title (max 60 characters) that is compelling and includes the primary topic.' ),
+			'ai_prompt_description' => get_option( 'SAMAN_SEO_ai_prompt_description', 'Write a concise SEO meta description (max 155 characters) summarizing the content and inviting clicks.' ),
 		];
 
 		return $this->success( $settings );
@@ -258,22 +258,22 @@ class Ai_Controller extends REST_Controller {
 		}
 
 		if ( isset( $params['ai_prompt_system'] ) ) {
-			update_option( 'samanlabs_seo_ai_prompt_system', sanitize_textarea_field( $params['ai_prompt_system'] ) );
+			update_option( 'SAMAN_SEO_ai_prompt_system', sanitize_textarea_field( $params['ai_prompt_system'] ) );
 		}
 
 		if ( isset( $params['ai_prompt_title'] ) ) {
-			update_option( 'samanlabs_seo_ai_prompt_title', sanitize_textarea_field( $params['ai_prompt_title'] ) );
+			update_option( 'SAMAN_SEO_ai_prompt_title', sanitize_textarea_field( $params['ai_prompt_title'] ) );
 		}
 
 		if ( isset( $params['ai_prompt_description'] ) ) {
-			update_option( 'samanlabs_seo_ai_prompt_description', sanitize_textarea_field( $params['ai_prompt_description'] ) );
+			update_option( 'SAMAN_SEO_ai_prompt_description', sanitize_textarea_field( $params['ai_prompt_description'] ) );
 		}
 
 		return $this->success( [
-			'ai_prompt_system'      => get_option( 'samanlabs_seo_ai_prompt_system' ),
-			'ai_prompt_title'       => get_option( 'samanlabs_seo_ai_prompt_title' ),
-			'ai_prompt_description' => get_option( 'samanlabs_seo_ai_prompt_description' ),
-		], __( 'Settings saved.', 'saman-labs-seo' ) );
+			'ai_prompt_system'      => get_option( 'SAMAN_SEO_ai_prompt_system' ),
+			'ai_prompt_title'       => get_option( 'SAMAN_SEO_ai_prompt_title' ),
+			'ai_prompt_description' => get_option( 'SAMAN_SEO_ai_prompt_description' ),
+		], __( 'Settings saved.', 'saman-seo' ) );
 	}
 
 	/**
@@ -289,10 +289,10 @@ class Ai_Controller extends REST_Controller {
 			'ai_prompt_description' => 'Write a concise SEO meta description (max 155 characters) summarizing the content and inviting clicks.',
 		];
 
-		update_option( 'samanlabs_seo_ai_prompt_system', $defaults['ai_prompt_system'] );
-		update_option( 'samanlabs_seo_ai_prompt_title', $defaults['ai_prompt_title'] );
-		update_option( 'samanlabs_seo_ai_prompt_description', $defaults['ai_prompt_description'] );
+		update_option( 'SAMAN_SEO_ai_prompt_system', $defaults['ai_prompt_system'] );
+		update_option( 'SAMAN_SEO_ai_prompt_title', $defaults['ai_prompt_title'] );
+		update_option( 'SAMAN_SEO_ai_prompt_description', $defaults['ai_prompt_description'] );
 
-		return $this->success( $defaults, __( 'Settings reset to defaults.', 'saman-labs-seo' ) );
+		return $this->success( $defaults, __( 'Settings reset to defaults.', 'saman-seo' ) );
 	}
 }

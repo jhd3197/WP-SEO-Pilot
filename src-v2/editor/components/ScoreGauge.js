@@ -18,11 +18,11 @@ const ScoreGauge = ({ score = 0, level = 'poor' }) => {
     const dashOffset = circumference - progress;
 
     return (
-        <div className="samanlabs-seo-gauge">
-            <svg viewBox="0 0 48 48" className="samanlabs-seo-gauge__svg">
+        <div className="saman-seo-gauge">
+            <svg viewBox="0 0 48 48" className="saman-seo-gauge__svg">
                 {/* Background circle */}
                 <circle
-                    className="samanlabs-seo-gauge__bg"
+                    className="saman-seo-gauge__bg"
                     cx="24"
                     cy="24"
                     r="20"
@@ -31,7 +31,7 @@ const ScoreGauge = ({ score = 0, level = 'poor' }) => {
                 />
                 {/* Progress circle */}
                 <circle
-                    className="samanlabs-seo-gauge__progress"
+                    className="saman-seo-gauge__progress"
                     cx="24"
                     cy="24"
                     r="20"
@@ -43,7 +43,7 @@ const ScoreGauge = ({ score = 0, level = 'poor' }) => {
                     style={{ stroke: color }}
                 />
             </svg>
-            <div className="samanlabs-seo-gauge__value" style={{ color }}>
+            <div className="saman-seo-gauge__value" style={{ color }}>
                 {score}
             </div>
         </div>

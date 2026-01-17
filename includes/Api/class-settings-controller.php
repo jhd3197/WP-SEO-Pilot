@@ -2,11 +2,11 @@
 /**
  * Settings REST Controller
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -88,12 +88,12 @@ class Settings_Controller extends REST_Controller {
         $options = $wpdb->get_results(
             "SELECT option_name, option_value
              FROM {$wpdb->options}
-             WHERE option_name LIKE 'samanlabs_seo_%'"
+             WHERE option_name LIKE 'SAMAN_SEO_%'"
         );
 
         $settings = [];
         foreach ( $options as $opt ) {
-            $key = str_replace( 'samanlabs_seo_', '', $opt->option_name );
+            $key = str_replace( 'SAMAN_SEO_', '', $opt->option_name );
             $settings[ $key ] = maybe_unserialize( $opt->option_value );
         }
 
@@ -108,7 +108,7 @@ class Settings_Controller extends REST_Controller {
      */
     public function get_setting( $request ) {
         $key   = $request->get_param( 'key' );
-        $value = get_option( 'samanlabs_seo_' . $key );
+        $value = get_option( 'SAMAN_SEO_' . $key );
 
         return $this->success( [
             'key'   => $key,
@@ -126,7 +126,7 @@ class Settings_Controller extends REST_Controller {
         $settings = $request->get_json_params();
 
         foreach ( $settings as $key => $value ) {
-            update_option( 'samanlabs_seo_' . $key, $value );
+            update_option( 'SAMAN_SEO_' . $key, $value );
         }
 
         // Sync breadcrumb settings to consolidated option for the service.
@@ -135,7 +135,7 @@ class Settings_Controller extends REST_Controller {
         // Sync IndexNow settings to consolidated option for the service.
         $this->sync_indexnow_settings( $settings );
 
-        return $this->success( null, __( 'Settings saved successfully.', 'saman-labs-seo' ) );
+        return $this->success( null, __( 'Settings saved successfully.', 'saman-seo' ) );
     }
 
     /**
@@ -158,7 +158,7 @@ class Settings_Controller extends REST_Controller {
             'module_breadcrumbs'          => 'enabled',
         ];
 
-        $breadcrumb_settings = get_option( 'samanlabs_seo_breadcrumb_settings', [] );
+        $breadcrumb_settings = get_option( 'SAMAN_SEO_breadcrumb_settings', [] );
         $updated             = false;
 
         foreach ( $breadcrumb_keys as $request_key => $service_key ) {
@@ -169,7 +169,7 @@ class Settings_Controller extends REST_Controller {
         }
 
         if ( $updated ) {
-            update_option( 'samanlabs_seo_breadcrumb_settings', $breadcrumb_settings );
+            update_option( 'SAMAN_SEO_breadcrumb_settings', $breadcrumb_settings );
         }
     }
 
@@ -186,7 +186,7 @@ class Settings_Controller extends REST_Controller {
             'indexnow_submit_on_update'    => 'submit_on_update',
         ];
 
-        $indexnow_settings = get_option( 'samanlabs_seo_indexnow_settings', [] );
+        $indexnow_settings = get_option( 'SAMAN_SEO_indexnow_settings', [] );
         $updated           = false;
 
         foreach ( $indexnow_keys as $request_key => $service_key ) {
@@ -198,7 +198,7 @@ class Settings_Controller extends REST_Controller {
 
         // Generate API key when enabling IndexNow for the first time.
         if ( $updated && ! empty( $indexnow_settings['enabled'] ) && empty( $indexnow_settings['api_key'] ) ) {
-            $indexnow_service = \SamanLabs\SEO\Plugin::instance()->get( 'indexnow' );
+            $indexnow_service = \Saman\SEO\Plugin::instance()->get( 'indexnow' );
             if ( $indexnow_service ) {
                 $indexnow_settings['api_key'] = $indexnow_service->generate_api_key();
                 flush_rewrite_rules();
@@ -206,7 +206,7 @@ class Settings_Controller extends REST_Controller {
         }
 
         if ( $updated ) {
-            update_option( 'samanlabs_seo_indexnow_settings', $indexnow_settings );
+            update_option( 'SAMAN_SEO_indexnow_settings', $indexnow_settings );
         }
     }
 
@@ -221,12 +221,12 @@ class Settings_Controller extends REST_Controller {
         $body  = $request->get_json_params();
         $value = isset( $body['value'] ) ? $body['value'] : null;
 
-        update_option( 'samanlabs_seo_' . $key, $value );
+        update_option( 'SAMAN_SEO_' . $key, $value );
 
         return $this->success( [
             'key'   => $key,
             'value' => $value,
-        ], __( 'Setting saved.', 'saman-labs-seo' ) );
+        ], __( 'Setting saved.', 'saman-seo' ) );
     }
 
     // =========================================================================
@@ -239,12 +239,12 @@ class Settings_Controller extends REST_Controller {
      * @return \WP_REST_Response
      */
     public function get_templates() {
-        $templates = get_option( 'samanlabs_seo_content_templates', [] );
+        $templates = get_option( 'SAMAN_SEO_content_templates', [] );
 
         // Add default templates if none exist.
         if ( empty( $templates ) ) {
             $templates = $this->get_default_templates();
-            update_option( 'samanlabs_seo_content_templates', $templates );
+            update_option( 'SAMAN_SEO_content_templates', $templates );
         }
 
         return $this->success( $templates );
@@ -265,10 +265,10 @@ class Settings_Controller extends REST_Controller {
         $category    = isset( $params['category'] ) ? sanitize_text_field( $params['category'] ) : 'custom';
 
         if ( empty( $name ) ) {
-            return $this->error( __( 'Template name is required.', 'saman-labs-seo' ), 'missing_name', 400 );
+            return $this->error( __( 'Template name is required.', 'saman-seo' ), 'missing_name', 400 );
         }
 
-        $templates = get_option( 'samanlabs_seo_content_templates', [] );
+        $templates = get_option( 'SAMAN_SEO_content_templates', [] );
 
         $id = 'custom_' . time() . '_' . wp_rand( 1000, 9999 );
 
@@ -282,9 +282,9 @@ class Settings_Controller extends REST_Controller {
             'created_at'  => current_time( 'mysql' ),
         ];
 
-        update_option( 'samanlabs_seo_content_templates', $templates );
+        update_option( 'SAMAN_SEO_content_templates', $templates );
 
-        return $this->success( $templates[ $id ], __( 'Template created.', 'saman-labs-seo' ) );
+        return $this->success( $templates[ $id ], __( 'Template created.', 'saman-seo' ) );
     }
 
     /**
@@ -297,15 +297,15 @@ class Settings_Controller extends REST_Controller {
         $id     = $request->get_param( 'id' );
         $params = $request->get_json_params();
 
-        $templates = get_option( 'samanlabs_seo_content_templates', [] );
+        $templates = get_option( 'SAMAN_SEO_content_templates', [] );
 
         if ( ! isset( $templates[ $id ] ) ) {
-            return $this->error( __( 'Template not found.', 'saman-labs-seo' ), 'not_found', 404 );
+            return $this->error( __( 'Template not found.', 'saman-seo' ), 'not_found', 404 );
         }
 
         // Don't allow editing default templates.
         if ( ! empty( $templates[ $id ]['is_default'] ) ) {
-            return $this->error( __( 'Cannot edit default templates.', 'saman-labs-seo' ), 'cannot_edit', 403 );
+            return $this->error( __( 'Cannot edit default templates.', 'saman-seo' ), 'cannot_edit', 403 );
         }
 
         if ( isset( $params['name'] ) ) {
@@ -323,9 +323,9 @@ class Settings_Controller extends REST_Controller {
 
         $templates[ $id ]['updated_at'] = current_time( 'mysql' );
 
-        update_option( 'samanlabs_seo_content_templates', $templates );
+        update_option( 'SAMAN_SEO_content_templates', $templates );
 
-        return $this->success( $templates[ $id ], __( 'Template updated.', 'saman-labs-seo' ) );
+        return $this->success( $templates[ $id ], __( 'Template updated.', 'saman-seo' ) );
     }
 
     /**
@@ -337,21 +337,21 @@ class Settings_Controller extends REST_Controller {
     public function delete_template( $request ) {
         $id = $request->get_param( 'id' );
 
-        $templates = get_option( 'samanlabs_seo_content_templates', [] );
+        $templates = get_option( 'SAMAN_SEO_content_templates', [] );
 
         if ( ! isset( $templates[ $id ] ) ) {
-            return $this->error( __( 'Template not found.', 'saman-labs-seo' ), 'not_found', 404 );
+            return $this->error( __( 'Template not found.', 'saman-seo' ), 'not_found', 404 );
         }
 
         // Don't allow deleting default templates.
         if ( ! empty( $templates[ $id ]['is_default'] ) ) {
-            return $this->error( __( 'Cannot delete default templates.', 'saman-labs-seo' ), 'cannot_delete', 403 );
+            return $this->error( __( 'Cannot delete default templates.', 'saman-seo' ), 'cannot_delete', 403 );
         }
 
         unset( $templates[ $id ] );
-        update_option( 'samanlabs_seo_content_templates', $templates );
+        update_option( 'SAMAN_SEO_content_templates', $templates );
 
-        return $this->success( null, __( 'Template deleted.', 'saman-labs-seo' ) );
+        return $this->success( null, __( 'Template deleted.', 'saman-seo' ) );
     }
 
     /**

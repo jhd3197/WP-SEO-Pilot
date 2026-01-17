@@ -4,11 +4,11 @@
  *
  * Provides endpoints for editing the .htaccess file.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -37,10 +37,10 @@ class Htaccess_Controller extends REST_Controller {
      * Constructor.
      */
     public function __construct() {
-        $this->namespace     = 'samanlabs-seo/v1';
+        $this->namespace     = 'saman-seo/v1';
         $this->rest_base     = 'htaccess';
         $this->htaccess_path = ABSPATH . '.htaccess';
-        $this->backup_dir    = WP_CONTENT_DIR . '/samanlabs-seo-backups/htaccess/';
+        $this->backup_dir    = WP_CONTENT_DIR . '/saman-seo-backups/htaccess/';
     }
 
     /**

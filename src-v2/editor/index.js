@@ -23,7 +23,7 @@ const PluginIcon = () => (
 );
 
 // Get localized data
-const editorData = window.samanlabsSeoEditor || {};
+const editorData = window.SamanSEOEditor || {};
 const variables = editorData.variables || {};
 const aiEnabled = editorData.aiEnabled || false;
 const aiProvider = editorData.aiProvider || 'none';
@@ -92,8 +92,8 @@ const SEOSidebar = () => {
         const restBase = getRestBase(postType);
         apiFetch({ path: `/wp/v2/${restBase}/${postId}` })
             .then((post) => {
-                if (post.meta && post.meta._samanlabs_seo_meta) {
-                    const meta = post.meta._samanlabs_seo_meta;
+                if (post.meta && post.meta._Saman_seo_meta) {
+                    const meta = post.meta._Saman_seo_meta;
                     setSeoMeta({
                         title: meta.title || '',
                         description: meta.description || '',
@@ -115,7 +115,7 @@ const SEOSidebar = () => {
         if (!postId) return;
 
         const timer = setTimeout(() => {
-            apiFetch({ path: `/samanlabs-seo/v1/audit/post/${postId}` })
+            apiFetch({ path: `/saman-seo/v1/audit/post/${postId}` })
                 .then((response) => {
                     if (response.success && response.data) {
                         setSeoScore(response.data);
@@ -164,7 +164,7 @@ const SEOSidebar = () => {
             focus_keyphrase: newMeta.focus_keyphrase,
         };
 
-        editPost({ meta: { _samanlabs_seo_meta: metaForSave } });
+        editPost({ meta: { _Saman_seo_meta: metaForSave } });
     }, [seoMeta, editPost]);
 
     // Get effective title and description (with fallbacks)
@@ -175,11 +175,11 @@ const SEOSidebar = () => {
 
     return (
         <>
-            <PluginSidebarMoreMenuItem target="samanlabs-seo-sidebar" icon={<PluginIcon />}>
+            <PluginSidebarMoreMenuItem target="saman-seo-sidebar" icon={<PluginIcon />}>
                 Saman SEO
             </PluginSidebarMoreMenuItem>
             <PluginSidebar
-                name="samanlabs-seo-sidebar"
+                name="saman-seo-sidebar"
                 title="Saman SEO"
                 icon={<PluginIcon />}
             >
@@ -207,7 +207,7 @@ const SEOSidebar = () => {
 };
 
 // Register the plugin
-registerPlugin('samanlabs-seo', {
+registerPlugin('saman-seo', {
     render: SEOSidebar,
     icon: <PluginIcon />,
 });

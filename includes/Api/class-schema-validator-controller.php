@@ -4,11 +4,11 @@
  *
  * Validates JSON-LD structured data from URLs.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -23,7 +23,7 @@ class Schema_Validator_Controller extends REST_Controller {
      * Constructor.
      */
     public function __construct() {
-        $this->namespace = 'samanlabs-seo/v1';
+        $this->namespace = 'saman-seo/v1';
         $this->rest_base = 'schema-validator';
     }
 

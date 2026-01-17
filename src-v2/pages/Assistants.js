@@ -3,7 +3,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { AssistantProvider, AssistantChat } from '../assistants';
 
 // Get AI status from global settings
-const globalSettings = window?.samanlabsSeoSettings || {};
+const globalSettings = window?.SamanSEOSettings || {};
 const aiEnabled = globalSettings.aiEnabled || false;
 const aiProvider = globalSettings.aiProvider || 'none';
 const aiPilot = globalSettings.aiPilot || null;
@@ -37,9 +37,9 @@ const Assistants = ({ initialAssistant = null }) => {
         setLoading(true);
         try {
             const [assistantsRes, customRes, statsRes] = await Promise.all([
-                apiFetch({ path: '/samanlabs-seo/v1/assistants' }),
-                apiFetch({ path: '/samanlabs-seo/v1/assistants/custom' }),
-                apiFetch({ path: '/samanlabs-seo/v1/assistants/stats' }),
+                apiFetch({ path: '/saman-seo/v1/assistants' }),
+                apiFetch({ path: '/saman-seo/v1/assistants/custom' }),
+                apiFetch({ path: '/saman-seo/v1/assistants/stats' }),
             ]);
 
             if (assistantsRes.success) {
@@ -134,13 +134,13 @@ const Assistants = ({ initialAssistant = null }) => {
         try {
             if (editingAssistant) {
                 await apiFetch({
-                    path: `/samanlabs-seo/v1/assistants/custom/${editingAssistant.id}`,
+                    path: `/saman-seo/v1/assistants/custom/${editingAssistant.id}`,
                     method: 'PUT',
                     data: form,
                 });
             } else {
                 await apiFetch({
-                    path: '/samanlabs-seo/v1/assistants/custom',
+                    path: '/saman-seo/v1/assistants/custom',
                     method: 'POST',
                     data: form,
                 });
@@ -162,7 +162,7 @@ const Assistants = ({ initialAssistant = null }) => {
 
         try {
             await apiFetch({
-                path: `/samanlabs-seo/v1/assistants/custom/${id}`,
+                path: `/saman-seo/v1/assistants/custom/${id}`,
                 method: 'DELETE',
             });
             await fetchData();

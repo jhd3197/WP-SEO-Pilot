@@ -4,11 +4,11 @@
  *
  * Handles installation, activation, and updates of managed plugins.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Updater;
+namespace Saman\SEO\Updater;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -66,13 +66,13 @@ class Plugin_Installer {
             }
             return [
                 'success' => false,
-                'message' => __( 'Installation failed. Check file permissions.', 'saman-labs-seo' ),
+                'message' => __( 'Installation failed. Check file permissions.', 'saman-seo' ),
             ];
         }
 
         return [
             'success' => true,
-            'message' => __( 'Plugin installed successfully.', 'saman-labs-seo' ),
+            'message' => __( 'Plugin installed successfully.', 'saman-seo' ),
         ];
     }
 
@@ -107,13 +107,13 @@ class Plugin_Installer {
             }
             return [
                 'success' => false,
-                'message' => __( 'Update failed.', 'saman-labs-seo' ),
+                'message' => __( 'Update failed.', 'saman-seo' ),
             ];
         }
 
         return [
             'success' => true,
-            'message' => __( 'Plugin updated successfully.', 'saman-labs-seo' ),
+            'message' => __( 'Plugin updated successfully.', 'saman-seo' ),
         ];
     }
 
@@ -137,7 +137,7 @@ class Plugin_Installer {
 
         return [
             'success' => true,
-            'message' => __( 'Plugin activated successfully.', 'saman-labs-seo' ),
+            'message' => __( 'Plugin activated successfully.', 'saman-seo' ),
         ];
     }
 
@@ -154,7 +154,7 @@ class Plugin_Installer {
 
         return [
             'success' => true,
-            'message' => __( 'Plugin deactivated.', 'saman-labs-seo' ),
+            'message' => __( 'Plugin deactivated.', 'saman-seo' ),
         ];
     }
 
@@ -182,7 +182,7 @@ class Plugin_Installer {
 
         return [
             'success' => true,
-            'message' => __( 'Plugin deleted.', 'saman-labs-seo' ),
+            'message' => __( 'Plugin deleted.', 'saman-seo' ),
         ];
     }
 }

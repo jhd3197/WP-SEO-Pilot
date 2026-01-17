@@ -33,7 +33,7 @@ export const trackEvent = (category, action, name = null, value = null) => {
         window._paq.push(eventData);
 
         // Debug log in development
-        if (window.samanlabsSeoDebug) {
+        if (window.SamanSEODebug) {
             console.log('Saman SEO Analytics:', { category, action, name, value });
         }
     } catch (e) {

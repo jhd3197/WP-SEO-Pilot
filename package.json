@@ -1,5 +1,5 @@
 {
-  "name": "saman-labs-seo",
+  "name": "saman-seo",
   "version": "2.0.0",
   "description": "Asset build pipeline for the Saman SEO plugin",
   "private": true,
@@ -30,7 +30,7 @@
     "plugin",
     "less",
     "react",
-    "saman-labs-seo"
+    "saman-seo"
   ],
   "author": "Juan Denis",
   "license": "GPL-2.0-or-later",

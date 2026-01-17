@@ -109,7 +109,7 @@ const Settings = () => {
     const fetchSettings = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await apiFetch({ path: '/samanlabs-seo/v1/settings' });
+            const res = await apiFetch({ path: '/saman-seo/v1/settings' });
             if (res.success && res.data) {
                 setSettings(prev => ({ ...prev, ...res.data }));
             }
@@ -135,7 +135,7 @@ const Settings = () => {
         setSaving(true);
         try {
             await apiFetch({
-                path: '/samanlabs-seo/v1/settings',
+                path: '/saman-seo/v1/settings',
                 method: 'POST',
                 data: settings,
             });
@@ -155,7 +155,7 @@ const Settings = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `samanlabs-seo-settings-${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `saman-seo-settings-${new Date().toISOString().split('T')[0]}.json`;
         a.click();
         URL.revokeObjectURL(url);
     };
@@ -190,7 +190,7 @@ const Settings = () => {
         setResettingWizard(true);
         try {
             await apiFetch({
-                path: '/samanlabs-seo/v1/setup/reset',
+                path: '/saman-seo/v1/setup/reset',
                 method: 'POST',
             });
             alert('Setup wizard has been reset. It will appear on the next page load.');
@@ -750,9 +750,9 @@ const BreadcrumbsTab = ({ settings, updateSetting }) => {
                 <div className="side-card">
                     <h4>Usage</h4>
                     <p className="muted">Add breadcrumbs to your theme using:</p>
-                    <code className="code-block">[samanlabs_seo_breadcrumbs]</code>
+                    <code className="code-block">[Saman_seo_breadcrumbs]</code>
                     <p className="muted" style={{ marginTop: '8px' }}>Or in PHP:</p>
-                    <code className="code-block">samanlabs_seo_breadcrumbs();</code>
+                    <code className="code-block">Saman_seo_breadcrumbs();</code>
                 </div>
 
                 <div className="side-card">
@@ -1472,7 +1472,7 @@ const ToolsTab = ({ settings, onExport, onImport, onReset, onResetWizard, resett
                 <div className="side-card">
                     <h4>Legacy Interface</h4>
                     <p className="muted">Access V1 for features not yet migrated.</p>
-                    <a href="admin.php?page=samanlabs-seo" className="button ghost">Open V1</a>
+                    <a href="admin.php?page=saman-seo" className="button ghost">Open V1</a>
                 </div>
             </aside>
         </div>

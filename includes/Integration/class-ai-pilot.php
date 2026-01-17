@@ -5,10 +5,10 @@
  * Central integration layer for Saman Labs AI (formerly WP AI Pilot).
  * All AI functionality is delegated to the Saman Labs AI plugin.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  */
 
-namespace SamanLabs\SEO\Integration;
+namespace Saman\SEO\Integration;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,7 +24,7 @@ class AI_Pilot {
 	/**
 	 * Plugin source identifier for usage tracking.
 	 */
-	const SOURCE = 'saman-labs-seo';
+	const SOURCE = 'saman-seo';
 
 	/**
 	 * Initialize the integration.
@@ -136,10 +136,10 @@ class AI_Pilot {
 	/**
 	 * Get the AI provider being used.
 	 *
-	 * @return string 'samanlabs-ai' or 'none'.
+	 * @return string 'Saman-ai' or 'none'.
 	 */
 	public static function get_provider(): string {
-		return self::is_ready() ? 'samanlabs-ai' : 'none';
+		return self::is_ready() ? 'Saman-ai' : 'none';
 	}
 
 	// =========================================================================
@@ -147,7 +147,7 @@ class AI_Pilot {
 	// =========================================================================
 
 	/**
-	 * Register Saman Labs SEO with Saman Labs AI.
+	 * Register Saman SEO with Saman Labs AI.
 	 */
 	public static function register_plugin(): void {
 		if ( ! function_exists( 'wp_ai_pilot' ) ) {
@@ -155,7 +155,7 @@ class AI_Pilot {
 		}
 
 		wp_ai_pilot()->register_plugin( [
-			'slug'        => 'saman-labs-seo',
+			'slug'        => 'saman-seo',
 			'file'        => 'saman-seo/saman-seo.php',
 			'name'        => 'Saman SEO',
 			'permissions' => [ 'generate', 'chat', 'assistants' ],
@@ -173,8 +173,8 @@ class AI_Pilot {
 		// General SEO Assistant
 		wp_ai_pilot()->register_assistant( [
 			'id'                 => 'seo-general',
-			'name'               => __( 'SEO Assistant', 'saman-labs-seo' ),
-			'description'        => __( 'Your helpful SEO buddy for all things search optimization.', 'saman-labs-seo' ),
+			'name'               => __( 'SEO Assistant', 'saman-seo' ),
+			'description'        => __( 'Your helpful SEO buddy for all things search optimization.', 'saman-seo' ),
 			'plugin'             => 'saman-seo/saman-seo.php',
 			'system_prompt'      => self::get_general_seo_prompt(),
 			'icon'               => 'dashicons-search',
@@ -184,18 +184,18 @@ class AI_Pilot {
 			'max_tokens'         => 1000,
 			'save_conversations' => true,
 			'suggested_prompts'  => [
-				__( 'How do I write a good meta description?', 'saman-labs-seo' ),
-				__( 'What makes a title tag effective?', 'saman-labs-seo' ),
-				__( 'Help me find keywords for my blog post', 'saman-labs-seo' ),
-				__( 'What are internal links and why do they matter?', 'saman-labs-seo' ),
+				__( 'How do I write a good meta description?', 'saman-seo' ),
+				__( 'What makes a title tag effective?', 'saman-seo' ),
+				__( 'Help me find keywords for my blog post', 'saman-seo' ),
+				__( 'What are internal links and why do they matter?', 'saman-seo' ),
 			],
 		] );
 
 		// SEO Reporter Assistant
 		wp_ai_pilot()->register_assistant( [
 			'id'                 => 'seo-reporter',
-			'name'               => __( 'SEO Reporter', 'saman-labs-seo' ),
-			'description'        => __( 'Your weekly SEO buddy that gives you the rundown on your site.', 'saman-labs-seo' ),
+			'name'               => __( 'SEO Reporter', 'saman-seo' ),
+			'description'        => __( 'Your weekly SEO buddy that gives you the rundown on your site.', 'saman-seo' ),
 			'plugin'             => 'saman-seo/saman-seo.php',
 			'system_prompt'      => self::get_reporter_prompt(),
 			'icon'               => 'dashicons-chart-bar',
@@ -205,10 +205,10 @@ class AI_Pilot {
 			'max_tokens'         => 1500,
 			'save_conversations' => true,
 			'suggested_prompts'  => [
-				__( 'Give me a quick SEO report', 'saman-labs-seo' ),
-				__( 'What SEO issues should I fix first?', 'saman-labs-seo' ),
-				__( 'Check my meta titles and descriptions', 'saman-labs-seo' ),
-				__( 'Find posts missing SEO data', 'saman-labs-seo' ),
+				__( 'Give me a quick SEO report', 'saman-seo' ),
+				__( 'What SEO issues should I fix first?', 'saman-seo' ),
+				__( 'Check my meta titles and descriptions', 'saman-seo' ),
+				__( 'Find posts missing SEO data', 'saman-seo' ),
 			],
 		] );
 	}
@@ -345,7 +345,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
 		if ( ! self::is_ready() ) {
 			return new \WP_Error(
 				'ai_not_ready',
-				__( 'Saman Labs AI is not configured. Please install and configure Saman Labs AI to use AI features.', 'saman-labs-seo' )
+				__( 'Saman Labs AI is not configured. Please install and configure Saman Labs AI to use AI features.', 'saman-seo' )
 			);
 		}
 
@@ -372,7 +372,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
 		if ( ! self::is_ready() ) {
 			return new \WP_Error(
 				'ai_not_ready',
-				__( 'Saman Labs AI is not configured.', 'saman-labs-seo' )
+				__( 'Saman Labs AI is not configured.', 'saman-seo' )
 			);
 		}
 
@@ -398,7 +398,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
 		if ( ! self::is_ready() ) {
 			return new \WP_Error(
 				'ai_not_ready',
-				__( 'Saman Labs AI is not configured.', 'saman-labs-seo' )
+				__( 'Saman Labs AI is not configured.', 'saman-seo' )
 			);
 		}
 
@@ -496,8 +496,8 @@ Return ONLY the description text. No quotes, no explanation, no alternatives.";
 				$parts[] = '- Type: ' . $post->post_type;
 				$parts[] = '- Status: ' . $post->post_status;
 
-				$meta_title = get_post_meta( $post->ID, '_samanlabs_seo_title', true );
-				$meta_desc  = get_post_meta( $post->ID, '_samanlabs_seo_description', true );
+				$meta_title = get_post_meta( $post->ID, '_SAMAN_SEO_title', true );
+				$meta_desc  = get_post_meta( $post->ID, '_SAMAN_SEO_description', true );
 
 				if ( $meta_title ) {
 					$parts[] = '- SEO Title: ' . $meta_title;
@@ -523,7 +523,7 @@ Return ONLY the description text. No quotes, no explanation, no alternatives.";
 	// =========================================================================
 
 	/**
-	 * Get usage statistics for Saman Labs SEO.
+	 * Get usage statistics for Saman SEO.
 	 *
 	 * @param string $period '24hours', '7days', '30days', '90days', 'all'.
 	 *
@@ -538,7 +538,7 @@ Return ONLY the description text. No quotes, no explanation, no alternatives.";
 	}
 
 	/**
-	 * Get registered assistants from Saman Labs AI that belong to Saman Labs SEO.
+	 * Get registered assistants from Saman Labs AI that belong to Saman SEO.
 	 *
 	 * @return array Array of assistants.
 	 */
@@ -549,7 +549,7 @@ Return ONLY the description text. No quotes, no explanation, no alternatives.";
 
 		$all = wp_ai_pilot()->get_assistants( true );
 
-		// Filter to Saman Labs SEO assistants.
+		// Filter to Saman SEO assistants.
 		return array_filter( $all, function ( $assistant ) {
 			return isset( $assistant['plugin'] ) &&
 			       $assistant['plugin'] === 'saman-seo/saman-seo.php';

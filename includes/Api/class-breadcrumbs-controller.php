@@ -2,17 +2,17 @@
 /**
  * REST API Controller for Breadcrumbs.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
 use WP_REST_Controller;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
-use SamanLabs\SEO\Plugin;
+use Saman\SEO\Plugin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -26,7 +26,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'samanlabs-seo/v1';
+	protected $namespace = 'saman-seo/v1';
 
 	/**
 	 * Resource base.
@@ -102,7 +102,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 	/**
 	 * Get breadcrumb service.
 	 *
-	 * @return \SamanLabs\SEO\Service\Breadcrumbs|null
+	 * @return \Saman\SEO\Service\Breadcrumbs|null
 	 */
 	private function get_service() {
 		return Plugin::instance()->get( 'breadcrumbs' );
@@ -121,7 +121,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 			return new WP_REST_Response(
 				[
 					'success' => false,
-					'message' => __( 'Breadcrumbs service not available.', 'saman-labs-seo' ),
+					'message' => __( 'Breadcrumbs service not available.', 'saman-seo' ),
 				],
 				500
 			);
@@ -148,7 +148,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 			return new WP_REST_Response(
 				[
 					'success' => false,
-					'message' => __( 'Breadcrumbs service not available.', 'saman-labs-seo' ),
+					'message' => __( 'Breadcrumbs service not available.', 'saman-seo' ),
 				],
 				500
 			);
@@ -165,7 +165,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 		if ( $result ) {
 			return new WP_REST_Response( [
 				'success' => true,
-				'message' => __( 'Settings saved successfully.', 'saman-labs-seo' ),
+				'message' => __( 'Settings saved successfully.', 'saman-seo' ),
 				'data'    => $service->get_settings(),
 			] );
 		}
@@ -173,7 +173,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 		return new WP_REST_Response(
 			[
 				'success' => false,
-				'message' => __( 'Failed to save settings.', 'saman-labs-seo' ),
+				'message' => __( 'Failed to save settings.', 'saman-seo' ),
 			],
 			500
 		);
@@ -192,7 +192,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 			return new WP_REST_Response(
 				[
 					'success' => false,
-					'message' => __( 'Breadcrumbs service not available.', 'saman-labs-seo' ),
+					'message' => __( 'Breadcrumbs service not available.', 'saman-seo' ),
 				],
 				500
 			);
@@ -245,7 +245,7 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 			return new WP_REST_Response(
 				[
 					'success' => false,
-					'message' => __( 'Breadcrumbs service not available.', 'saman-labs-seo' ),
+					'message' => __( 'Breadcrumbs service not available.', 'saman-seo' ),
 				],
 				500
 			);
@@ -257,20 +257,20 @@ class Breadcrumbs_Controller extends WP_REST_Controller {
 		$sample_crumbs = [
 			[
 				'url'   => home_url( '/' ),
-				'title' => __( 'Home', 'saman-labs-seo' ),
+				'title' => __( 'Home', 'saman-seo' ),
 			],
 			[
 				'url'   => home_url( '/category/' ),
-				'title' => __( 'Category', 'saman-labs-seo' ),
+				'title' => __( 'Category', 'saman-seo' ),
 			],
 			[
 				'url'   => '',
-				'title' => __( 'Current Page', 'saman-labs-seo' ),
+				'title' => __( 'Current Page', 'saman-seo' ),
 			],
 		];
 
 		// Temporarily filter breadcrumbs to use sample data.
-		add_filter( 'samanlabs_seo_breadcrumb_items', function() use ( $sample_crumbs ) {
+		add_filter( 'SAMAN_SEO_breadcrumb_items', function() use ( $sample_crumbs ) {
 			return $sample_crumbs;
 		}, 999 );
 

@@ -12,9 +12,9 @@ const SEOScoreBadge = ({ score, level, label, issues, flags }) => {
     };
 
     const getLevelClass = () => {
-        if (level === 'good') return 'samanlabs-seo-badge--good';
-        if (level === 'fair') return 'samanlabs-seo-badge--fair';
-        return 'samanlabs-seo-badge--poor';
+        if (level === 'good') return 'saman-seo-badge--good';
+        if (level === 'fair') return 'saman-seo-badge--fair';
+        return 'saman-seo-badge--poor';
     };
 
     // Calculate circle progress
@@ -24,8 +24,8 @@ const SEOScoreBadge = ({ score, level, label, issues, flags }) => {
     const dashOffset = circumference - progress;
 
     return (
-        <div className="samanlabs-seo-list-badge">
-            <div className={`samanlabs-seo-badge-ring ${getLevelClass()}`}>
+        <div className="saman-seo-list-badge">
+            <div className={`saman-seo-badge-ring ${getLevelClass()}`}>
                 <svg width="44" height="44" viewBox="0 0 44 44">
                     {/* Background circle */}
                     <circle
@@ -51,20 +51,20 @@ const SEOScoreBadge = ({ score, level, label, issues, flags }) => {
                         style={{ transition: 'stroke-dashoffset 0.3s ease' }}
                     />
                 </svg>
-                <span className="samanlabs-seo-badge-score">{score}</span>
+                <span className="saman-seo-badge-score">{score}</span>
             </div>
-            <div className="samanlabs-seo-badge-info">
-                <span className={`samanlabs-seo-badge-label ${getLevelClass()}`}>
+            <div className="saman-seo-badge-info">
+                <span className={`saman-seo-badge-label ${getLevelClass()}`}>
                     {label}
                 </span>
                 {issues && issues.length > 0 && (
-                    <span className="samanlabs-seo-badge-issues">
+                    <span className="saman-seo-badge-issues">
                         {issues.slice(0, 2).join(' • ')}
                         {issues.length > 2 && ` +${issues.length - 2}`}
                     </span>
                 )}
                 {flags && flags.length > 0 && (
-                    <span className="samanlabs-seo-badge-flags">
+                    <span className="saman-seo-badge-flags">
                         {flags.join(', ')}
                     </span>
                 )}

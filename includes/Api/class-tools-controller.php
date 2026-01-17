@@ -2,13 +2,13 @@
 /**
  * AI-Powered Tools REST Controller
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
-use SamanLabs\SEO\Integration\AI_Pilot;
+use Saman\SEO\Integration\AI_Pilot;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -197,7 +197,7 @@ class Tools_Controller extends REST_Controller {
 	 * @return \WP_REST_Response
 	 */
 	public function get_schema_templates( $request ) {
-		$templates = get_option( 'samanlabs_seo_schema_templates', [] );
+		$templates = get_option( 'SAMAN_SEO_schema_templates', [] );
 		return $this->success( $templates );
 	}
 
@@ -209,9 +209,9 @@ class Tools_Controller extends REST_Controller {
 	 */
 	public function save_schema_template( $request ) {
 		$params = $request->get_json_params();
-		$templates = get_option( 'samanlabs_seo_schema_templates', [] );
+		$templates = get_option( 'SAMAN_SEO_schema_templates', [] );
 		$templates[] = $params;
-		update_option( 'samanlabs_seo_schema_templates', $templates );
+		update_option( 'SAMAN_SEO_schema_templates', $templates );
 		return $this->success( $templates );
 	}
 
@@ -226,7 +226,7 @@ class Tools_Controller extends REST_Controller {
 		$url = isset( $params['url'] ) ? esc_url_raw( $params['url'] ) : '';
 
 		if ( empty( $url ) ) {
-			return $this->error( __( 'URL is required.', 'saman-labs-seo' ), 'missing_url', 400 );
+			return $this->error( __( 'URL is required.', 'saman-seo' ), 'missing_url', 400 );
 		}
 
 		$response = wp_remote_get( $url );
@@ -243,13 +243,13 @@ class Tools_Controller extends REST_Controller {
 		$scripts = $xpath->query( '//script[@type="application/ld+json"]' );
 
 		if ( $scripts->length === 0 ) {
-			return $this->error( __( 'No schema found at the specified URL.', 'saman-labs-seo' ), 'no_schema_found', 404 );
+			return $this->error( __( 'No schema found at the specified URL.', 'saman-seo' ), 'no_schema_found', 404 );
 		}
 
 		$schema_data = json_decode( $scripts[0]->nodeValue, true );
 
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
-			return $this->error( __( 'Invalid JSON format in schema.', 'saman-labs-seo' ), 'invalid_json', 400 );
+			return $this->error( __( 'Invalid JSON format in schema.', 'saman-seo' ), 'invalid_json', 400 );
 		}
 
 		return $this->success( [
@@ -293,11 +293,11 @@ class Tools_Controller extends REST_Controller {
             $args['meta_query'] = [
                 'relation' => 'OR',
                 [
-                    'key'     => '_samanlabs_seo_title',
+                    'key'     => '_SAMAN_SEO_title',
                     'compare' => 'NOT EXISTS',
                 ],
                 [
-                    'key'     => '_samanlabs_seo_title',
+                    'key'     => '_SAMAN_SEO_title',
                     'value'   => '',
                     'compare' => '=',
                 ],
@@ -306,11 +306,11 @@ class Tools_Controller extends REST_Controller {
             $args['meta_query'] = [
                 'relation' => 'OR',
                 [
-                    'key'     => '_samanlabs_seo_description',
+                    'key'     => '_SAMAN_SEO_description',
                     'compare' => 'NOT EXISTS',
                 ],
                 [
-                    'key'     => '_samanlabs_seo_description',
+                    'key'     => '_SAMAN_SEO_description',
                     'value'   => '',
                     'compare' => '=',
                 ],
@@ -321,8 +321,8 @@ class Tools_Controller extends REST_Controller {
         $posts = [];
 
         foreach ( $query->posts as $post ) {
-            $seo_title = get_post_meta( $post->ID, '_samanlabs_seo_title', true );
-            $seo_desc = get_post_meta( $post->ID, '_samanlabs_seo_description', true );
+            $seo_title = get_post_meta( $post->ID, '_SAMAN_SEO_title', true );
+            $seo_desc = get_post_meta( $post->ID, '_SAMAN_SEO_description', true );
 
             $posts[] = [
                 'id'               => $post->ID,
@@ -364,7 +364,7 @@ class Tools_Controller extends REST_Controller {
         $type = isset( $params['type'] ) ? sanitize_text_field( $params['type'] ) : 'both';
 
         if ( empty( $post_ids ) ) {
-            return $this->error( __( 'No posts selected.', 'saman-labs-seo' ), 'no_posts', 400 );
+            return $this->error( __( 'No posts selected.', 'saman-seo' ), 'no_posts', 400 );
         }
 
         $suggestions = [];
@@ -414,7 +414,7 @@ class Tools_Controller extends REST_Controller {
         $changes = isset( $params['changes'] ) ? $params['changes'] : [];
 
         if ( empty( $changes ) ) {
-            return $this->error( __( 'No changes to save.', 'saman-labs-seo' ), 'no_changes', 400 );
+            return $this->error( __( 'No changes to save.', 'saman-seo' ), 'no_changes', 400 );
         }
 
         $saved = 0;
@@ -426,17 +426,17 @@ class Tools_Controller extends REST_Controller {
             }
 
             if ( isset( $change['seo_title'] ) ) {
-                update_post_meta( $post_id, '_samanlabs_seo_title', sanitize_text_field( $change['seo_title'] ) );
+                update_post_meta( $post_id, '_SAMAN_SEO_title', sanitize_text_field( $change['seo_title'] ) );
             }
 
             if ( isset( $change['seo_description'] ) ) {
-                update_post_meta( $post_id, '_samanlabs_seo_description', sanitize_textarea_field( $change['seo_description'] ) );
+                update_post_meta( $post_id, '_SAMAN_SEO_description', sanitize_textarea_field( $change['seo_description'] ) );
             }
 
             $saved++;
         }
 
-        return $this->success( [ 'saved' => $saved ], sprintf( __( '%d posts updated.', 'saman-labs-seo' ), $saved ) );
+        return $this->success( [ 'saved' => $saved ], sprintf( __( '%d posts updated.', 'saman-seo' ), $saved ) );
     }
 
     // =========================================================================
@@ -540,7 +540,7 @@ class Tools_Controller extends REST_Controller {
         $keywords = isset( $params['keywords'] ) ? array_map( 'sanitize_text_field', $params['keywords'] ) : [];
 
         if ( empty( $title ) ) {
-            return $this->error( __( 'Title is required.', 'saman-labs-seo' ), 'missing_title', 400 );
+            return $this->error( __( 'Title is required.', 'saman-seo' ), 'missing_title', 400 );
         }
 
         $keywords_str = ! empty( $keywords ) ? implode( ', ', $keywords ) : '';
@@ -594,12 +594,12 @@ class Tools_Controller extends REST_Controller {
         $post_id = isset( $params['post_id'] ) ? intval( $params['post_id'] ) : 0;
 
         if ( ! $post_id ) {
-            return $this->error( __( 'Post ID is required.', 'saman-labs-seo' ), 'missing_post_id', 400 );
+            return $this->error( __( 'Post ID is required.', 'saman-seo' ), 'missing_post_id', 400 );
         }
 
         $post = get_post( $post_id );
         if ( ! $post ) {
-            return $this->error( __( 'Post not found.', 'saman-labs-seo' ), 'not_found', 404 );
+            return $this->error( __( 'Post not found.', 'saman-seo' ), 'not_found', 404 );
         }
 
         $content = wp_strip_all_tags( $post->post_content );
@@ -655,12 +655,12 @@ class Tools_Controller extends REST_Controller {
         $custom_data = isset( $params['custom_data'] ) ? $params['custom_data'] : [];
 
         if ( ! $post_id ) {
-            return $this->error( __( 'Post ID is required.', 'saman-labs-seo' ), 'missing_post_id', 400 );
+            return $this->error( __( 'Post ID is required.', 'saman-seo' ), 'missing_post_id', 400 );
         }
 
         $post = get_post( $post_id );
         if ( ! $post ) {
-            return $this->error( __( 'Post not found.', 'saman-labs-seo' ), 'not_found', 404 );
+            return $this->error( __( 'Post not found.', 'saman-seo' ), 'not_found', 404 );
         }
 
         $content = wp_strip_all_tags( $post->post_content );
@@ -748,7 +748,7 @@ class Tools_Controller extends REST_Controller {
         $schema = isset( $params['schema'] ) ? $params['schema'] : '';
 
         if ( empty( $schema ) ) {
-            return $this->error( __( 'Schema is required.', 'saman-labs-seo' ), 'missing_schema', 400 );
+            return $this->error( __( 'Schema is required.', 'saman-seo' ), 'missing_schema', 400 );
         }
 
         // Basic validation
@@ -758,7 +758,7 @@ class Tools_Controller extends REST_Controller {
         if ( is_string( $schema ) ) {
             $schema = json_decode( $schema, true );
             if ( json_last_error() !== JSON_ERROR_NONE ) {
-                $errors[] = __( 'Invalid JSON format.', 'saman-labs-seo' );
+                $errors[] = __( 'Invalid JSON format.', 'saman-seo' );
                 return $this->success( [
                     'valid'    => false,
                     'errors'   => $errors,
@@ -769,11 +769,11 @@ class Tools_Controller extends REST_Controller {
 
         // Check required fields
         if ( ! isset( $schema['@context'] ) ) {
-            $errors[] = __( 'Missing @context (should be https://schema.org).', 'saman-labs-seo' );
+            $errors[] = __( 'Missing @context (should be https://schema.org).', 'saman-seo' );
         }
 
         if ( ! isset( $schema['@type'] ) ) {
-            $errors[] = __( 'Missing @type.', 'saman-labs-seo' );
+            $errors[] = __( 'Missing @type.', 'saman-seo' );
         }
 
         // Type-specific validation
@@ -781,34 +781,34 @@ class Tools_Controller extends REST_Controller {
 
         if ( $type === 'Article' || $type === 'BlogPosting' || $type === 'NewsArticle' ) {
             if ( empty( $schema['headline'] ) ) {
-                $errors[] = __( 'Missing headline (required for Article).', 'saman-labs-seo' );
+                $errors[] = __( 'Missing headline (required for Article).', 'saman-seo' );
             }
             if ( empty( $schema['image'] ) ) {
-                $warnings[] = __( 'Missing image (recommended for Article).', 'saman-labs-seo' );
+                $warnings[] = __( 'Missing image (recommended for Article).', 'saman-seo' );
             }
             if ( empty( $schema['author'] ) ) {
-                $warnings[] = __( 'Missing author (recommended for Article).', 'saman-labs-seo' );
+                $warnings[] = __( 'Missing author (recommended for Article).', 'saman-seo' );
             }
             if ( empty( $schema['datePublished'] ) ) {
-                $warnings[] = __( 'Missing datePublished (recommended for Article).', 'saman-labs-seo' );
+                $warnings[] = __( 'Missing datePublished (recommended for Article).', 'saman-seo' );
             }
         }
 
         if ( $type === 'Recipe' ) {
             if ( empty( $schema['name'] ) && empty( $schema['headline'] ) ) {
-                $errors[] = __( 'Missing name (required for Recipe).', 'saman-labs-seo' );
+                $errors[] = __( 'Missing name (required for Recipe).', 'saman-seo' );
             }
             if ( empty( $schema['recipeIngredient'] ) ) {
-                $warnings[] = __( 'Missing recipeIngredient (recommended for Recipe).', 'saman-labs-seo' );
+                $warnings[] = __( 'Missing recipeIngredient (recommended for Recipe).', 'saman-seo' );
             }
             if ( empty( $schema['recipeInstructions'] ) ) {
-                $warnings[] = __( 'Missing recipeInstructions (recommended for Recipe).', 'saman-labs-seo' );
+                $warnings[] = __( 'Missing recipeInstructions (recommended for Recipe).', 'saman-seo' );
             }
         }
 
         if ( $type === 'FAQPage' ) {
             if ( empty( $schema['mainEntity'] ) ) {
-                $errors[] = __( 'Missing mainEntity (required for FAQPage).', 'saman-labs-seo' );
+                $errors[] = __( 'Missing mainEntity (required for FAQPage).', 'saman-seo' );
             }
         }
 
@@ -835,11 +835,11 @@ class Tools_Controller extends REST_Controller {
         $schema = isset( $params['schema'] ) ? $params['schema'] : '';
 
         if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
-            return $this->error( __( 'Invalid post or permission denied.', 'saman-labs-seo' ), 'permission_denied', 403 );
+            return $this->error( __( 'Invalid post or permission denied.', 'saman-seo' ), 'permission_denied', 403 );
         }
 
         if ( empty( $schema ) ) {
-            return $this->error( __( 'Schema is required.', 'saman-labs-seo' ), 'missing_schema', 400 );
+            return $this->error( __( 'Schema is required.', 'saman-seo' ), 'missing_schema', 400 );
         }
 
         // Store as JSON string
@@ -847,9 +847,9 @@ class Tools_Controller extends REST_Controller {
             $schema = wp_json_encode( $schema );
         }
 
-        update_post_meta( $post_id, '_samanlabs_seo_schema', $schema );
+        update_post_meta( $post_id, '_SAMAN_SEO_schema', $schema );
 
-        return $this->success( null, __( 'Schema saved successfully.', 'saman-labs-seo' ) );
+        return $this->success( null, __( 'Schema saved successfully.', 'saman-seo' ) );
     }
 
     // =========================================================================
@@ -863,7 +863,7 @@ class Tools_Controller extends REST_Controller {
      * @return \WP_REST_Response
      */
     public function get_robots_txt( $request ) {
-        $content = get_option( 'samanlabs_seo_robots_txt', '' );
+        $content = get_option( 'SAMAN_SEO_robots_txt', '' );
         $site_url = home_url();
         $sitemap_url = home_url( '/sitemap.xml' );
 
@@ -891,11 +891,11 @@ class Tools_Controller extends REST_Controller {
         // Sanitize - allow only safe characters
         $content = wp_kses( $content, [] );
 
-        update_option( 'samanlabs_seo_robots_txt', $content );
+        update_option( 'SAMAN_SEO_robots_txt', $content );
 
         return $this->success( [
             'content' => $content,
-        ], __( 'robots.txt saved successfully.', 'saman-labs-seo' ) );
+        ], __( 'robots.txt saved successfully.', 'saman-seo' ) );
     }
 
     /**
@@ -905,14 +905,14 @@ class Tools_Controller extends REST_Controller {
      * @return \WP_REST_Response
      */
     public function reset_robots_txt( $request ) {
-        delete_option( 'samanlabs_seo_robots_txt' );
+        delete_option( 'SAMAN_SEO_robots_txt' );
 
         // Generate default content
         $default = "User-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n\nSitemap: " . home_url( '/sitemap.xml' );
 
         return $this->success( [
             'content' => $default,
-        ], __( 'robots.txt reset to default.', 'saman-labs-seo' ) );
+        ], __( 'robots.txt reset to default.', 'saman-seo' ) );
     }
 
     /**
@@ -1049,7 +1049,7 @@ class Tools_Controller extends REST_Controller {
         if ( ! AI_Pilot::is_ready() ) {
             return new \WP_Error(
                 'ai_not_ready',
-                __( 'Saman Labs AI is not configured. Please install and configure Saman Labs AI to use AI features.', 'saman-labs-seo' )
+                __( 'Saman Labs AI is not configured. Please install and configure Saman Labs AI to use AI features.', 'saman-seo' )
             );
         }
 
@@ -1078,7 +1078,7 @@ class Tools_Controller extends REST_Controller {
             return trim( $result );
         }
 
-        return new \WP_Error( 'ai_error', __( 'Unexpected AI response format.', 'saman-labs-seo' ) );
+        return new \WP_Error( 'ai_error', __( 'Unexpected AI response format.', 'saman-seo' ) );
     }
 
     // =========================================================================
@@ -1214,16 +1214,16 @@ class Tools_Controller extends REST_Controller {
         $alt = sanitize_text_field( $request->get_param( 'alt' ) ?? '' );
 
         if ( ! $image_id ) {
-            return $this->error( __( 'Image ID is required.', 'saman-labs-seo' ), 'missing_id', 400 );
+            return $this->error( __( 'Image ID is required.', 'saman-seo' ), 'missing_id', 400 );
         }
 
         $attachment = get_post( $image_id );
         if ( ! $attachment || $attachment->post_type !== 'attachment' ) {
-            return $this->error( __( 'Image not found.', 'saman-labs-seo' ), 'not_found', 404 );
+            return $this->error( __( 'Image not found.', 'saman-seo' ), 'not_found', 404 );
         }
 
         if ( ! current_user_can( 'edit_post', $image_id ) ) {
-            return $this->error( __( 'Permission denied.', 'saman-labs-seo' ), 'permission_denied', 403 );
+            return $this->error( __( 'Permission denied.', 'saman-seo' ), 'permission_denied', 403 );
         }
 
         update_post_meta( $image_id, '_wp_attachment_image_alt', $alt );
@@ -1231,7 +1231,7 @@ class Tools_Controller extends REST_Controller {
         return $this->success( [
             'id'  => $image_id,
             'alt' => $alt,
-        ], __( 'Alt text updated.', 'saman-labs-seo' ) );
+        ], __( 'Alt text updated.', 'saman-seo' ) );
     }
 
     /**
@@ -1244,16 +1244,16 @@ class Tools_Controller extends REST_Controller {
         $image_id = intval( $request->get_param( 'id' ) );
 
         if ( ! $image_id ) {
-            return $this->error( __( 'Image ID is required.', 'saman-labs-seo' ), 'missing_id', 400 );
+            return $this->error( __( 'Image ID is required.', 'saman-seo' ), 'missing_id', 400 );
         }
 
         $attachment = get_post( $image_id );
         if ( ! $attachment || $attachment->post_type !== 'attachment' ) {
-            return $this->error( __( 'Image not found.', 'saman-labs-seo' ), 'not_found', 404 );
+            return $this->error( __( 'Image not found.', 'saman-seo' ), 'not_found', 404 );
         }
 
         if ( ! current_user_can( 'edit_post', $image_id ) ) {
-            return $this->error( __( 'Permission denied.', 'saman-labs-seo' ), 'permission_denied', 403 );
+            return $this->error( __( 'Permission denied.', 'saman-seo' ), 'permission_denied', 403 );
         }
 
         // Generate alt text from filename.
@@ -1273,6 +1273,6 @@ class Tools_Controller extends REST_Controller {
         return $this->success( [
             'id'  => $image_id,
             'alt' => $alt,
-        ], __( 'Alt text generated from filename.', 'saman-labs-seo' ) );
+        ], __( 'Alt text generated from filename.', 'saman-seo' ) );
     }
 }

@@ -12,29 +12,29 @@
 	const ServerSideRender = serverSideRender;
 	const { __ } = i18n;
 
-	registerBlockType( 'wpseopilot/breadcrumbs', {
+	registerBlockType( 'samanseo/breadcrumbs', {
 		edit: function( props ) {
 			const { attributes, setAttributes } = props;
 			const { showHome, homeLabel, separator, showCurrent, linkCurrent, stylePreset } = attributes;
 			const blockProps = useBlockProps();
 
 			const separatorOptions = [
-				{ value: '', label: __( 'Default (from settings)', 'saman-labs-seo' ) },
+				{ value: '', label: __( 'Default (from settings)', 'saman-seo' ) },
 				{ value: '>', label: '>' },
 				{ value: '/', label: '/' },
 				{ value: '|', label: '|' },
 				{ value: '-', label: '-' },
-				{ value: 'arrow', label: __( 'Arrow', 'saman-labs-seo' ) + ' (→)' },
-				{ value: 'chevron', label: __( 'Chevron', 'saman-labs-seo' ) + ' (»)' },
+				{ value: 'arrow', label: __( 'Arrow', 'saman-seo' ) + ' (→)' },
+				{ value: 'chevron', label: __( 'Chevron', 'saman-seo' ) + ' (»)' },
 			];
 
 			const styleOptions = [
-				{ value: '', label: __( 'Default (from settings)', 'saman-labs-seo' ) },
-				{ value: 'default', label: __( 'Default', 'saman-labs-seo' ) },
-				{ value: 'minimal', label: __( 'Minimal', 'saman-labs-seo' ) },
-				{ value: 'rounded', label: __( 'Rounded', 'saman-labs-seo' ) },
-				{ value: 'pills', label: __( 'Pills', 'saman-labs-seo' ) },
-				{ value: 'none', label: __( 'No Styling', 'saman-labs-seo' ) },
+				{ value: '', label: __( 'Default (from settings)', 'saman-seo' ) },
+				{ value: 'default', label: __( 'Default', 'saman-seo' ) },
+				{ value: 'minimal', label: __( 'Minimal', 'saman-seo' ) },
+				{ value: 'rounded', label: __( 'Rounded', 'saman-seo' ) },
+				{ value: 'pills', label: __( 'Pills', 'saman-seo' ) },
+				{ value: 'none', label: __( 'No Styling', 'saman-seo' ) },
 			];
 
 			return el(
@@ -45,9 +45,9 @@
 					null,
 					el(
 						PanelBody,
-						{ title: __( 'Breadcrumb Settings', 'saman-labs-seo' ), initialOpen: true },
+						{ title: __( 'Breadcrumb Settings', 'saman-seo' ), initialOpen: true },
 						el( SelectControl, {
-							label: __( 'Separator', 'saman-labs-seo' ),
+							label: __( 'Separator', 'saman-seo' ),
 							value: separator,
 							options: separatorOptions,
 							onChange: function( value ) {
@@ -55,7 +55,7 @@
 							},
 						} ),
 						el( SelectControl, {
-							label: __( 'Style Preset', 'saman-labs-seo' ),
+							label: __( 'Style Preset', 'saman-seo' ),
 							value: stylePreset,
 							options: styleOptions,
 							onChange: function( value ) {
@@ -65,18 +65,18 @@
 					),
 					el(
 						PanelBody,
-						{ title: __( 'Home Link', 'saman-labs-seo' ), initialOpen: false },
+						{ title: __( 'Home Link', 'saman-seo' ), initialOpen: false },
 						el( ToggleControl, {
-							label: __( 'Show Home Link', 'saman-labs-seo' ),
+							label: __( 'Show Home Link', 'saman-seo' ),
 							checked: showHome,
 							onChange: function( value ) {
 								setAttributes( { showHome: value } );
 							},
 						} ),
 						showHome && el( TextControl, {
-							label: __( 'Custom Home Label', 'saman-labs-seo' ),
+							label: __( 'Custom Home Label', 'saman-seo' ),
 							value: homeLabel,
-							placeholder: __( 'Home', 'saman-labs-seo' ),
+							placeholder: __( 'Home', 'saman-seo' ),
 							onChange: function( value ) {
 								setAttributes( { homeLabel: value } );
 							},
@@ -84,16 +84,16 @@
 					),
 					el(
 						PanelBody,
-						{ title: __( 'Current Page', 'saman-labs-seo' ), initialOpen: false },
+						{ title: __( 'Current Page', 'saman-seo' ), initialOpen: false },
 						el( ToggleControl, {
-							label: __( 'Show Current Page', 'saman-labs-seo' ),
+							label: __( 'Show Current Page', 'saman-seo' ),
 							checked: showCurrent,
 							onChange: function( value ) {
 								setAttributes( { showCurrent: value } );
 							},
 						} ),
 						showCurrent && el( ToggleControl, {
-							label: __( 'Link Current Page', 'saman-labs-seo' ),
+							label: __( 'Link Current Page', 'saman-seo' ),
 							checked: linkCurrent,
 							onChange: function( value ) {
 								setAttributes( { linkCurrent: value } );
@@ -106,17 +106,17 @@
 					blockProps,
 					el( Placeholder, {
 						icon: 'admin-links',
-						label: __( 'SEO Breadcrumbs', 'saman-labs-seo' ),
-						instructions: __( 'Breadcrumb navigation will be displayed here based on the current page context.', 'saman-labs-seo' ),
+						label: __( 'SEO Breadcrumbs', 'saman-seo' ),
+						instructions: __( 'Breadcrumb navigation will be displayed here based on the current page context.', 'saman-seo' ),
 					},
 					el(
 						'div',
-						{ className: 'wpseopilot-breadcrumbs-preview' },
-						el( 'span', null, __( 'Home', 'saman-labs-seo' ) ),
-						el( 'span', { className: 'wpseopilot-breadcrumbs-preview__sep' }, ' ' + ( separator || '>' ) + ' ' ),
-						el( 'span', null, __( 'Category', 'saman-labs-seo' ) ),
-						el( 'span', { className: 'wpseopilot-breadcrumbs-preview__sep' }, ' ' + ( separator || '>' ) + ' ' ),
-						el( 'span', { style: { opacity: 0.7 } }, __( 'Current Page', 'saman-labs-seo' ) )
+						{ className: 'samanseo-breadcrumbs-preview' },
+						el( 'span', null, __( 'Home', 'saman-seo' ) ),
+						el( 'span', { className: 'samanseo-breadcrumbs-preview__sep' }, ' ' + ( separator || '>' ) + ' ' ),
+						el( 'span', null, __( 'Category', 'saman-seo' ) ),
+						el( 'span', { className: 'samanseo-breadcrumbs-preview__sep' }, ' ' + ( separator || '>' ) + ' ' ),
+						el( 'span', { style: { opacity: 0.7 } }, __( 'Current Page', 'saman-seo' ) )
 					) )
 				)
 			);

@@ -2,17 +2,17 @@
 /**
  * REST API Controller for Link Health.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  */
 
-namespace SamanLabs\SEO\Api;
+namespace Saman\SEO\Api;
 
 use WP_REST_Controller;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
-use SamanLabs\SEO\Service\Link_Health;
+use Saman\SEO\Service\Link_Health;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -26,7 +26,7 @@ class Link_Health_Controller extends WP_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'samanlabs-seo/v1';
+	protected $namespace = 'saman-seo/v1';
 
 	/**
 	 * Resource base.
@@ -315,7 +315,7 @@ class Link_Health_Controller extends WP_REST_Controller {
 		if ( false === $scan_id ) {
 			return new WP_Error(
 				'scan_failed',
-				__( 'Could not start scan. A scan may already be running.', 'saman-labs-seo' ),
+				__( 'Could not start scan. A scan may already be running.', 'saman-seo' ),
 				[ 'status' => 400 ]
 			);
 		}
@@ -324,7 +324,7 @@ class Link_Health_Controller extends WP_REST_Controller {
 			'success' => true,
 			'data'    => [
 				'scan_id' => $scan_id,
-				'message' => __( 'Scan started successfully.', 'saman-labs-seo' ),
+				'message' => __( 'Scan started successfully.', 'saman-seo' ),
 			],
 		] );
 	}
@@ -371,13 +371,13 @@ class Link_Health_Controller extends WP_REST_Controller {
 		if ( $this->service->delete_link( $id ) ) {
 			return new WP_REST_Response( [
 				'success' => true,
-				'message' => __( 'Link deleted.', 'saman-labs-seo' ),
+				'message' => __( 'Link deleted.', 'saman-seo' ),
 			] );
 		}
 
 		return new WP_Error(
 			'delete_failed',
-			__( 'Could not delete link.', 'saman-labs-seo' ),
+			__( 'Could not delete link.', 'saman-seo' ),
 			[ 'status' => 400 ]
 		);
 	}
@@ -396,7 +396,7 @@ class Link_Health_Controller extends WP_REST_Controller {
 		if ( false === $result ) {
 			return new WP_Error(
 				'recheck_failed',
-				__( 'Could not recheck link.', 'saman-labs-seo' ),
+				__( 'Could not recheck link.', 'saman-seo' ),
 				[ 'status' => 400 ]
 			);
 		}

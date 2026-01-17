@@ -66,7 +66,7 @@ const LocalSeo = () => {
     const loadSettings = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await apiFetch({ path: '/samanlabs-seo/v1/settings' });
+            const response = await apiFetch({ path: '/saman-seo/v1/settings' });
             if (response.success) {
                 const data = response.data;
 
@@ -114,7 +114,7 @@ const LocalSeo = () => {
         setSaving(true);
         try {
             await apiFetch({
-                path: '/samanlabs-seo/v1/settings',
+                path: '/saman-seo/v1/settings',
                 method: 'POST',
                 data: settingsToSave,
             });

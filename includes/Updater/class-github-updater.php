@@ -5,11 +5,11 @@
  * Checks GitHub releases for plugin updates and integrates
  * with WordPress update system. Supports both stable and beta releases.
  *
- * @package SamanLabs\SEO
+ * @package Saman\SEO
  * @since 0.2.0
  */
 
-namespace SamanLabs\SEO\Updater;
+namespace Saman\SEO\Updater;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -76,32 +76,32 @@ class GitHub_Updater {
         $this->plugins = [
             'saman-seo/saman-seo.php' => [
                 'slug'        => 'saman-seo',
-                'repo'        => 'SamanLabs/Saman-SEO',
+                'repo'        => 'Saman/Saman-SEO',
                 'name'        => 'Saman SEO',
                 'description' => 'AI-powered SEO optimization for WordPress',
-                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-SEO/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-SEO/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/Saman/Saman-SEO/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/Saman/Saman-SEO/main/assets/images/banner-772x250.png',
             ],
             'saman-ai/saman-ai.php' => [
                 'slug'        => 'saman-ai',
-                'repo'        => 'SamanLabs/Saman-AI',
+                'repo'        => 'Saman/Saman-AI',
                 'name'        => 'Saman AI',
                 'description' => 'Centralized AI management for WordPress',
-                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-AI/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-AI/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/Saman/Saman-AI/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/Saman/Saman-AI/main/assets/images/banner-772x250.png',
             ],
             'saman-security/saman-security.php' => [
                 'slug'        => 'saman-security',
-                'repo'        => 'SamanLabs/Saman-Security',
+                'repo'        => 'Saman/Saman-Security',
                 'name'        => 'Saman Security',
                 'description' => 'Core security suite with firewall, malware scans, and hardening',
-                'icon'        => 'https://raw.githubusercontent.com/SamanLabs/Saman-Security/main/assets/images/icon-128.png',
-                'banner'      => 'https://raw.githubusercontent.com/SamanLabs/Saman-Security/main/assets/images/banner-772x250.png',
+                'icon'        => 'https://raw.githubusercontent.com/Saman/Saman-Security/main/assets/images/icon-128.png',
+                'banner'      => 'https://raw.githubusercontent.com/Saman/Saman-Security/main/assets/images/banner-772x250.png',
             ],
         ];
 
         // Allow filtering.
-        $this->plugins = apply_filters( 'samanlabs_seo_managed_plugins', $this->plugins );
+        $this->plugins = apply_filters( 'SAMAN_SEO_managed_plugins', $this->plugins );
     }
 
     /**
@@ -118,11 +118,11 @@ class GitHub_Updater {
         add_filter( 'upgrader_source_selection', [ $this, 'fix_folder_name' ], 10, 4 );
 
         // Daily cron check.
-        add_action( 'samanlabs_seo_check_updates', [ $this, 'cron_check_updates' ] );
+        add_action( 'SAMAN_SEO_check_updates', [ $this, 'cron_check_updates' ] );
 
         // Schedule cron if not scheduled.
-        if ( ! wp_next_scheduled( 'samanlabs_seo_check_updates' ) ) {
-            wp_schedule_event( time(), 'daily', 'samanlabs_seo_check_updates' );
+        if ( ! wp_next_scheduled( 'SAMAN_SEO_check_updates' ) ) {
+            wp_schedule_event( time(), 'daily', 'SAMAN_SEO_check_updates' );
         }
     }
 
@@ -202,7 +202,7 @@ class GitHub_Updater {
      * @return array|null Remote version data or null on error.
      */
     public function get_remote_version( string $repo ): ?array {
-        $cache_key = 'samanlabs_seo_gh_' . md5( $repo );
+        $cache_key = 'SAMAN_SEO_gh_' . md5( $repo );
         $cached    = get_transient( $cache_key );
 
         if ( false !== $cached ) {
@@ -277,7 +277,7 @@ class GitHub_Updater {
      * @return array|null Beta version data or null if not found.
      */
     public function get_beta_version( string $repo ): ?array {
-        $cache_key = 'samanlabs_seo_gh_beta_' . md5( $repo );
+        $cache_key = 'SAMAN_SEO_gh_beta_' . md5( $repo );
         $cached    = get_transient( $cache_key );
 
         if ( false !== $cached ) {
@@ -403,7 +403,7 @@ class GitHub_Updater {
      * @return bool
      */
     public function is_beta_enabled( string $slug ): bool {
-        $beta_settings = get_option( 'samanlabs_seo_beta_plugins', [] );
+        $beta_settings = get_option( 'SAMAN_SEO_beta_plugins', [] );
         return ! empty( $beta_settings[ $slug ] );
     }
 
@@ -415,7 +415,7 @@ class GitHub_Updater {
      * @return bool Success.
      */
     public function set_beta_enabled( string $slug, bool $enabled ): bool {
-        $beta_settings = get_option( 'samanlabs_seo_beta_plugins', [] );
+        $beta_settings = get_option( 'SAMAN_SEO_beta_plugins', [] );
 
         if ( $enabled ) {
             $beta_settings[ $slug ] = true;
@@ -423,7 +423,7 @@ class GitHub_Updater {
             unset( $beta_settings[ $slug ] );
         }
 
-        return update_option( 'samanlabs_seo_beta_plugins', $beta_settings );
+        return update_option( 'SAMAN_SEO_beta_plugins', $beta_settings );
     }
 
     /**
@@ -462,12 +462,12 @@ class GitHub_Updater {
             'name'           => $plugin_data['name'],
             'slug'           => $plugin_data['slug'],
             'version'        => $remote['version'],
-            'author'         => '<a href="https://SamanLabs.com">SamanLabs</a>',
-            'author_profile' => 'https://SamanLabs.com',
+            'author'         => '<a href="https://Saman.com">Saman</a>',
+            'author_profile' => 'https://Saman.com',
             'requires'       => '5.0',
             'tested'         => get_bloginfo( 'version' ),
             'requires_php'   => '7.4',
-            'homepage'       => 'https://github.com/SamanLabs/Saman-SEO',
+            'homepage'       => 'https://github.com/Saman/Saman-SEO',
             'download_link'  => $remote['download_url'],
             'trunk'          => $remote['download_url'],
             'last_updated'   => $remote['published_at'],
@@ -551,8 +551,8 @@ class GitHub_Updater {
     public function cron_check_updates() {
         // Clear transients to force fresh check.
         foreach ( $this->plugins as $plugin_file => $plugin_data ) {
-            delete_transient( 'samanlabs_seo_gh_' . md5( $plugin_data['repo'] ) );
-            delete_transient( 'samanlabs_seo_gh_beta_' . md5( $plugin_data['repo'] ) );
+            delete_transient( 'SAMAN_SEO_gh_' . md5( $plugin_data['repo'] ) );
+            delete_transient( 'SAMAN_SEO_gh_beta_' . md5( $plugin_data['repo'] ) );
         }
 
         // Trigger WordPress update check.
@@ -570,8 +570,8 @@ class GitHub_Updater {
 
         foreach ( $this->plugins as $plugin_file => $plugin_data ) {
             // Clear cache.
-            delete_transient( 'samanlabs_seo_gh_' . md5( $plugin_data['repo'] ) );
-            delete_transient( 'samanlabs_seo_gh_beta_' . md5( $plugin_data['repo'] ) );
+            delete_transient( 'SAMAN_SEO_gh_' . md5( $plugin_data['repo'] ) );
+            delete_transient( 'SAMAN_SEO_gh_beta_' . md5( $plugin_data['repo'] ) );
 
             // Get fresh versions.
             $remote = $this->get_remote_version( $plugin_data['repo'] );

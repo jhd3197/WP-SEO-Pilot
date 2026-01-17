@@ -34,7 +34,7 @@ const Header = ({ currentView, onNavigate }) => {
             <div className="nav-actions">
                 <a
                     className="icon-button"
-                    href="https://github.com/SamanLabs/Saman-SEO"
+                    href="https://github.com/Saman/Saman-SEO"
                     target="_blank"
                     rel="noreferrer"
                     aria-label="Open GitHub repository"

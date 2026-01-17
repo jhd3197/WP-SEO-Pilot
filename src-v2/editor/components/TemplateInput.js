@@ -171,42 +171,42 @@ const TemplateInput = ({
     const InputComponent = multiline ? 'textarea' : 'input';
 
     return (
-        <div className={`samanlabs-seo-template-input ${isFocused ? 'is-focused' : ''} ${disabled ? 'is-disabled' : ''}`}>
+        <div className={`saman-seo-template-input ${isFocused ? 'is-focused' : ''} ${disabled ? 'is-disabled' : ''}`}>
             {label && (
-                <div className="samanlabs-seo-template-input__header">
-                    <label className="samanlabs-seo-template-input__label" htmlFor={id}>
+                <div className="saman-seo-template-input__header">
+                    <label className="saman-seo-template-input__label" htmlFor={id}>
                         {label}
                     </label>
                     {maxLength && (
-                        <span className={`samanlabs-seo-template-input__counter ${isOverLimit ? 'over-limit' : charCount > 0 ? 'has-value' : ''}`}>
+                        <span className={`saman-seo-template-input__counter ${isOverLimit ? 'over-limit' : charCount > 0 ? 'has-value' : ''}`}>
                             {charCount}/{maxLength}
                         </span>
                     )}
                 </div>
             )}
 
-            <div className="samanlabs-seo-template-input__container">
+            <div className="saman-seo-template-input__container">
                 {/* Highlight overlay - shows syntax highlighted variables */}
                 <div
                     ref={highlightRef}
-                    className={`samanlabs-seo-template-input__highlight ${multiline ? 'multiline' : ''}`}
+                    className={`saman-seo-template-input__highlight ${multiline ? 'multiline' : ''}`}
                     aria-hidden="true"
                 >
                     {renderHighlighted.map((part, index) =>
                         part.type === 'variable' ? (
                             <span
                                 key={index}
-                                className={`samanlabs-seo-template-input__var samanlabs-seo-template-input__var--${part.varType}`}
+                                className={`saman-seo-template-input__var saman-seo-template-input__var--${part.varType}`}
                                 onMouseEnter={() => setHoveredVariable({ ...part, index })}
                                 onMouseLeave={() => setHoveredVariable(null)}
                             >
-                                <span className="samanlabs-seo-template-input__bracket">{'{'}</span>
-                                <span className="samanlabs-seo-template-input__bracket">{'{'}</span>
-                                <span className="samanlabs-seo-template-input__tag">{part.fullTag}</span>
-                                <span className="samanlabs-seo-template-input__bracket">{'}'}</span>
-                                <span className="samanlabs-seo-template-input__bracket">{'}'}</span>
+                                <span className="saman-seo-template-input__bracket">{'{'}</span>
+                                <span className="saman-seo-template-input__bracket">{'{'}</span>
+                                <span className="saman-seo-template-input__tag">{part.fullTag}</span>
+                                <span className="saman-seo-template-input__bracket">{'}'}</span>
+                                <span className="saman-seo-template-input__bracket">{'}'}</span>
                                 {hoveredVariable?.index === index && part.preview && (
-                                    <span className="samanlabs-seo-template-input__tooltip">
+                                    <span className="saman-seo-template-input__tooltip">
                                         {part.preview}
                                     </span>
                                 )}
@@ -215,7 +215,7 @@ const TemplateInput = ({
                             <span key={index}>{part.content}</span>
                         )
                     )}
-                    {!value && <span className="samanlabs-seo-template-input__placeholder">{placeholder}</span>}
+                    {!value && <span className="saman-seo-template-input__placeholder">{placeholder}</span>}
                 </div>
 
                 {/* Actual input - completely invisible, just for typing */}
@@ -223,7 +223,7 @@ const TemplateInput = ({
                     ref={inputRef}
                     id={id}
                     type={multiline ? undefined : 'text'}
-                    className={`samanlabs-seo-template-input__field ${multiline ? 'multiline' : ''}`}
+                    className={`saman-seo-template-input__field ${multiline ? 'multiline' : ''}`}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     onFocus={() => setIsFocused(true)}
@@ -234,11 +234,11 @@ const TemplateInput = ({
                 />
 
                 {/* Floating action buttons */}
-                <div className="samanlabs-seo-template-input__actions">
+                <div className="saman-seo-template-input__actions">
                     {showAiButton && (
                         <button
                             type="button"
-                            className={`samanlabs-seo-template-input__action-btn samanlabs-seo-template-input__action-btn--ai ${!aiEnabled ? 'is-disabled' : ''}`}
+                            className={`saman-seo-template-input__action-btn saman-seo-template-input__action-btn--ai ${!aiEnabled ? 'is-disabled' : ''}`}
                             onClick={() => {
                                 if (aiEnabled && onAiClick) {
                                     onAiClick();
@@ -272,8 +272,8 @@ const TemplateInput = ({
             </div>
 
             {helpText && (
-                <div className="samanlabs-seo-template-input__footer">
-                    <span className="samanlabs-seo-template-input__help">{helpText}</span>
+                <div className="saman-seo-template-input__footer">
+                    <span className="saman-seo-template-input__help">{helpText}</span>
                 </div>
             )}
         </div>

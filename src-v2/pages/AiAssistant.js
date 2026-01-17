@@ -37,8 +37,8 @@ const AiAssistant = () => {
         setLoading(true);
         try {
             const [settingsRes, statusRes] = await Promise.all([
-                apiFetch({ path: '/samanlabs-seo/v1/ai/settings' }),
-                apiFetch({ path: '/samanlabs-seo/v1/ai/status' }),
+                apiFetch({ path: '/saman-seo/v1/ai/settings' }),
+                apiFetch({ path: '/saman-seo/v1/ai/status' }),
             ]);
 
             if (settingsRes.success) {
@@ -68,7 +68,7 @@ const AiAssistant = () => {
         setMessage({ type: '', text: '' });
         try {
             const res = await apiFetch({
-                path: '/samanlabs-seo/v1/ai/settings',
+                path: '/saman-seo/v1/ai/settings',
                 method: 'POST',
                 data: {
                     ai_prompt_system: settings.ai_prompt_system,
@@ -98,7 +98,7 @@ const AiAssistant = () => {
         setMessage({ type: '', text: '' });
         try {
             const res = await apiFetch({
-                path: '/samanlabs-seo/v1/ai/reset',
+                path: '/saman-seo/v1/ai/reset',
                 method: 'POST',
             });
 
@@ -138,7 +138,7 @@ const AiAssistant = () => {
 
         try {
             const res = await apiFetch({
-                path: '/samanlabs-seo/v1/ai/generate',
+                path: '/saman-seo/v1/ai/generate',
                 method: 'POST',
                 data: { content: testContent, type: 'both' },
             });
