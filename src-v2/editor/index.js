@@ -23,7 +23,7 @@ const PluginIcon = () => (
 );
 
 // Get localized data
-const editorData = window.wpseopilotEditor || {};
+const editorData = window.samanlabsSeoEditor || {};
 const variables = editorData.variables || {};
 const aiEnabled = editorData.aiEnabled || false;
 const aiProvider = editorData.aiProvider || 'none';
@@ -92,8 +92,8 @@ const SEOSidebar = () => {
         const restBase = getRestBase(postType);
         apiFetch({ path: `/wp/v2/${restBase}/${postId}` })
             .then((post) => {
-                if (post.meta && post.meta._wpseopilot_meta) {
-                    const meta = post.meta._wpseopilot_meta;
+                if (post.meta && post.meta._samanlabs_seo_meta) {
+                    const meta = post.meta._samanlabs_seo_meta;
                     setSeoMeta({
                         title: meta.title || '',
                         description: meta.description || '',
@@ -115,7 +115,7 @@ const SEOSidebar = () => {
         if (!postId) return;
 
         const timer = setTimeout(() => {
-            apiFetch({ path: `/wpseopilot/v2/audit/post/${postId}` })
+            apiFetch({ path: `/samanlabs-seo/v1/audit/post/${postId}` })
                 .then((response) => {
                     if (response.success && response.data) {
                         setSeoScore(response.data);
@@ -164,7 +164,7 @@ const SEOSidebar = () => {
             focus_keyphrase: newMeta.focus_keyphrase,
         };
 
-        editPost({ meta: { _wpseopilot_meta: metaForSave } });
+        editPost({ meta: { _samanlabs_seo_meta: metaForSave } });
     }, [seoMeta, editPost]);
 
     // Get effective title and description (with fallbacks)
@@ -175,11 +175,11 @@ const SEOSidebar = () => {
 
     return (
         <>
-            <PluginSidebarMoreMenuItem target="wpseopilot-sidebar" icon={<PluginIcon />}>
+            <PluginSidebarMoreMenuItem target="samanlabs-seo-sidebar" icon={<PluginIcon />}>
                 WP SEO Pilot
             </PluginSidebarMoreMenuItem>
             <PluginSidebar
-                name="wpseopilot-sidebar"
+                name="samanlabs-seo-sidebar"
                 title="WP SEO Pilot"
                 icon={<PluginIcon />}
             >
@@ -207,7 +207,7 @@ const SEOSidebar = () => {
 };
 
 // Register the plugin
-registerPlugin('wpseopilot', {
+registerPlugin('samanlabs-seo', {
     render: SEOSidebar,
     icon: <PluginIcon />,
 });

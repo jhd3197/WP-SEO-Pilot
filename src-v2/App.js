@@ -37,29 +37,29 @@ const PageLoader = () => (
 );
 
 const viewToPage = {
-    dashboard: 'wpseopilot-dashboard',
-    'search-appearance': 'wpseopilot-search-appearance',
-    sitemap: 'wpseopilot-sitemap',
-    tools: 'wpseopilot-tools',
-    redirects: 'wpseopilot-redirects',
-    '404-log': 'wpseopilot-404-log',
-    'internal-linking': 'wpseopilot-internal-linking',
-    audit: 'wpseopilot-audit',
-    'ai-assistant': 'wpseopilot-ai-assistant',
-    assistants: 'wpseopilot-assistants',
-    settings: 'wpseopilot-settings',
-    more: 'wpseopilot-more',
-    'bulk-editor': 'wpseopilot-bulk-editor',
-    'content-gaps': 'wpseopilot-content-gaps',
-    'schema-builder': 'wpseopilot-schema-builder',
-    'link-health': 'wpseopilot-link-health',
-    'local-seo': 'wpseopilot-local-seo',
-    'robots-txt': 'wpseopilot-robots-txt',
-    'image-seo': 'wpseopilot-image-seo',
-    'instant-indexing': 'wpseopilot-instant-indexing',
-    'schema-validator': 'wpseopilot-schema-validator',
-    'htaccess-editor': 'wpseopilot-htaccess-editor',
-    'mobile-friendly': 'wpseopilot-mobile-friendly',
+    dashboard: 'samanlabs-seo-dashboard',
+    'search-appearance': 'samanlabs-seo-search-appearance',
+    sitemap: 'samanlabs-seo-sitemap',
+    tools: 'samanlabs-seo-tools',
+    redirects: 'samanlabs-seo-redirects',
+    '404-log': 'samanlabs-seo-404-log',
+    'internal-linking': 'samanlabs-seo-internal-linking',
+    audit: 'samanlabs-seo-audit',
+    'ai-assistant': 'samanlabs-seo-ai-assistant',
+    assistants: 'samanlabs-seo-assistants',
+    settings: 'samanlabs-seo-settings',
+    more: 'samanlabs-seo-more',
+    'bulk-editor': 'samanlabs-seo-bulk-editor',
+    'content-gaps': 'samanlabs-seo-content-gaps',
+    'schema-builder': 'samanlabs-seo-schema-builder',
+    'link-health': 'samanlabs-seo-link-health',
+    'local-seo': 'samanlabs-seo-local-seo',
+    'robots-txt': 'samanlabs-seo-robots-txt',
+    'image-seo': 'samanlabs-seo-image-seo',
+    'instant-indexing': 'samanlabs-seo-instant-indexing',
+    'schema-validator': 'samanlabs-seo-schema-validator',
+    'htaccess-editor': 'samanlabs-seo-htaccess-editor',
+    'mobile-friendly': 'samanlabs-seo-mobile-friendly',
 };
 
 const pageToView = Object.entries(viewToPage).reduce((acc, [view, page]) => {
@@ -76,7 +76,7 @@ const App = ({ initialView = 'dashboard' }) => {
     useEffect(() => {
         const checkSetupStatus = async () => {
             try {
-                const response = await apiFetch({ path: '/wpseopilot/v2/setup/status' });
+                const response = await apiFetch({ path: '/samanlabs-seo/v1/setup/status' });
                 if (response.success && response.data.show_wizard) {
                     setShowSetup(true);
                 }
@@ -103,12 +103,12 @@ const App = ({ initialView = 'dashboard' }) => {
             return;
         }
 
-        const menu = document.getElementById('toplevel_page_wpseopilot');
+        const menu = document.getElementById('toplevel_page_samanlabs-seo');
         if (!menu) {
             return;
         }
 
-        const submenuLinks = menu.querySelectorAll('.wp-submenu a[href*="page=wpseopilot"]');
+        const submenuLinks = menu.querySelectorAll('.wp-submenu a[href*="page=samanlabs-seo"]');
         submenuLinks.forEach((link) => {
             link.removeAttribute('aria-current');
             const listItem = link.closest('li');
@@ -174,13 +174,13 @@ const App = ({ initialView = 'dashboard' }) => {
                 return;
             }
 
-            const menu = document.getElementById('toplevel_page_wpseopilot');
+            const menu = document.getElementById('toplevel_page_samanlabs-seo');
             if (!menu || !menu.contains(link)) {
                 return;
             }
 
             const href = link.getAttribute('href');
-            if (!href || !href.includes('page=wpseopilot')) {
+            if (!href || !href.includes('page=samanlabs-seo')) {
                 return;
             }
 

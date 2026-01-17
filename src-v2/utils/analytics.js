@@ -33,7 +33,7 @@ export const trackEvent = (category, action, name = null, value = null) => {
         window._paq.push(eventData);
 
         // Debug log in development
-        if (window.wpseopilotDebug) {
+        if (window.samanlabsSeoDebug) {
             console.log('WP SEO Pilot Analytics:', { category, action, name, value });
         }
     } catch (e) {

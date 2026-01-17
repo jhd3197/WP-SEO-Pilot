@@ -3,6 +3,6 @@ import App from './App';
 
 import './index.css';
 
-const initialView = window?.wpseopilotV2Settings?.initialView || 'dashboard';
+const initialView = window?.samanlabsSeoSettings?.initialView || 'dashboard';
 
-render(<App initialView={initialView} />, document.getElementById('wpseopilot-v2-root'));
+render(<App initialView={initialView} />, document.getElementById('samanlabs-seo-v2-root'));

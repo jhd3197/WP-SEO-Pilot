@@ -52,7 +52,7 @@ const More = () => {
     const loadPlugins = useCallback(async () => {
         try {
             setLoading(true);
-            const data = await apiFetch({ path: '/wpseopilot/v2/updater/plugins' });
+            const data = await apiFetch({ path: '/samanlabs-seo/v1/updater/plugins' });
             setPlugins(data);
         } catch (error) {
             console.error('Failed to load plugins:', error);
@@ -79,7 +79,7 @@ const More = () => {
         setChecking(true);
         setNotice(null);
         try {
-            await apiFetch({ path: '/wpseopilot/v2/updater/check', method: 'POST' });
+            await apiFetch({ path: '/samanlabs-seo/v1/updater/check', method: 'POST' });
             await loadPlugins();
             setNotice({ type: 'success', message: 'Update check complete.' });
         } catch (error) {
@@ -96,7 +96,7 @@ const More = () => {
         setNotice(null);
         try {
             const response = await apiFetch({
-                path: `/wpseopilot/v2/updater/${action}`,
+                path: `/samanlabs-seo/v1/updater/${action}`,
                 method: 'POST',
                 data: { slug },
             });
@@ -116,7 +116,7 @@ const More = () => {
         setNotice(null);
         try {
             const response = await apiFetch({
-                path: '/wpseopilot/v2/updater/beta',
+                path: '/samanlabs-seo/v1/updater/beta',
                 method: 'POST',
                 data: { slug, enabled: !currentEnabled },
             });

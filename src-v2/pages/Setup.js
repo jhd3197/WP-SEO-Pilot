@@ -48,7 +48,7 @@ const Setup = ({ onComplete, onSkip }) => {
 
         try {
             const response = await apiFetch({
-                path: '/wpseopilot/v2/setup/test-api',
+                path: '/samanlabs-seo/v1/setup/test-api',
                 method: 'POST',
                 data: {
                     provider: data.ai_provider,
@@ -70,7 +70,7 @@ const Setup = ({ onComplete, onSkip }) => {
 
         try {
             await apiFetch({
-                path: '/wpseopilot/v2/setup/complete',
+                path: '/samanlabs-seo/v1/setup/complete',
                 method: 'POST',
                 data,
             });
@@ -86,7 +86,7 @@ const Setup = ({ onComplete, onSkip }) => {
     const handleSkip = async () => {
         try {
             await apiFetch({
-                path: '/wpseopilot/v2/setup/skip',
+                path: '/samanlabs-seo/v1/setup/skip',
                 method: 'POST',
             });
         } catch (err) {

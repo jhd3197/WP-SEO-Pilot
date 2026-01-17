@@ -12,7 +12,7 @@ import './admin-list.css';
  * Initialize all SEO badge placeholders on the page.
  */
 const initBadges = () => {
-    const placeholders = document.querySelectorAll('.wpseopilot-badge-placeholder');
+    const placeholders = document.querySelectorAll('.samanlabs-seo-badge-placeholder');
 
     placeholders.forEach((placeholder) => {
         const data = placeholder.dataset;
@@ -30,7 +30,7 @@ const initBadges = () => {
         root.render(<SEOScoreBadge {...props} />);
 
         // Mark as initialized
-        placeholder.classList.add('wpseopilot-badge-initialized');
+        placeholder.classList.add('samanlabs-seo-badge-initialized');
     });
 };
 
