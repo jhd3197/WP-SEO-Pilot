@@ -143,7 +143,7 @@ class Sitemap_Settings {
 		// Add inline script data
 		wp_localize_script(
 			'samanlabs-seo-admin',
-			'WPSEOPilotSitemap',
+			'SamanLabsSEOSitemap',
 			[
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'samanlabs_seo_sitemap_action' ),

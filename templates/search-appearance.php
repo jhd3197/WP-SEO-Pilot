@@ -2,7 +2,7 @@
 /**
  * Search Appearance Settings Template
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ $taxonomies = get_taxonomies(
 // are passed from the service render method
 
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( 'types' );
+\SamanLabs\SEO\Admin_Topbar::render( 'types' );
 ?>
 
 <div class="wrap samanlabs-seo-page samanlabs-seo-search-appearance-page">

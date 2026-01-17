@@ -21,7 +21,7 @@
  * @var string $page_url
  * @var string $capability
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $tabs = [
@@ -39,7 +39,7 @@ $tab_url = static function ( $tab, $extra = [] ) use ( $page_url ) {
 $current_rule = $rule_to_edit ?: $rule_defaults;
 
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( 'internal-linking' );
+\SamanLabs\SEO\Admin_Topbar::render( 'internal-linking' );
 ?>
 <div class="wrap samanlabs-seo-page samanlabs-seo-links">
 

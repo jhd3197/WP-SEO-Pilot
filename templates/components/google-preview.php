@@ -2,7 +2,7 @@
 /**
  * Google Search Preview Component
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 defined( 'ABSPATH' ) || exit;

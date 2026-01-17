@@ -7,7 +7,7 @@
  * @var int   $scanned
  * @var array $recommendations
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $total_issues       = $stats['total'] ?? count( $issues );
@@ -28,7 +28,7 @@ $severity_labels = [
 ];
 
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( 'audit' );
+\SamanLabs\SEO\Admin_Topbar::render( 'audit' );
 ?>
 <div class="wrap samanlabs-seo-page samanlabs-seo-audit">
 

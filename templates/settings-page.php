@@ -2,9 +2,9 @@
 /**
  * Settings admin template.
  *
- * @var WPSEOPilot\Service\Settings $this
+ * @var SamanLabs\SEO\Service\Settings $this
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $social_defaults = get_option( 'samanlabs_seo_social_defaults', [] );
@@ -89,7 +89,7 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 };
 
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( 'defaults' );
+\SamanLabs\SEO\Admin_Topbar::render( 'defaults' );
 ?>
 <div class="wrap samanlabs-seo-page samanlabs-seo-settings">
 	<div class="samanlabs-seo-tabs" data-component="samanlabs-seo-tabs">

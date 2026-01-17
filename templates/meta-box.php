@@ -7,7 +7,7 @@
  * @var bool    $ai_enabled
  * @var array   $seo_score
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $samanlabs_seo_ai_enabled = ! empty( $ai_enabled );

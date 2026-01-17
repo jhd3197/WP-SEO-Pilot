@@ -2,7 +2,7 @@
 /**
  * Internal Linking — Module settings.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $form_action        = admin_url( 'admin-post.php' );

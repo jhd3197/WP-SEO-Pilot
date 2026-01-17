@@ -2,13 +2,13 @@
 /**
  * Sitemap Settings Page Template
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 defined( 'ABSPATH' ) || exit;
 
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( 'sitemap', '', [
+\SamanLabs\SEO\Admin_Topbar::render( 'sitemap', '', [
 	[
 		'type'   => 'button',
 		'label'  => __( 'View Sitemap', 'saman-labs-seo' ),
@@ -614,20 +614,20 @@ jQuery(document).ready(function($) {
 	// Regenerate sitemap
 	$('#regenerate-sitemap').on('click', function() {
 		var $btn = $(this);
-		$btn.prop('disabled', true).text(WPSEOPilotSitemap.strings.regenerating);
+		$btn.prop('disabled', true).text(SamanLabsSEOSitemap.strings.regenerating);
 
-		$.post(WPSEOPilotSitemap.ajax_url, {
+		$.post(SamanLabsSEOSitemap.ajax_url, {
 			action: 'samanlabs_seo_regenerate_sitemap',
-			nonce: WPSEOPilotSitemap.nonce
+			nonce: SamanLabsSEOSitemap.nonce
 		}, function(response) {
 			if (response.success) {
-				alert(WPSEOPilotSitemap.strings.success);
+				alert(SamanLabsSEOSitemap.strings.success);
 			} else {
-				alert(WPSEOPilotSitemap.strings.error);
+				alert(SamanLabsSEOSitemap.strings.error);
 			}
 			$btn.prop('disabled', false).text('<?php esc_html_e( 'Regenerate Now', 'saman-labs-seo' ); ?>');
 		}).fail(function() {
-			alert(WPSEOPilotSitemap.strings.error);
+			alert(SamanLabsSEOSitemap.strings.error);
 			$btn.prop('disabled', false).text('<?php esc_html_e( 'Regenerate Now', 'saman-labs-seo' ); ?>');
 		});
 	});

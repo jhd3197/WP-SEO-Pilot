@@ -2,7 +2,7 @@
 /**
  * Internal Linking — Add/Edit rule form.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $is_edit          = ! empty( $current_rule['id'] );

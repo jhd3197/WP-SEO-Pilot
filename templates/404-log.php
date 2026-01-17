@@ -4,13 +4,13 @@
  *
  * @var array $rows
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 ?>
 <?php
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( '404-log' );
+\SamanLabs\SEO\Admin_Topbar::render( '404-log' );
 ?>
 <div class="wrap samanlabs-seo-page">
 

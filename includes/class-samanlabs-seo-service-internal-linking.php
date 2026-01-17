@@ -178,7 +178,7 @@ class Internal_Linking {
 
 		wp_localize_script(
 			'samanlabs-seo-internal-linking',
-			'WPSEOPilotLinks',
+			'SamanLabsSEOLinks',
 			[
 				'ajax'   => admin_url( 'admin-ajax.php' ),
 				'nonce'  => wp_create_nonce( 'samanlabs_seo_link_admin' ),

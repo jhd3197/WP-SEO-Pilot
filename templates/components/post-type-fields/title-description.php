@@ -2,7 +2,7 @@
 /**
  * Title & Description Sub-Tab Content
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  *
  * Variables expected:
  * - $slug (string): Post type slug

@@ -2,7 +2,7 @@
 /**
  * Social Cards Tab Content
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 defined( 'ABSPATH' ) || exit;

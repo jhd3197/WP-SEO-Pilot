@@ -2,7 +2,7 @@
 /**
  * Internal Linking — Categories management.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $form_action      = admin_url( 'admin-post.php' );

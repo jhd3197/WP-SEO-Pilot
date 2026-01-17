@@ -2,7 +2,7 @@
 /**
  * Social Settings Tab Content
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 defined( 'ABSPATH' ) || exit;

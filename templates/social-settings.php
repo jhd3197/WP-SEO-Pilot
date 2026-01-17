@@ -2,7 +2,7 @@
 /**
  * Social Settings Page Template
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -57,7 +57,7 @@ $render_schema_control = static function ( $field_name, $current_value, $input_i
 };
 
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( 'social' );
+\SamanLabs\SEO\Admin_Topbar::render( 'social' );
 ?>
 
 <div class="wrap samanlabs-seo-page samanlabs-seo-social-page">

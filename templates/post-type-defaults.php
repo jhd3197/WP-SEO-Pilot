@@ -10,9 +10,9 @@
  * @var array $taxonomy_settings
  * @var array $archive_settings
  * @var array $taxonomies
- * @var WPSEOPilot\Service\Settings $this
+ * @var SamanLabs\SEO\Service\Settings $this
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 call_user_func(
@@ -26,7 +26,7 @@ call_user_func(
 		];
 
 		// Render top bar
-		\WPSEOPilot\Admin_Topbar::render( 'types' );
+		\SamanLabs\SEO\Admin_Topbar::render( 'types' );
 		?>
 <div class="wrap samanlabs-seo-page samanlabs-seo-settings">
 	<form action="options.php" method="post" class="samanlabs-seo-search-defaults">

@@ -303,7 +303,7 @@ class Admin_UI {
 		$settings_svc = new Settings();
 		wp_localize_script(
 			'samanlabs-seo-admin',
-			'WPSEOPilotAdmin',
+			'SamanLabsSEOAdmin',
 			[
 				'mediaTitle'  => __( 'Select image', 'saman-labs-seo' ),
 				'mediaButton' => __( 'Use image', 'saman-labs-seo' ),
@@ -449,7 +449,7 @@ class Admin_UI {
 
 		wp_localize_script(
 			'samanlabs-seo-editor',
-			'WPSEOPilotEditor',
+			'SamanLabsSEOEditor',
 			[
 				'defaultTitle'       => get_option( 'samanlabs_seo_default_title_template', '{{post_title}} | {{site_title}}' ),
 				'defaultDescription' => get_option( 'samanlabs_seo_default_meta_description', '' ),

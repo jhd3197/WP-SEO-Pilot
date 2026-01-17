@@ -2,7 +2,7 @@
 /**
  * Internal Linking — Rules table.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $filter_status   = $filters['status'] ?? '';

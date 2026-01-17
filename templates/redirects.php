@@ -4,7 +4,7 @@
  *
  * @var array $redirects
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 ?>
@@ -12,7 +12,7 @@
 $samanlabs_seo_prefill = isset( $_GET['prefill'] ) ? sanitize_text_field( wp_unslash( $_GET['prefill'] ) ) : '';
 
 // Render top bar
-\WPSEOPilot\Admin_Topbar::render( 'redirects' );
+\SamanLabs\SEO\Admin_Topbar::render( 'redirects' );
 ?>
 <div class="wrap samanlabs-seo-page">
 

@@ -2,7 +2,7 @@
 /**
  * Internal Linking — UTM Templates UI.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 $form_action = admin_url( 'admin-post.php' );

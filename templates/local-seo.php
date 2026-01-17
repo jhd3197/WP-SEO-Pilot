@@ -4,7 +4,7 @@
  *
  * @var array $business_types Available business types.
  *
- * @package WPSEOPilot
+ * @package SamanLabs\SEO
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -34,7 +34,7 @@ if ( ! is_array( $social_profiles ) ) {
 }
 
 // Render top bar.
-\WPSEOPilot\Admin_Topbar::render( 'local-seo' );
+\SamanLabs\SEO\Admin_Topbar::render( 'local-seo' );
 ?>
 
 <div class="wrap samanlabs-seo-page samanlabs-seo-local-seo-page">
@@ -488,7 +488,7 @@ if ( ! is_array( $social_profiles ) ) {
 				<div class="samanlabs-seo-card-body">
 
 					<?php
-					$local_seo_service = new \WPSEOPilot\Service\Local_SEO();
+					$local_seo_service = new \SamanLabs\SEO\Service\Local_SEO();
 					$schema_method = new ReflectionMethod( $local_seo_service, 'build_schema' );
 					$schema_method->setAccessible( true );
 					$schema = $schema_method->invoke( $local_seo_service );

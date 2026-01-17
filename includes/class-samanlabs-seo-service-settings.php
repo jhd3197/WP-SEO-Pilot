@@ -890,7 +890,7 @@ class Settings {
 
 		wp_localize_script(
 			'samanlabs-seo-admin',
-			'WPSEOPilotAdmin',
+			'SamanLabsSEOAdmin',
 			[
 				'mediaTitle'  => __( 'Select default image', 'saman-labs-seo' ),
 				'mediaButton' => __( 'Use image', 'saman-labs-seo' ),
