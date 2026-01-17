@@ -21,7 +21,7 @@ class Local_SEO {
 	 */
 	public function boot() {
 		// Only initialize if module is enabled.
-		if ( '1' !== get_option( 'samanlabs_seo_enable_local_seo', '0' ) ) {
+		if ( ! \SamanLabs\SEO\Helpers\module_enabled( 'local_seo' ) ) {
 			return;
 		}
 
