@@ -8,6 +8,8 @@
 
 namespace SamanLabs\SEO\Api;
 
+use SamanLabs\SEO\Integration\AI_Pilot;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -87,52 +89,54 @@ class Setup_Controller extends REST_Controller {
     }
 
     /**
-     * Test API connection.
+     * Test API connection via Saman Labs AI.
+     *
+     * All AI operations are now delegated to the Saman Labs AI plugin.
+     * This endpoint checks the status of that integration.
      *
      * @param \WP_REST_Request $request Request object.
      * @return \WP_REST_Response
      */
     public function test_api( $request ) {
-        $params = $request->get_json_params();
-        if ( empty( $params ) ) {
-            $params = $request->get_params();
-        }
+        $status = AI_Pilot::get_status();
 
-        $provider = isset( $params['provider'] ) ? sanitize_text_field( $params['provider'] ) : 'openai';
-        $api_key = isset( $params['api_key'] ) ? sanitize_text_field( $params['api_key'] ) : '';
-        $model = isset( $params['model'] ) ? sanitize_text_field( $params['model'] ) : 'gpt-4o-mini';
-
-        if ( empty( $api_key ) && $provider !== 'ollama' ) {
-            return $this->error( __( 'API key is required.', 'saman-labs-seo' ), 'missing_key', 400 );
-        }
-
-        $test_prompt = 'Say "Hello!" in one word.';
-
-        switch ( $provider ) {
-            case 'openai':
-                $result = $this->test_openai( $api_key, $model, $test_prompt );
-                break;
-            case 'anthropic':
-                $result = $this->test_anthropic( $api_key, $test_prompt );
-                break;
-            case 'ollama':
-                $result = $this->test_ollama( $test_prompt );
-                break;
-            default:
-                return $this->error( __( 'Unsupported provider.', 'saman-labs-seo' ), 'invalid_provider', 400 );
-        }
-
-        if ( is_wp_error( $result ) ) {
+        // Check if Saman Labs AI is installed
+        if ( ! AI_Pilot::is_installed() ) {
             return $this->success( [
-                'success' => false,
-                'message' => $result->get_error_message(),
+                'success'      => false,
+                'message'      => __( 'Saman Labs AI is not installed. Please install Saman Labs AI to use AI features.', 'saman-labs-seo' ),
+                'install_url'  => admin_url( 'plugin-install.php?s=saman-labs-ai&tab=search&type=term' ),
+                'status'       => 'not_installed',
             ] );
         }
 
+        // Check if Saman Labs AI is active
+        if ( ! AI_Pilot::is_active() ) {
+            return $this->success( [
+                'success'      => false,
+                'message'      => __( 'Saman Labs AI is installed but not activated. Please activate it in your plugins.', 'saman-labs-seo' ),
+                'plugins_url'  => admin_url( 'plugins.php' ),
+                'status'       => 'not_active',
+            ] );
+        }
+
+        // Check if Saman Labs AI is configured
+        if ( ! AI_Pilot::is_ready() ) {
+            return $this->success( [
+                'success'      => false,
+                'message'      => __( 'Saman Labs AI is active but not configured. Please configure your AI provider in Saman Labs AI settings.', 'saman-labs-seo' ),
+                'settings_url' => admin_url( 'admin.php?page=samanlabs-ai' ),
+                'status'       => 'not_configured',
+            ] );
+        }
+
+        // All good - Saman Labs AI is ready
         return $this->success( [
-            'success'  => true,
-            'message'  => __( 'Connection successful!', 'saman-labs-seo' ),
-            'response' => $result,
+            'success'   => true,
+            'message'   => __( 'Saman Labs AI is ready! AI features are available.', 'saman-labs-seo' ),
+            'status'    => 'ready',
+            'providers' => $status['providers'] ?? [],
+            'models'    => $status['models'] ?? [],
         ] );
     }
 
@@ -220,110 +224,5 @@ class Setup_Controller extends REST_Controller {
         delete_option( 'samanlabs_seo_setup_data' );
 
         return $this->success( null, __( 'Setup wizard reset. It will show on next page load.', 'saman-labs-seo' ) );
-    }
-
-    /**
-     * Test OpenAI connection.
-     *
-     * @param string $api_key API key.
-     * @param string $model   Model ID.
-     * @param string $prompt  Test prompt.
-     * @return string|\WP_Error
-     */
-    private function test_openai( $api_key, $model, $prompt ) {
-        $response = wp_remote_post( 'https://api.openai.com/v1/chat/completions', [
-            'headers' => [
-                'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $api_key,
-            ],
-            'body'    => wp_json_encode( [
-                'model'      => $model,
-                'messages'   => [ [ 'role' => 'user', 'content' => $prompt ] ],
-                'max_tokens' => 10,
-            ] ),
-            'timeout' => 30,
-        ] );
-
-        if ( is_wp_error( $response ) ) {
-            return $response;
-        }
-
-        $status_code = wp_remote_retrieve_response_code( $response );
-        $body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-        if ( $status_code !== 200 ) {
-            $error_message = $body['error']['message'] ?? __( 'OpenAI API error', 'saman-labs-seo' );
-            return new \WP_Error( 'api_error', $error_message );
-        }
-
-        return trim( $body['choices'][0]['message']['content'] ?? '' );
-    }
-
-    /**
-     * Test Anthropic connection.
-     *
-     * @param string $api_key API key.
-     * @param string $prompt  Test prompt.
-     * @return string|\WP_Error
-     */
-    private function test_anthropic( $api_key, $prompt ) {
-        $response = wp_remote_post( 'https://api.anthropic.com/v1/messages', [
-            'headers' => [
-                'Content-Type'      => 'application/json',
-                'x-api-key'         => $api_key,
-                'anthropic-version' => '2023-06-01',
-            ],
-            'body'    => wp_json_encode( [
-                'model'      => 'claude-3-haiku-20240307',
-                'max_tokens' => 10,
-                'messages'   => [ [ 'role' => 'user', 'content' => $prompt ] ],
-            ] ),
-            'timeout' => 30,
-        ] );
-
-        if ( is_wp_error( $response ) ) {
-            return $response;
-        }
-
-        $status_code = wp_remote_retrieve_response_code( $response );
-        $body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-        if ( $status_code !== 200 ) {
-            $error_message = $body['error']['message'] ?? __( 'Anthropic API error', 'saman-labs-seo' );
-            return new \WP_Error( 'api_error', $error_message );
-        }
-
-        return trim( $body['content'][0]['text'] ?? '' );
-    }
-
-    /**
-     * Test Ollama connection.
-     *
-     * @param string $prompt Test prompt.
-     * @return string|\WP_Error
-     */
-    private function test_ollama( $prompt ) {
-        $response = wp_remote_post( 'http://localhost:11434/api/chat', [
-            'headers' => [ 'Content-Type' => 'application/json' ],
-            'body'    => wp_json_encode( [
-                'model'    => 'llama2',
-                'messages' => [ [ 'role' => 'user', 'content' => $prompt ] ],
-                'stream'   => false,
-            ] ),
-            'timeout' => 60,
-        ] );
-
-        if ( is_wp_error( $response ) ) {
-            return new \WP_Error( 'connection_error', __( 'Could not connect to Ollama. Make sure it\'s running on localhost:11434.', 'saman-labs-seo' ) );
-        }
-
-        $status_code = wp_remote_retrieve_response_code( $response );
-        $body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-        if ( $status_code !== 200 ) {
-            return new \WP_Error( 'api_error', __( 'Ollama returned an error. Make sure a model is installed.', 'saman-labs-seo' ) );
-        }
-
-        return trim( $body['message']['content'] ?? '' );
     }
 }
