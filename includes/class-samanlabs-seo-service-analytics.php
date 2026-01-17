@@ -48,19 +48,12 @@ class Analytics {
 	}
 
 	/**
-	 * Check if analytics tracking is enabled
+	 * Check if analytics tracking is enabled.
 	 */
 	public function is_enabled() {
-		// Check module setting (new React UI uses this)
-		$module_enabled = get_option( 'samanlabs_seo_module_analytics', '0' );
+		$enabled = \SamanLabs\SEO\Helpers\module_enabled( 'analytics' );
 
-		// Also check legacy setting for backwards compatibility
-		$legacy_enabled = get_option( 'samanlabs_seo_enable_analytics', '1' );
-
-		// Enabled if either setting is on
-		$setting_enabled = '1' === $module_enabled || '1' === $legacy_enabled;
-
-		return apply_filters( 'samanlabs_seo_analytics_enabled', $setting_enabled );
+		return apply_filters( 'samanlabs_seo_analytics_enabled', $enabled );
 	}
 
 	/**
