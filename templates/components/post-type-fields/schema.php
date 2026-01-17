@@ -59,7 +59,7 @@ defined( 'ABSPATH' ) || exit;
 			<label class="wpseopilot-radio-card <?php echo ( $current_schema === $opt['val'] ) ? 'is-selected' : ''; ?>">
 				<input
 					type="radio"
-					name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][schema_type]"
+					name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][schema_type]"
 					value="<?php echo esc_attr( $opt['val'] ); ?>"
 					<?php checked( $current_schema, $opt['val'] ); ?>
 				/>

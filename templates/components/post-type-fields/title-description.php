@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 	<label class="wpseopilot-toggle">
 		<input
 			type="checkbox"
-			name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][noindex]"
+			name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][noindex]"
 			value="1"
 			<?php checked( $settings['noindex'] ?? false, 1 ); ?>
 		/>
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 		<input
 			type="text"
 			id="title_template_<?php echo esc_attr( $slug ); ?>"
-			name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][title_template]"
+			name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][title_template]"
 			value="<?php echo esc_attr( $settings['title_template'] ?? '{{post_title}} {{separator}} {{site_title}}' ); ?>"
 			class="regular-text"
 			data-preview-field="title"
@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="wpseopilot-flex-input">
 		<textarea
 			id="desc_template_<?php echo esc_attr( $slug ); ?>"
-			name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][description_template]"
+			name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][description_template]"
 			rows="2"
 			class="large-text"
 			data-preview-field="description"

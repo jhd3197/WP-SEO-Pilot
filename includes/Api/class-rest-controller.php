@@ -22,7 +22,7 @@ abstract class REST_Controller {
      *
      * @var string
      */
-    protected $namespace = 'wpseopilot/v2';
+    protected $namespace = 'samanlabs-seo/v1';
 
     /**
      * Register routes - must be implemented by child classes.

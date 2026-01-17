@@ -172,7 +172,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
         $issues = [];
 
         // Check posts without meta descriptions
-        $posts_without_desc = $this->get_posts_without_meta( '_wpseopilot_description' );
+        $posts_without_desc = $this->get_posts_without_meta( '_samanlabs_seo_description' );
         if ( ! empty( $posts_without_desc ) ) {
             $issues[] = [
                 'type'    => 'warning',
@@ -186,7 +186,7 @@ GOOD: 'Looked at your site. Here's what's up:'";
         }
 
         // Check posts without meta titles
-        $posts_without_title = $this->get_posts_without_meta( '_wpseopilot_title' );
+        $posts_without_title = $this->get_posts_without_meta( '_samanlabs_seo_title' );
         if ( ! empty( $posts_without_title ) ) {
             $issues[] = [
                 'type'    => 'info',
@@ -255,8 +255,8 @@ GOOD: 'Looked at your site. Here's what's up:'";
         $data['stats']['total_pages'] = $page_count->publish ?? 0;
 
         // Posts without meta
-        $data['stats']['posts_without_description'] = count( $this->get_posts_without_meta( '_wpseopilot_description' ) );
-        $data['stats']['posts_without_title'] = count( $this->get_posts_without_meta( '_wpseopilot_title' ) );
+        $data['stats']['posts_without_description'] = count( $this->get_posts_without_meta( '_samanlabs_seo_description' ) );
+        $data['stats']['posts_without_title'] = count( $this->get_posts_without_meta( '_samanlabs_seo_title' ) );
         $data['stats']['posts_with_long_titles'] = count( $this->get_posts_with_long_titles() );
 
         return $data;

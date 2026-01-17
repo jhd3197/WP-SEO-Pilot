@@ -125,8 +125,8 @@ GOOD: 'Three things to fix: [specific list]'";
                 $context_parts[] = '- Status: ' . $post->post_status;
 
                 // Get meta title/description if set
-                $meta_title = get_post_meta( $post->ID, '_wpseopilot_title', true );
-                $meta_desc = get_post_meta( $post->ID, '_wpseopilot_description', true );
+                $meta_title = get_post_meta( $post->ID, '_samanlabs_seo_title', true );
+                $meta_desc = get_post_meta( $post->ID, '_samanlabs_seo_description', true );
 
                 if ( $meta_title ) {
                     $context_parts[] = '- SEO Title: ' . $meta_title;

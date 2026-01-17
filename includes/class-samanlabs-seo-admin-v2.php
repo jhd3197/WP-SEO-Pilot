@@ -300,7 +300,7 @@ class Admin_V2 {
         // Pass configuration to React app
         wp_localize_script( 'wpseopilot-admin-v2', 'wpseopilotV2Settings', [
             'initialView' => $initial_view,
-            'restUrl'     => rest_url( 'wpseopilot/v2/' ),
+            'restUrl'     => rest_url( 'samanlabs-seo/v1/' ),
             'nonce'       => wp_create_nonce( 'wp_rest' ),
             'adminUrl'    => admin_url(),
             'pluginUrl'   => SAMANLABS_SEO_URL,

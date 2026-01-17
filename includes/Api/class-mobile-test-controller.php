@@ -23,7 +23,7 @@ class Mobile_Test_Controller extends REST_Controller {
      * Constructor.
      */
     public function __construct() {
-        $this->namespace = 'wpseopilot/v2';
+        $this->namespace = 'samanlabs-seo/v1';
         $this->rest_base = 'mobile-test';
     }
 

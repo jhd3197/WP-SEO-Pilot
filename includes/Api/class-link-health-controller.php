@@ -26,7 +26,7 @@ class Link_Health_Controller extends WP_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'wpseopilot/v2';
+	protected $namespace = 'samanlabs-seo/v1';
 
 	/**
 	 * Resource base.

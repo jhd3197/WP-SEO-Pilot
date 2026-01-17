@@ -37,7 +37,7 @@ class Htaccess_Controller extends REST_Controller {
      * Constructor.
      */
     public function __construct() {
-        $this->namespace     = 'wpseopilot/v2';
+        $this->namespace     = 'samanlabs-seo/v1';
         $this->rest_base     = 'htaccess';
         $this->htaccess_path = ABSPATH . '.htaccess';
         $this->backup_dir    = WP_CONTENT_DIR . '/wpseopilot-backups/htaccess/';

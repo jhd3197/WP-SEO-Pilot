@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 			<label class="wpseopilot-toggle">
 				<input
 					type="checkbox"
-					name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][noarchive]"
+					name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][noarchive]"
 					value="1"
 					<?php checked( $settings['noarchive'] ?? false, 1 ); ?>
 				/>
@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 			<label class="wpseopilot-toggle">
 				<input
 					type="checkbox"
-					name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][nosnippet]"
+					name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][nosnippet]"
 					value="1"
 					<?php checked( $settings['nosnippet'] ?? false, 1 ); ?>
 				/>
@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 			<label class="wpseopilot-toggle">
 				<input
 					type="checkbox"
-					name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][nofollow]"
+					name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][nofollow]"
 					value="1"
 					<?php checked( $settings['nofollow'] ?? false, 1 ); ?>
 				/>
@@ -56,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
 			<label class="wpseopilot-toggle">
 				<input
 					type="checkbox"
-					name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][noimageindex]"
+					name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][noimageindex]"
 					value="1"
 					<?php checked( $settings['noimageindex'] ?? false, 1 ); ?>
 				/>
@@ -73,7 +73,7 @@ defined( 'ABSPATH' ) || exit;
 		<input
 			type="text"
 			id="breadcrumbs-title-<?php echo esc_attr( $slug ); ?>"
-			name="wpseopilot_post_type_defaults[<?php echo esc_attr( $slug ); ?>][breadcrumb_title]"
+			name="samanlabs_seo_post_type_defaults[<?php echo esc_attr( $slug ); ?>][breadcrumb_title]"
 			value="<?php echo esc_attr( $settings['breadcrumb_title'] ?? '' ); ?>"
 			class="regular-text"
 			placeholder="<?php esc_attr_e( 'Default: Post Title', 'saman-labs-seo' ); ?>"
